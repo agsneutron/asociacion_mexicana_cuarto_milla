@@ -1,0 +1,10 @@
+.navbar-horizontal .navbar-brand img {
+    height: 60px;
+}
+
+.breadcrumb {
+    background-color: transparent;
+}
+.navbar-vertical.navbar-expand-xs .navbar-nav .nav-link {
+    padding: 0.675rem 1.1rem;
+}
