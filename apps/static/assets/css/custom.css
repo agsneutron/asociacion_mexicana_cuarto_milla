@@ -1,0 +1,17 @@
+.navbar-horizontal .navbar-brand img {
+    height: 60px;
+}
+
+.breadcrumb {
+    background-color: transparent;
+}
+.navbar-vertical.navbar-expand-xs .navbar-nav .nav-link {
+    padding: 0.675rem 1.1rem;
+}
+.sidenav .navbar-brand, .sidenav .navbar-heading {
+    padding: .6rem;
+}
+.navbar-vertical .navbar-brand-img, .navbar-vertical .navbar-brand > img {
+    max-width: 100%;
+    max-height: 60px;
+}
