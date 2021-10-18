@@ -7,6 +7,7 @@ from django.urls import path, re_path
 from apps.home import views
 
 urlpatterns = [
+    path('registro_pagos/', views.registro_pagos_view, name="registro_pagos"),
 
     # The home page
     path('', views.index, name='home'),
