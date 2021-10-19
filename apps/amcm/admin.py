@@ -14,6 +14,7 @@ class CuotaAdmin(admin.ModelAdmin):
     #fields = ('nombre', 'descripcion', 'monto', 'tipoCuota')
     actions = None
     list_per_page = 20
+    list_display = ('nombre', 'descripcion', 'monto', 'tipoCuota',)
     fieldsets = (
         (('Cuotas'),
          {'fields': ('nombre', 'descripcion', 'monto', 'tipoCuota',)}),)
@@ -26,6 +27,7 @@ class TipoCuotaAdmin(admin.ModelAdmin):
     #fields = ('nombre', 'descripcion',)
     actions = None
     list_per_page = 20
+    list_display = ('nombre', 'descripcion',)
     fieldsets = (
         (('Tipo de Cuota'),
          {'fields': ('nombre', 'descripcion',)}),)
@@ -38,6 +40,7 @@ class DescuentoAdmin(admin.ModelAdmin):
     #fields = ('nombre', 'descripcion', 'porcentaje')
     actions = None
     list_per_page = 20
+    list_display = ('nombre', 'descripcion', 'porcentaje',)
     fieldsets = (
         (('Descuentos'),
          {'fields': ('nombre', 'descripcion', 'porcentaje', )}),)
@@ -50,6 +53,7 @@ class SexoAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
+    list_display = ('nombre',)
     fieldsets = (
         (('Sexo'),
          {'fields': ('nombre', )}),)
@@ -62,6 +66,7 @@ class NacionalidadAdmin(admin.ModelAdmin):
     # fields = ('nombre', 'abreviatura')
     actions = None
     list_per_page = 20
+    list_display = ('nombre', 'abreviatura',)
     fieldsets = (
         (('Nacionalidad'),
          {'fields': ('nombre','abreviatura',)}),)
@@ -74,6 +79,7 @@ class EjemplarAdmin(admin.ModelAdmin):
     actions = None
     extra = 1
     list_per_page = 20
+    list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
     fieldsets = (
         (('Ejemplares'),
          {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -85,6 +91,7 @@ class EjemplarInlineAdmin(admin.StackedInline):
     actions = None
     extra = 1
     list_per_page = 20
+
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -96,7 +103,8 @@ class CuadraAdmin(admin.ModelAdmin):
     actions = None
     extra = 1
     list_per_page = 20
-    inlines= [EjemplarInlineAdmin, ]
+    inlines = [EjemplarInlineAdmin, ]
+    list_display = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico',)
     fieldsets = (
         (('Cuadras'), {'fields': ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones',)}),)
 
