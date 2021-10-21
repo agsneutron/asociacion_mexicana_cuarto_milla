@@ -1,0 +1,38 @@
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+    {% if has_add_permission %}
+        <div class="header pb-2">
+            <div class="container-fluid">
+                <div class="header-body">
+                    <div class="row align-items-center py-2">
+                        <div class="col-lg-6 col-7">
+                            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                                <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                    {% block breadcrumbs %}
+                                        <li class="breadcrumb-item"><a
+                                                href="{% url 'admin:index' %}">{% translate 'Home' %}</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">{% if title %}
+                                            {{ title }}{% endif %}</li>
+                                    {% endblock %}
+
+                                </ol>
+                            </nav>
+                        </div>
+
+                        <div class="col-lg-6 col-5 text-right">
+                            {% url cl.opts|admin_urlname:'add' as add_url %}
+                            <a href="{% add_preserved_filters add_url is_popup to_field %}"
+                               class="addlink btn btn-lg btn-neutral">
+                                {% blocktranslate with cl.opts.verbose_name as name %}Add
+                                    {{ name }}{% endblocktranslate %}
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock %}

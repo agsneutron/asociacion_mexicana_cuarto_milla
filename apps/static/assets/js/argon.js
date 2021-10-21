@@ -1395,7 +1395,7 @@ var DatatableBasic = (function() {
 
 	// Variables
 
-	var $dtBasic = $('#datatable-basic');
+	var $dtBasic = $('#result_list');
 
 
 	// Methods
@@ -1406,16 +1406,35 @@ var DatatableBasic = (function() {
 		// https://datatables.net/manual/options
 
 		var options = {
-			keys: !0,
-			select: {
-				style: "multi"
-			},
-			language: {
+
+
+                bInfo: false,
+                pageLength: 5,
+                bLengthChange: false, //used to hide the property
+                language: {
 				paginate: {
 					previous: "<i class='fas fa-angle-left'>",
 					next: "<i class='fas fa-angle-right'>"
-				}
-			},
+				},
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "NingÃºn dato disponible en esta tabla",
+                    "sInfo": "",
+                    "sInfoEmpty": "",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Ãšltimo",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                },
 		};
 
 		// Init the datatable
