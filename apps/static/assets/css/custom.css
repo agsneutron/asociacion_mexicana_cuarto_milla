@@ -15,3 +15,16 @@
     max-width: 100%;
     max-height: 60px;
 }
+.object-tools{
+    margin-bottom: 75px;
+}
+#result_list_wrapper{
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
+.dataTables_filter>label {
+    display: inline-flex;
+    margin-bottom: 0.5rem;
+    align-items: center;
+}

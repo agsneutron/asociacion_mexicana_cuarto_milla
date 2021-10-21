@@ -40,9 +40,17 @@
 {% if to_field %}<input type="hidden" name="{{ to_field_var }}" value="{{ to_field }}">{% endif %}
 {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
 {% if errors %}
-    <p class="errornote">
-    {% if errors|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
-    </p>
+
+
+    <div class="errornote alert alert-danger alert-dismissible fade show mx-4 mt-3" role="alert">
+                <span class="alert-icon"><i class="ni ni-like-2"></i></span>
+                <span class="alert-text"><strong>Advertencia!</strong> {% if errors|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}</span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+
+
     {{ adminform.form.non_field_errors }}
 {% endif %}
 
@@ -75,6 +83,7 @@
 {% endblock %}
 
 {# JavaScript for prepopulated fields #}
+
 {% prepopulated_fields_js %}
 
 </div>
