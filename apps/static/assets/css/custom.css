@@ -28,3 +28,13 @@
     margin-bottom: 0.5rem;
     align-items: center;
 }
+.inline-group ul.tools a.add, .inline-group div.add-row a, .inline-group .tabular tr.add-row td a {
+    padding-left: 21px;
+    font-size: 15px;
+}
+.add-row-gsn{
+    margin-left: 30px;
+}
+.add-row-gsn > a{
+
+}
