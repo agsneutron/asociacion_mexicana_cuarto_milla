@@ -77,7 +77,6 @@ class EjemplarAdmin(admin.ModelAdmin):
     model = Ejemplares
     #fields = ('nombre',)
     actions = None
-    extra = 1
     list_per_page = 20
     list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
     fieldsets = (
