@@ -6,11 +6,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-argon">
-  
+
   <title>
     AMCM - {% block title %} Open-Source Admin Panel {% endblock %} | AppSeed
   </title>
-
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
   <!-- Favicon - loaded as static -->
   <link rel="icon" href="/static/assets/img/brand/favicon.png" type="image/png">
   <!-- Fonts -->
@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/static/assets/vendor/nucleo/css/nucleo.css" type="text/css">
   <link rel="stylesheet" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
   <!-- Page plugins -->
+{% block extrahead %}{% endblock %}
   <!-- Argon CSS -->
   <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
   <link rel="stylesheet" href="/static/assets/css/custom.css" type="text/css">
@@ -41,7 +42,7 @@
 
   {% include "includes/scripts.html" %}
 
-  <!-- Specific JS goes HERE --> 
+  <!-- Specific JS goes HERE -->
 
 
   <script src="/static/assets/js/argon.js?v=1.2.0"></script>
