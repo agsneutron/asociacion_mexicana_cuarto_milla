@@ -1086,3 +1086,426 @@ var Scrollbar = (function() {
 	}
 
 })();
+
+
+//
+// Widget Calendar
+//
+
+
+if($('[data-toggle="widget-calendar"]')[0]) {
+    $('[data-toggle="widget-calendar"]').fullCalendar({
+        contentHeight: 'auto',
+        theme: false,
+        buttonIcons: {
+            prev: ' ni ni-bold-left',
+            next: ' ni ni-bold-right'
+        },
+        header: {
+            right: 'next',
+            center: 'title, ',
+            left: 'prev'
+        },
+        defaultDate: '2018-12-01',
+        editable: true,
+        events: [
+
+            {
+                title: 'Call with Dave',
+                start: '2018-11-18',
+                end: '2018-11-18',
+                className: 'bg-red'
+            },
+
+            {
+                title: 'Lunch meeting',
+                start: '2018-11-21',
+                end: '2018-11-22',
+                className: 'bg-orange'
+            },
+
+            {
+                title: 'All day conference',
+                start: '2018-11-29',
+                end: '2018-11-29',
+                className: 'bg-green'
+            },
+
+            {
+                title: 'Meeting with Mary',
+                start: '2018-12-01',
+                end: '2018-12-01',
+                className: 'bg-blue'
+            },
+
+            {
+                title: 'Winter Hackaton',
+                start: '2018-12-03',
+                end: '2018-12-03',
+                className: 'bg-red'
+            },
+
+            {
+                title: 'Digital event',
+                start: '2018-12-07',
+                end: '2018-12-09',
+                className: 'bg-warning'
+            },
+
+            {
+                title: 'Marketing event',
+                start: '2018-12-10',
+                end: '2018-12-10',
+                className: 'bg-purple'
+            },
+
+            {
+                title: 'Dinner with Family',
+                start: '2018-12-19',
+                end: '2018-12-19',
+                className: 'bg-red'
+            },
+
+            {
+                title: 'Black Friday',
+                start: '2018-12-23',
+                end: '2018-12-23',
+                className: 'bg-blue'
+            },
+
+            {
+                title: 'Cyber Week',
+                start: '2018-12-02',
+                end: '2018-12-02',
+                className: 'bg-yellow'
+            },
+
+        ]
+    });
+
+    //Display Current Date as Calendar widget header
+    var mYear = moment().format('YYYY');
+    var mDay = moment().format('dddd, MMM D');
+    $('.widget-calendar-year').html(mYear);
+    $('.widget-calendar-day').html(mDay);
+}
+
+
+//
+// Charts
+//
+
+'use strict';
+
+//
+// Doughnut chart
+//
+
+var DoughnutChart = (function() {
+
+	// Variables
+
+	var $chart = $('#chart-doughnut');
+
+
+	// Methods
+
+	function init($this) {
+		var randomScalingFactor = function() {
+			return Math.round(Math.random() * 100);
+		};
+
+		var doughnutChart = new Chart($this, {
+			type: 'doughnut',
+			data: {
+				labels: [
+					'Danger',
+					'Warning',
+					'Success',
+					'Primary',
+					'Info'
+				],
+				datasets: [{
+					data: [
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+						randomScalingFactor(),
+					],
+					backgroundColor: [
+						Charts.colors.theme['danger'],
+						Charts.colors.theme['warning'],
+						Charts.colors.theme['success'],
+						Charts.colors.theme['primary'],
+						Charts.colors.theme['info'],
+					],
+					label: 'Dataset 1'
+				}],
+			},
+			options: {
+				responsive: true,
+				legend: {
+					position: 'top',
+				},
+				animation: {
+					animateScale: true,
+					animateRotate: true
+				}
+			}
+		});
+
+		// Save to jQuery object
+
+		$this.data('chart', doughnutChart);
+
+	};
+
+
+	// Events
+
+	if ($chart.length) {
+		init($chart);
+	}
+
+})();
+
+
+//
+// Charts
+//
+
+'use strict';
+
+//
+// Doughnut chart
+//
+
+var BarStackedChart = (function() {
+
+	// Variables
+
+	var $chart = $('#chart-bar-stacked');
+
+
+	// Methods
+
+	function init($this) {
+
+		// Only for demo purposes - return a random number to generate datasets
+		var randomScalingFactor = function() {
+			return Math.round(Math.random() * 100);
+		};
+
+
+		// Chart data
+
+		var data = {
+			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+			datasets: [{
+				label: 'Dataset 1',
+				backgroundColor: Charts.colors.theme['danger'],
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}, {
+				label: 'Dataset 2',
+				backgroundColor: Charts.colors.theme['primary'],
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}, {
+				label: 'Dataset 3',
+				backgroundColor: Charts.colors.theme['success'],
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}]
+
+		};
+
+
+		// Options
+
+		var options = {
+			tooltips: {
+				mode: 'index',
+				intersect: false
+			},
+			responsive: true,
+			scales: {
+				xAxes: [{
+					stacked: true,
+				}],
+				yAxes: [{
+					stacked: true
+				}]
+			}
+		}
+
+
+		// Init chart
+
+		var barStackedChart = new Chart($this, {
+			type: 'bar',
+			data: data,
+			options: options
+		});
+
+		// Save to jQuery object
+
+		$this.data('chart', barStackedChart);
+
+	};
+
+
+	// Events
+
+	if ($chart.length) {
+		init($chart);
+	}
+
+})();
+
+//
+// Datatable
+//
+
+'use strict';
+
+var DatatableBasic = (function() {
+
+	// Variables
+
+	var $dtBasic = $('#result_list');
+
+
+	// Methods
+
+	function init($this) {
+
+		// Basic options. For more options check out the Datatables Docs:
+		// https://datatables.net/manual/options
+
+		var options = {
+
+
+                bInfo: false,
+                pageLength: 5,
+                bLengthChange: false, //used to hide the property
+                language: {
+				paginate: {
+					previous: "<i class='fas fa-angle-left'>",
+					next: "<i class='fas fa-angle-right'>"
+				},
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "NingÃºn dato disponible en esta tabla",
+                    "sInfo": "",
+                    "sInfoEmpty": "",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Ãšltimo",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    }
+                },
+		};
+
+		// Init the datatable
+
+		var table = $this.on( 'init.dt', function () {
+			$('div.dataTables_length select').removeClass('custom-select custom-select-sm');
+
+	    }).DataTable(options);
+	}
+
+
+	// Events
+
+	if ($dtBasic.length) {
+		init($dtBasic);
+	}
+
+})();
+
+
+//
+// Buttons Datatable
+//
+
+var DatatableButtons = (function() {
+
+	// Variables
+
+	var $dtButtons = $('#datatable-buttons');
+
+
+	// Methods
+
+	function init($this) {
+
+		// For more options check out the Datatables Docs:
+		// https://datatables.net/extensions/buttons/
+
+		var buttons = ["copy", "print"];
+
+		// Basic options. For more options check out the Datatables Docs:
+		// https://datatables.net/manual/options
+
+		var options = {
+
+			lengthChange: !1,
+			dom: 'Bfrtip',
+			buttons: buttons,
+			// select: {
+			// 	style: "multi"
+			// },
+			language: {
+				paginate: {
+					previous: "<i class='fas fa-angle-left'>",
+					next: "<i class='fas fa-angle-right'>"
+				}
+			}
+		};
+
+		// Init the datatable
+
+		var table = $this.on( 'init.dt', function () {
+			$('.dt-buttons .btn').removeClass('btn-secondary').addClass('btn-sm btn-default');
+	    }).DataTable(options);
+	}
+
+
+	// Events
+
+	if ($dtButtons.length) {
+		init($dtButtons);
+	}
+
+})();
