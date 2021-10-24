@@ -107,6 +107,19 @@ class CuadraAdmin(admin.ModelAdmin):
         (('Cuadras'), {'fields': ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones',)}),)
 
 
+class CuotasEventoInlineAdmin(admin.TabularInline):
+    model = CuotaEvento
+    fields = ('monto', 'tipoCuota', 'fechaVencimiento', )
+    actions = None
+    extra = 1
+    list_per_page = 20
+
+    # fieldsets = (
+    #     (('Ejemplares'),
+    #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+
+
+
 class CondicionesEventoInlineAdmin(admin.TabularInline):
     model = CondicionesEvento
     fields = ('limite', 'tipoCondicion', 'valor', 'especificacion', )
@@ -138,11 +151,11 @@ class EventoAdmin(admin.ModelAdmin):
     # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
     list_per_page = 20
-    inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, ]
+    inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
     fieldsets = (
         (('Evento'),
-         {'fields': ('nombre' , 'yardas' , 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento', 'observaciones','descuento' )}),)
+         {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento', 'observaciones','descuento' )}),)
 
 
 
