@@ -191,8 +191,8 @@ class CondicionesEvento(models.Model):
     def __unicode__(self):
         return self.tipoCuota.nombre
 
-#catalogo para cuotas de los eventos
 
+#catalogo para cuotas de los eventos
 class CuotaEvento(models.Model):
     monto = models.FloatField(verbose_name='Monto', blank=False, null=False, default=0)
     tipoCuota = models.ForeignKey('TipoCuota', verbose_name="Tipo de Cuota", null=False, blank=False, on_delete=models.CASCADE,)
