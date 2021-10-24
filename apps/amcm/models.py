@@ -142,6 +142,7 @@ class Cuotas(models.Model):
 
 
 
+
     class Meta:
         ordering = ['nombre']
         verbose_name = "Cuota"
