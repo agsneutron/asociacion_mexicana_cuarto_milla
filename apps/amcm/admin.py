@@ -77,7 +77,6 @@ class EjemplarAdmin(admin.ModelAdmin):
     model = Ejemplares
     #fields = ('nombre',)
     actions = None
-    extra = 1
     list_per_page = 20
     list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
     fieldsets = (
@@ -101,12 +100,63 @@ class CuadraAdmin(admin.ModelAdmin):
     model = Cuadras
     #fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    extra = 1
     list_per_page = 20
     inlines = [EjemplarInlineAdmin, ]
     list_display = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico',)
     fieldsets = (
         (('Cuadras'), {'fields': ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones',)}),)
+
+
+class CuotasEventoInlineAdmin(admin.TabularInline):
+    model = CuotaEvento
+    fields = ('monto', 'tipoCuota', 'fechaVencimiento', )
+    actions = None
+    extra = 1
+    list_per_page = 20
+
+    # fieldsets = (
+    #     (('Ejemplares'),
+    #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+
+
+
+class CondicionesEventoInlineAdmin(admin.TabularInline):
+    model = CondicionesEvento
+    fields = ('limite', 'tipoCondicion', 'valor', 'especificacion', )
+    actions = None
+    extra = 1
+    list_per_page = 20
+
+    # fieldsets = (
+    #     (('Ejemplares'),
+    #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+
+
+
+class FechasEventoInlineAdmin(admin.TabularInline):
+    model = FechasEvento
+    fields = ('tipoFecha', 'fecha', 'evento' )
+    actions = None
+    extra = 1
+    list_per_page = 20
+
+    # fieldsets = (
+    #     (('Ejemplares'),
+    #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+
+
+
+class EventoAdmin(admin.ModelAdmin):
+    model = Evento
+    # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
+    actions = None
+    list_per_page = 20
+    inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
+    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
+    fieldsets = (
+        (('Evento'),
+         {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento', 'observaciones','descuento' )}),)
+
 
 
 admin.site.register(Cuotas, CuotaAdmin)
@@ -116,3 +166,10 @@ admin.site.register(Sexo, SexoAdmin)
 admin.site.register(Nacionalidad, NacionalidadAdmin)
 admin.site.register(Cuadras, CuadraAdmin)
 admin.site.register(Ejemplares, EjemplarAdmin)
+admin.site.register(Evento, EventoAdmin)
+admin.site.register(TipoFecha)
+admin.site.register(CuotaEvento)
+admin.site.register(RegistroCuotaEvento)
+admin.site.register(Limite)
+admin.site.register(TipoCondicion)
+admin.site.register(TipoEvento)
