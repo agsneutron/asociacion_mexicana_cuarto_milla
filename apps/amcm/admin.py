@@ -109,7 +109,7 @@ class CuadraAdmin(admin.ModelAdmin):
 
 class CuotasEventoInlineAdmin(admin.TabularInline):
     model = CuotaEvento
-    fields = ('monto', 'tipoCuota', 'fechaVencimiento', )
+    fields = ( 'tipoCuota', 'monto', 'fechaVencimiento', )
     actions = None
     extra = 0
     list_per_page = 20
