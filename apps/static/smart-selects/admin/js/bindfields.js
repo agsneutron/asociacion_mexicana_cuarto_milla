@@ -14,7 +14,7 @@
             chainedm2m.init(chainfield, url, id, value, auto_choose);
         }
     }
-    $(window).load(function() {
+    $(window).on('load', function() {
         $.each($(".chained"), function(index, item) {
             initItem(item);
         });
