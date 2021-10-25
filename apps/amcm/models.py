@@ -5,6 +5,7 @@ Copyright (c) 2021 - AriSan - FusionTI
 
 from django.db import models
 from django.forms.models import model_to_dict
+from smart_selects.db_fields import ChainedForeignKey
 
 # Catalogs Models
 
@@ -421,8 +422,8 @@ class Evento(models.Model):
         dict['temporada'] = str(self.temporada)
         dict['observaciones'] = self.observaciones
         dict['tipoEvento'] = self.tipoEvento
-        dics['fechaEvento'] = self.fechasEvento
-        dics['descuento'] = self.descuento
+        dict['fechaEvento'] = self.fechasEvento
+        dict['descuento'] = self.descuento
 
         #dics[''] = self.
 
@@ -470,3 +471,51 @@ class RegistroCuotaEvento(models.Model):
 
     def __unicode__(self):
         return self.evento.nombre + ' ' + self.cuadras.nombre + ' ' + self.cuotaEvento
+
+
+# Modelo de Registro de inscripción
+class inscripcion(models.Model):
+    evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
+    ejemplar = ChainedForeignKey(Ejemplares,
+                               chained_field="cuadra",
+                               chained_model_field="cuadra",
+                               show_all=False,
+                               auto_choose=True,
+                               sort=True,
+                               null=True,
+                               blank=True)
+    #ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
+    fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
+
+    ACTIVO = 'ACTIVO'
+    RETIRADO = 'RETIRADO'
+    STATUS_CHOICES = (
+        (ACTIVO, 'ACTIVO'),
+        (RETIRADO, 'RETIRADO'),
+    )
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default=ACTIVO,
+                              verbose_name="Estatus de inscripción")
+
+
+    class Meta:
+        ordering = ['evento']
+        verbose_name = "Inscripción"
+        verbose_name_plural = "Inscripciones"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['evento'] = self.evento
+        dict['cuadra'] = self.cuadras
+        dict['ejemplar'] =self.ejemplares
+        dict['fecharegistro'] = str(self.fechaRegistro)
+
+
+        return dict
+
+    def __str__(self):
+        return self.evento.nombre + ' ' + self.cuadras.nombre
+
+    def __unicode__(self):
+        return self.evento.nombre + ' ' + self.cuadras.nombre

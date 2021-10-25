@@ -159,6 +159,7 @@ class EventoAdmin(admin.ModelAdmin):
 
 
 
+
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
@@ -173,3 +174,5 @@ admin.site.register(RegistroCuotaEvento)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento)
+
+admin.site.register(inscripcion)
