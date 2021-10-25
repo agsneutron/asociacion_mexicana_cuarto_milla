@@ -16,8 +16,6 @@ class Descuentos(models.Model):
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
     porcentaje = models.FloatField(verbose_name='Porcentaje', blank=False, null=False, default=0)
 
-
-
     class Meta:
         ordering = ['nombre']
         verbose_name = "Descuento"
@@ -478,13 +476,14 @@ class inscripcion(models.Model):
     evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
     ejemplar = ChainedForeignKey(Ejemplares,
-                               chained_field="cuadra",
-                               chained_model_field="cuadra",
-                               show_all=False,
-                               auto_choose=True,
-                               sort=True,
-                               null=True,
-                               blank=True)
+                                 chained_field="cuadra",
+                                 chained_model_field="cuadra",
+                                 show_all=False,
+                                 auto_choose=False,
+                                 sort=True,
+                                 null=True,
+                                 blank=True,
+                                 )
     #ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
     fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
 
