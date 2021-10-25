@@ -375,12 +375,12 @@ class Ejemplares(models.Model):
         dict['nombre'] = str(self.nombre)
         dict['edad'] = str(self.edad)
         dict['peso'] = str(self.peso)
-        dict['sexo'] = self.sexo
-        dict['nacionalidad'] = self.nacionalidad
+        dict['sexo'] = self.sexo.nombre
+        dict['nacionalidad'] = self.nacionalidad.nombre
         dict['color'] = str(self.color)
         dict['padre'] = str(self.padre)
         dict['madre'] = str(self.madre)
-        dict['cuadra'] = str(self.cuadra)
+        dict['cuadra'] = str(self.cuadra.nombre)
 
         return dict
 
@@ -506,16 +506,16 @@ class inscripcion(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['evento'] = self.evento
-        dict['cuadra'] = self.cuadras
-        dict['ejemplar'] =self.ejemplares
+        dict['evento'] = self.evento.nombre
+        dict['cuadra'] = self.cuadra.nombre
+
         dict['fecharegistro'] = str(self.fechaRegistro)
 
 
         return dict
 
     def __str__(self):
-        return self.evento.nombre + ' ' + self.cuadras.nombre
+        return self.evento.nombre + ' ' + self.cuadra.nombre
 
     def __unicode__(self):
-        return self.evento.nombre + ' ' + self.cuadras.nombre
+        return self.evento.nombre + ' ' + self.cuadra.nombre
