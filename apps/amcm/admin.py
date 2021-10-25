@@ -32,6 +32,17 @@ class TipoCuotaAdmin(admin.ModelAdmin):
         (('Tipo de Cuota'),
          {'fields': ('nombre', 'descripcion',)}),)
 
+# administrador tipo evento
+
+class TipoEventoAdmin(admin.ModelAdmin):
+    model = TipoEvento
+    #fields = ('nombre', 'descripcion',)
+    actions = None
+    list_per_page = 20
+    list_display = ('nombre', 'descripcion',)
+    fieldsets = (
+        (('Tipo de Evento'),
+         {'fields': ('nombre', 'descripcion',)}),)
 
 # Administrador para el catálogo Cuotas.
 
@@ -81,7 +92,7 @@ class EjemplarAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
     fieldsets = (
         (('Ejemplares'),
-         {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
 
 
 class EjemplarInlineAdmin(admin.StackedInline):
@@ -155,9 +166,18 @@ class EventoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
     fieldsets = (
         (('Evento'),
-         {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento', 'observaciones','descuento' )}),)
+         {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
 
 
+class InscripcionAdmin(admin.ModelAdmin):
+    model = inscripcion
+    actions = None
+    list_per_page = 20
+    list_display = ('evento', 'cuadra',  'ejemplar',)
+    fieldsets = (
+        (('Inscripción'),
+         {'fields': ('evento', 'cuadra', 'ejemplar',  'status', )}),)
+    exclude = ('fechaRegistro',)
 
 
 admin.site.register(Cuotas, CuotaAdmin)
@@ -173,6 +193,6 @@ admin.site.register(CuotaEvento)
 admin.site.register(RegistroCuotaEvento)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
-admin.site.register(TipoEvento)
+admin.site.register(TipoEvento, TipoEventoAdmin)
 
-admin.site.register(inscripcion)
+admin.site.register(inscripcion, InscripcionAdmin)

@@ -16,8 +16,6 @@ class Descuentos(models.Model):
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
     porcentaje = models.FloatField(verbose_name='Porcentaje', blank=False, null=False, default=0)
 
-
-
     class Meta:
         ordering = ['nombre']
         verbose_name = "Descuento"
@@ -171,7 +169,7 @@ class CondicionesEvento(models.Model):
     limite = models.ForeignKey('Limite', verbose_name='Limite', null=False, blank=False, on_delete=models.CASCADE,)
     tipoCondicion = models.ForeignKey('TipoCondicion', verbose_name="Tipo de Condición", null=False, blank=False, on_delete=models.CASCADE,)
     valor = models.FloatField(verbose_name="Valor", null=False, blank=False, default=0)
-    especificacion = models.CharField(verbose_name="Especificación de la Condición", null=False, blank=True, max_length = 500, )
+    especificacion = models.CharField(verbose_name="Especificación de la Condición", null=False, blank=True, max_length=500, )
     evento = models.ForeignKey('Evento', verbose_name='Evento', null=False, blank=False, on_delete=models.CASCADE,)
 
     class Meta:
@@ -223,8 +221,8 @@ class CuotaEvento(models.Model):
 #catalogo para tipoFechas
 
 class TipoFecha(models.Model):
-    nombre = models.CharField(verbose_name='Nombre', blank=False, null=False, max_length = 500 )
-    descripcion = models.CharField(verbose_name='Descripción', blank=False, null=False, max_length = 500 )
+    nombre = models.CharField(verbose_name='Nombre', blank=False, null=False, max_length=500,)
+    descripcion = models.CharField(verbose_name='Descripción', blank=False, null=False, max_length=500,)
 
     class Meta:
         verbose_name = "Tipo de Fecha del Evento"
@@ -318,11 +316,11 @@ class Nacionalidad(models.Model):
 
 # Modelo de Cuadras
 class Cuadras(models.Model):
-    nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False)
-    representante = models.CharField(verbose_name="Representante", max_length=100, null=False, blank=False)
+    nombre = models.CharField(verbose_name="Nombre", max_length=200, null=False, blank=False)
+    representante = models.CharField(verbose_name="Representante", max_length=150, null=False, blank=False)
     telefono = models.CharField(verbose_name="Teléfono", max_length=15, null=False, blank=False)
     celular = models.CharField(verbose_name="Celular", max_length=15, null=False, blank=False)
-    correoElectronico = models.CharField(verbose_name="Correo Electrónico", max_length=15, null=False, blank=False)
+    correoElectronico = models.CharField(verbose_name="Correo Electrónico", max_length=100, null=False, blank=False)
     observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
 
     class Meta:
@@ -395,7 +393,7 @@ class Ejemplares(models.Model):
 class Evento(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False)
     yardas = models.IntegerField(verbose_name="Distancia (yardas)", null=False, blank=False)
-    descripcion = models.CharField(verbose_name="Descripción", max_length=100, null=False, blank=False)
+    descripcion = models.CharField(verbose_name="Descripción", max_length=500, null=False, blank=False)
 
     bolsa = models.FloatField(verbose_name="Bolsa", null=False, blank=False)
     fondo = models.FloatField(verbose_name="Fondo",  null=False, blank=False)
@@ -444,7 +442,7 @@ class RegistroCuotaEvento(models.Model):
     ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
     cuotaEvento = models.ForeignKey(CuotaEvento, verbose_name='Cuotas', null=False, blank=False, on_delete=models.CASCADE,)
     fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
-    valorRecibido = models.CharField(verbose_name="Valor Recibido en", null=False, blank=False, max_length = 500 )
+    valorRecibido = models.CharField(verbose_name="Valor Recibido en", null=False, blank=False, max_length=500 )
 
     class Meta:
         ordering = ['evento']
@@ -506,11 +504,10 @@ class inscripcion(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['evento'] = self.evento.nombre
-        dict['cuadra'] = self.cuadra.nombre
-
+        dict['evento'] = self.evento
+        dict['cuadra'] = self.cuadra
+        dict['ejemplar'] =self.ejemplar
         dict['fecharegistro'] = str(self.fechaRegistro)
-
 
         return dict
 
