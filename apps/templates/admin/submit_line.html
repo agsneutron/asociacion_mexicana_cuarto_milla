@@ -12,7 +12,7 @@
     {% if show_save %}<button type="submit" value="" class="default btn btn-secondary" name="_save">{% translate 'Save' %}</button>{% endif %}
 {% if show_delete_link and original %}
     {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
-    <a href="{% add_preserved_filters delete_url %}" class="deletelink btn btn-danger">{% translate "Delete" %}</a>
+    <a href="{% add_preserved_filters delete_url %}" class="btn btn-danger">{% translate "Delete" %}</a>
 {% endif %}
 {% if show_save_as_new %}<button type="submit" value="" name="_saveasnew" class="btn btn-secondary">{% translate 'Save as new' %}</button>{% endif %}
 {% if show_save_and_add_another %}<button type="submit" value="" name="_addanother" class="btn btn-secondary">{% translate 'Save and add another' %}</button>{% endif %}
