@@ -480,9 +480,9 @@ class inscripcion(models.Model):
                                  chained_model_field="cuadra",
                                  show_all=False,
                                  auto_choose=False,
-                                 sort=True,
-                                 null=True,
-                                 blank=True,
+                                 #sort=True,
+                                 #null=True,
+                                 #blank=True,
                                  )
     #ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
     fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
