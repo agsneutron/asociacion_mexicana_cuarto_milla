@@ -89,7 +89,7 @@ class EjemplarAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
-    list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
+    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
     fieldsets = (
         (('Ejemplares'),
          {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -163,7 +163,7 @@ class EventoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
-    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
+    list_display = ('nombre', 'tipoEvento', 'yardas', 'bolsa', 'fondo', )
     fieldsets = (
         (('Evento'),
          {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
@@ -194,5 +194,4 @@ admin.site.register(RegistroCuotaEvento)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
-
 admin.site.register(inscripcion, InscripcionAdmin)

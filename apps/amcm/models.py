@@ -480,7 +480,7 @@ class inscripcion(models.Model):
                                  chained_model_field="cuadra",
                                  show_all=False,
                                  auto_choose=False,
-                                 #sort=True,
+                                 sort=True,
                                  #null=True,
                                  #blank=True,
                                  )
