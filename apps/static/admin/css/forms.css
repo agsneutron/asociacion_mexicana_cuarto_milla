@@ -493,7 +493,7 @@ body.popup .submit-row {
 }
 
 .empty-form {
-    display: none;
+    display: none !important;
 }
 
 /* RELATED FIELD ADD ONE / LOOKUP */
