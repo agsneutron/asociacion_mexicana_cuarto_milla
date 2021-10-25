@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <div class="card mb-4 mt-4">
-     <div class="card-header">
-                <h3 class="mb-0"> {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}</h3>
-              </div>
+        <div class="card-header">
+            <h3 class="mb-0"> {% if fieldset.name %}<h2>{{ fieldset.name }}</h2>{% endif %}</h3>
+        </div>
         <div class="card-body">
             <fieldset class="row {{ fieldset.classes }}">
 
@@ -15,8 +15,8 @@
                         {% if line.fields|length_is:'1' %}{{ line.errors }}{% endif %}
                         {% for field in line %}
                             <div class="form-group"{% if not line.fields|length_is:'1' %}
-                                class="fieldBox{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}"{% elif field.is_checkbox %}
-                                class="checkbox-row"{% endif %}>
+                                 class="fieldBox{% if field.field.name %} field-{{ field.field.name }}{% endif %}{% if not field.is_readonly and field.errors %} errors{% endif %}{% if field.field.is_hidden %} hidden{% endif %}"{% elif field.is_checkbox %}
+                                 class="checkbox-row"{% endif %}>
                                 {% if not line.fields|length_is:'1' and not field.is_readonly %}
                                     {{ field.errors }}{% endif %}
                                 {% if field.is_checkbox %}

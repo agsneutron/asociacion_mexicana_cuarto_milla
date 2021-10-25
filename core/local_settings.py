@@ -7,7 +7,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'amcm_db',
         'USER': 'root',
-        'PASSWORD': 'alex2727',
+        'PASSWORD': '',
         'HOST': '',
         'PORT': '',
     }
