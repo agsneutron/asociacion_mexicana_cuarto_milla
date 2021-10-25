@@ -187,10 +187,10 @@ class CondicionesEvento(models.Model):
         return dict
 
     def __str__(self):
-        return self.tipoCuota.nombre
+        return self.tipoCondicion.nombre
 
     def __unicode__(self):
-        return self.tipoCuota.nombre
+        return self.tipoCondicion.nombre
 
 
 #catalogo para cuotas de los eventos
@@ -403,7 +403,7 @@ class Evento(models.Model):
 
     tipoEvento = models.ForeignKey(TipoEvento, verbose_name="Tipo de Evento", null=False, blank=False, on_delete=models.CASCADE,)
     #fechasEvento = models.ForeignKey(FechasEvento, verbose_name="Fechas del Evento", null=False, blank=False, on_delete=models.CASCADE,)
-    descuento = models.ForeignKey(Descuentos, verbose_name="Descuento", null=False, blank=False, on_delete=models.CASCADE,)
+    descuento = models.ForeignKey(Descuentos, verbose_name="Descuento", null=True, blank=True, on_delete=models.CASCADE,)
     #condicionesEvento = models.ForeignKey(CondicionesEvento, verbose_name="Condiciones del Evento", null=False, blank=False, on_delete=models.CASCADE,)
 
     class Meta:
