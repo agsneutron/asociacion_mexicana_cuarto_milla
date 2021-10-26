@@ -8,6 +8,7 @@ from apps.amcm.models import *
 from apps.amcm import views
 from apps.amcm.forms import *
 from django.conf.urls import url
+from django.utils.html import format_html
 
 # Administrador para el catálogo Cuotas.
 
@@ -165,10 +166,35 @@ class EventoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
-    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
+    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link',)
     fieldsets = (
         (('Evento'),
          {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+
+    def changelist_view(self, request, extra_context=None):
+
+        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', )
+
+        return super(EventoAdmin, self).changelist_view(request, extra_context)
+
+
+    def ficha_link(self, obj):
+        return format_html(
+            '<a href="/indicadores/view/accion/{}/">{}. {}</a>',
+            obj.id,
+            obj.numero,
+            obj.nombre,
+
+        )
+    ficha_link.short_description = 'Acción'
+    ficha_link.allow_tags = True
+
+    def edit_link(self, obj):
+        return format_html('<a href="/admin/amcm/evento/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
+            obj.id,
+        )
+    edit_link.short_description = 'Editar'
+    edit_link.allow_tags = True
 
 # @admin.register(Evento)
 # class EventoAdmin(admin.ModelAdmin):
