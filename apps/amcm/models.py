@@ -515,7 +515,7 @@ class Pago(models.Model):
         return dict
 
     def __str__(self):
-        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre) + ' ' + str(self.numeroRecibo)
+        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre)
 
     def __unicode__(self):
-        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre) + ' ' + str(self.numeroRecibo)
+        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre)
