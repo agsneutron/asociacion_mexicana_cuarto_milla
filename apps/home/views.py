@@ -22,6 +22,9 @@ def index(request):
 def registro_pagos_view(request):
     return render(request, 'home/registro_pagos.html')
 
+def recibo_view(request):
+    return render(request, 'home/recibo.html')
+
 
 @login_required(login_url="/login/")
 def pages(request):

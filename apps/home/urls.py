@@ -8,11 +8,11 @@ from apps.home import views
 
 urlpatterns = [
     path('registro_pagos/', views.registro_pagos_view, name="registro_pagos"),
-
+    path('recibo/', views.recibo_view, name="recibo"),
     # The home page
     path('', views.index, name='home'),
 
     # Matches any html file
-    re_path(r'^.*\.*', views.pages, name='pages'),
+    # re_path(r'^.*\.*', views.pages, name='pages'),
 
 ]
