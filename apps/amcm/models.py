@@ -373,12 +373,12 @@ class Ejemplares(models.Model):
         dict['nombre'] = str(self.nombre)
         dict['edad'] = str(self.edad)
         dict['peso'] = str(self.peso)
-        dict['sexo'] = self.sexo
-        dict['nacionalidad'] = self.nacionalidad
+        dict['sexo'] = self.sexo.nombre
+        dict['nacionalidad'] = self.nacionalidad.nombre
         dict['color'] = str(self.color)
         dict['padre'] = str(self.padre)
         dict['madre'] = str(self.madre)
-        dict['cuadra'] = str(self.cuadra)
+        dict['cuadra'] = str(self.cuadra.nombre)
 
         return dict
 
@@ -476,14 +476,13 @@ class inscripcion(models.Model):
     evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
     ejemplar = ChainedForeignKey(Ejemplares,
-                                 chained_field="cuadra",
-                                 chained_model_field="cuadra",
-                                 show_all=False,
-                                 auto_choose=False,
-                                 sort=True,
-                                 #null=True,
-                                 #blank=True,
-                                 )
+                               chained_field="cuadra",
+                               chained_model_field="cuadra",
+                               show_all=False,
+                               auto_choose=True,
+                               sort=True,
+                               null=True,
+                               blank=True)
     #ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
     fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
 

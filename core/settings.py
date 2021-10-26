@@ -20,8 +20,9 @@ SECRET_KEY = 'h0c_&ivq(4q9qh2)lh7uko@ph6)ot89q2+bbt3$v$hq*8frfps'
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 # load production server from .env
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', config('SERVER', default='127.0.0.1')]
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','*', config('SERVER', default='127.0.0.1')]
+#USE_DJANGO_JQUERY = True
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Application definition
 
 INSTALLED_APPS = [
@@ -30,8 +31,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'smart_selects',
     'django.contrib.staticfiles',
+    'smart_selects',
     'apps.home',  # Enable the inner home (home)
     'apps.amcm'
 ]
@@ -51,6 +52,7 @@ ROOT_URLCONF = 'core.urls'
 LOGIN_REDIRECT_URL = "home"  # Route defined in home/urls.py
 LOGOUT_REDIRECT_URL = "home"  # Route defined in home/urls.py
 TEMPLATE_DIR = os.path.join(CORE_DIR, "apps/templates")  # ROOT dir for templates
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -129,9 +131,10 @@ STATICFILES_DIRS = (
     os.path.join(CORE_DIR, 'apps/static'),
 )
 
-# vida del token
-SESSION_COOKIE_AGE = 600
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+STATIC_FILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 
 #############################################################
