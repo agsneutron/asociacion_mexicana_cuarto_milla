@@ -485,7 +485,16 @@ class inscripcion(models.Model):
 # Modelo de Registro de Cuota de Evento
 class Pago(models.Model):
     inscripcion = models.ForeignKey(inscripcion, verbose_name="Inscripcion", null=False, blank=False, on_delete=models.CASCADE,)
-    cuota = models.ForeignKey(CuotaEvento, verbose_name="Cuota", null=False, blank=False, on_delete=models.CASCADE, )
+
+    cuota = ChainedForeignKey(CuotaEvento,
+                                 chained_field="inscripcion.evento",
+                                 chained_model_field="evento",
+                                 show_all=False,
+                                 auto_choose=True,
+                                 sort=True,
+                                 null=True,
+                                 blank=True)
+    #cuota = models.ForeignKey(CuotaEvento, verbose_name="Cuota", null=False, blank=False, on_delete=models.CASCADE, )
     cuotaPagada = models.FloatField(verbose_name='Cuota Recibida', null=False, blank=False,)
     cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
     conceptoPago = models.CharField(verbose_name="Concepto de Pago", null=False, blank=False, max_length=250,)
