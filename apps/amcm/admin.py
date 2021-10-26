@@ -92,7 +92,7 @@ class EjemplarAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
-    list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
+    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
     fieldsets = (
         (('Ejemplares'),
          {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -254,6 +254,7 @@ class InscripcionAdmin(admin.ModelAdmin):
     exclude = ('fechaRegistro',)
 
 
+
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
@@ -264,9 +265,8 @@ admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(CuotaEvento)
-admin.site.register(RegistroCuotaEvento)
+admin.site.register(Pago)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
-
 admin.site.register(inscripcion, InscripcionAdmin)

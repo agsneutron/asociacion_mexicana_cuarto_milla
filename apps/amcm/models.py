@@ -435,41 +435,6 @@ class Evento(models.Model):
         return self.nombre
 
 
-# Modelo de Registro de Evento
-class RegistroCuotaEvento(models.Model):
-    evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
-    cuadras = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
-    ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
-    cuotaEvento = models.ForeignKey(CuotaEvento, verbose_name='Cuotas', null=False, blank=False, on_delete=models.CASCADE,)
-    fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
-    valorRecibido = models.CharField(verbose_name="Valor Recibido en", null=False, blank=False, max_length=500 )
-
-    class Meta:
-        ordering = ['evento']
-        verbose_name = "Registro a Evento"
-        verbose_name_plural = "Registro a Evento"
-
-    def to_serializable_dict(self):
-        dict = model_to_dict(self)
-        dict['id'] = str(self.id)
-        dict['evento'] = self.evento
-        dict['cuadra'] = self.cuadras
-        dict['ejemplar'] =self.ejemplares
-        dict['cuotaevento'] = str(self.cuotaEvento)
-        dict['fecharegistro'] = str(self.fechaRegistro)
-        dict['valorrecibido'] = self.valorRecibido
-
-
-        # dics[''] = self.
-
-        return dict
-
-    def __str__(self):
-        return self.evento.nombre + ' ' + self.cuadras.nombre + ' ' + self.cuotaEvento
-
-    def __unicode__(self):
-        return self.evento.nombre + ' ' + self.cuadras.nombre + ' ' + self.cuotaEvento
-
 
 # Modelo de Registro de inscripción
 class inscripcion(models.Model):
@@ -516,3 +481,41 @@ class inscripcion(models.Model):
 
     def __unicode__(self):
         return self.evento.nombre + ' ' + self.cuadra.nombre
+
+# Modelo de Registro de Cuota de Evento
+class Pago(models.Model):
+    inscripcion = models.ForeignKey(inscripcion, verbose_name="Inscripcion", null=False, blank=False, on_delete=models.CASCADE,)
+    cuota = models.ForeignKey(CuotaEvento, verbose_name="Cuota", null=False, blank=False, on_delete=models.CASCADE, )
+    cuotaPagada = models.FloatField(verbose_name='Cuota Recibida', null=False, blank=False,)
+    cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
+    conceptoPago = models.CharField(verbose_name="Concepto de Pago", null=False, blank=False, max_length=250,)
+    fechaPago = models.DateField(auto_now=True, verbose_name='Fecha de Pago')
+    fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
+    numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)
+    valorRecibido = models.CharField(verbose_name="Valor Recibido en", null=False, blank=False, max_length=500 )
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Pago"
+        verbose_name_plural = "Pagos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['cuota'] = str(self.cuota)
+        dict['inscripcion'] = str(self.inscripcion)
+        dict['cuotaPagada'] = str(self.cuotaPagada)
+        dict['cuotaLetra'] = str(self.cuotaLetra)
+        dict['conceptoPago'] = str(self.conceptoPago)
+        dict['fechaPago'] = str(self.fechaPago)
+        dict['fechaRegistro'] = str(self.fechaRegistro)
+        dict['numeroRecibo'] = str(self.numeroRecibo)
+        dict['valorRecibido'] = str(self.valorRecibido)
+
+        return dict
+
+    def __str__(self):
+        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre) + ' ' + str(self.numeroRecibo)
+
+    def __unicode__(self):
+        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre) + ' ' + str(self.numeroRecibo)
