@@ -16,8 +16,6 @@ class Descuentos(models.Model):
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
     porcentaje = models.FloatField(verbose_name='Porcentaje', blank=False, null=False, default=0)
 
-
-
     class Meta:
         ordering = ['nombre']
         verbose_name = "Descuento"
@@ -375,12 +373,12 @@ class Ejemplares(models.Model):
         dict['nombre'] = str(self.nombre)
         dict['edad'] = str(self.edad)
         dict['peso'] = str(self.peso)
-        dict['sexo'] = self.sexo
-        dict['nacionalidad'] = self.nacionalidad
+        dict['sexo'] = self.sexo.nombre
+        dict['nacionalidad'] = self.nacionalidad.nombre
         dict['color'] = str(self.color)
         dict['padre'] = str(self.padre)
         dict['madre'] = str(self.madre)
-        dict['cuadra'] = str(self.cuadra)
+        dict['cuadra'] = str(self.cuadra.nombre)
 
         return dict
 
