@@ -8,7 +8,7 @@ from django.views.generic import ListView
 from apps.amcm.models import Evento
 import operator
 from django.db.models import Q
-from __future__ import unicode_literals
+
 from django.core.exceptions import PermissionDenied
 from functools import reduce
 
@@ -25,8 +25,8 @@ class EventoListView(ListView):
     #paginate_by = 10
 
     def get_queryset(self):
-        user_id = self.request.user.id
-        access_set = Evento.objects.filter(user_id=user_id)
+        #user_id = self.request.user.id
+        access_set = Evento.objects.all() #filter(user_id=user_id)
 
         eventos_array = []
         for access in access_set:
