@@ -180,6 +180,7 @@ class InscripcionAdmin(admin.ModelAdmin):
     exclude = ('fechaRegistro',)
 
 
+
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
@@ -190,7 +191,7 @@ admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(CuotaEvento)
-admin.site.register(RegistroCuotaEvento)
+admin.site.register(Pago)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
