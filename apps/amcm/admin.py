@@ -254,6 +254,13 @@ class InscripcionAdmin(admin.ModelAdmin):
     exclude = ('fechaRegistro',)
 
 
+class PagoAdmin(admin.ModelAdmin):
+    model = Pago
+    actions = None
+    list_per_page = 20
+    list_display = ('inscripcion', 'cuotaPagada', 'numeroRecibo')
+
+
 
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
@@ -265,7 +272,7 @@ admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(CuotaEvento)
-admin.site.register(Pago)
+admin.site.register(Pago, PagoAdmin)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
