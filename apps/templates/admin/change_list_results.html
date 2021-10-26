@@ -6,7 +6,7 @@
 {% endif %}
 {% if results %}
     <div class="table-responsive results">
-        <table id="result_list" class="table align-items-center ">
+        <table id="result_list" class="table align-items-center  mod-table">
             <thead>
             <tr>
                 {% for header in result_headers %}
@@ -28,7 +28,11 @@
                             <a href="{{ header.url_primary }}">{{ header.text|capfirst }}</a>{% else %}
                             <span>{{ header.text|capfirst }}</span>{% endif %}</div>
                         <div class="clear"></div>
-                    </th>{% endfor %}
+                    </th>
+
+                {% endfor %}
+             <th style="width: 30px !important; padding: 0 !important;text-align: center">Ver</th>
+            <th style="width: 30px !important; padding: 0 !important;text-align: center">Editar</th>
             </tr>
             </thead>
             <tbody>
@@ -36,10 +40,17 @@
                 {% if result.form and result.form.non_field_errors %}
                     <tr>
                         <td colspan="{{ result|length }}">{{ result.form.non_field_errors }}</td>
+
                     </tr>
                 {% endif %}
-                <tr>{% for item in result %}{{ item }}{% endfor %}</tr>
+                <tr>
+                    {% for item in result %}{{ item }}{% endfor %}
+                <td style="padding: 0 !important;text-align: center"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-eye"></i></button></td>
+                <td style="padding: 0 !important;text-align: center"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></td>
+                </tr>
+
             {% endfor %}
+
             </tbody>
         </table>
     </div>
