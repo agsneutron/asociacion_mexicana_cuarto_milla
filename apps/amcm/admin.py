@@ -5,7 +5,9 @@ Copyright (c) 2021 - AriSan - FusionTI
 
 from django.contrib import admin
 from apps.amcm.models import *
-
+from apps.amcm import views
+from apps.amcm.forms import *
+from django.conf.urls import url
 
 # Administrador para el catálogo Cuotas.
 
@@ -157,16 +159,62 @@ class FechasEventoInlineAdmin(admin.TabularInline):
 
 
 
+# class EventoAdmin(admin.ModelAdmin):
+#     model = Evento
+#     # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
+#     actions = None
+#     list_per_page = 20
+#     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
+#     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
+#     fieldsets = (
+#         (('Evento'),
+#          {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+
+@admin.register(Evento)
 class EventoAdmin(admin.ModelAdmin):
-    model = Evento
-    # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
-    actions = None
+    form = EventoForm
     list_per_page = 20
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
+
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
-    fieldsets = (
-        (('Evento'),
-         {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+    fieldsets = ((('Evento'), {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+
+
+
+    def get_form(self, request, obj=None, **kwargs):
+        ModelForm = super(EventoAdmin, self).get_form(request, obj, **kwargs)
+        # # get the foreign key field I want to restrict
+        # contractlineitem = ModelForm.base_fields['contractlineitem']
+        #
+        # # remove the green + and change icons by setting can_change_related and can_add_related to False on the widget
+        # contractlineitem.widget.can_add_related = False
+        # contractlineitem.widget.can_change_related = False
+
+        class ModelFormMetaClass(ModelForm):
+            def __new__(cls, *args, **kwargs):
+                kwargs['request'] = request
+                return ModelForm(*args, **kwargs)
+
+        return ModelFormMetaClass
+
+    def get_urls(self):
+        urls = super(EventoAdmin, self).get_urls()
+        info = self.model._meta.app_label, self.model._meta.model_name
+        my_urls = [
+            url(r'^$',
+                self.admin_site.admin_view(views.EventoListView.as_view()),
+                name='Evento-list-view'),
+            # url(r'^(?P<pk>\d+)/unlock$', views.unlock_estimate, name='estimate-detail'),
+            # url(r'^(?P<pk>\d+)/$', views.EstimateDetailView.as_view(), name='estimate-detail'),
+            # url(r'^(?P<pk>\d+)/delete/$', views.EstimateDelete.as_view(), name='estimate-delete'),
+            # url(r'^(?P<pk>\d+)/approve', views.approve_estimate_advance, name='estimate-advance-approve'),
+            # url(r'^apply_deductions_to_estimate', views.apply_deductions_to_estimate),
+            # url(r'^save_deductions_to_estimate', views.save_deductions_to_estimate),
+
+        ]
+
+        return my_urls + urls
+
 
 
 class InscripcionAdmin(admin.ModelAdmin):
@@ -187,7 +235,7 @@ admin.site.register(Sexo, SexoAdmin)
 admin.site.register(Nacionalidad, NacionalidadAdmin)
 admin.site.register(Cuadras, CuadraAdmin)
 admin.site.register(Ejemplares, EjemplarAdmin)
-admin.site.register(Evento, EventoAdmin)
+#admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(CuotaEvento)
 admin.site.register(RegistroCuotaEvento)
