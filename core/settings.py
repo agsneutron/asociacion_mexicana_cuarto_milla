@@ -23,6 +23,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['localhost', '127.0.0.1','*', config('SERVER', default='127.0.0.1')]
 #USE_DJANGO_JQUERY = True
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+SMART_SELECTS_USE_DJANGO_JQUERY = True
 # Application definition
 
 INSTALLED_APPS = [

@@ -258,7 +258,14 @@ class PagoAdmin(admin.ModelAdmin):
     model = Pago
     actions = None
     list_per_page = 20
-    list_display = ('inscripcion', 'cuotaPagada', 'numeroRecibo')
+    list_display = ('evento', 'cuadra', 'cuota')
+
+class ReciboAdmin(admin.ModelAdmin):
+    model = Recibo
+    actions = None
+    list_per_page = 20
+    list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones')
+
 
 
 
@@ -273,6 +280,7 @@ admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(CuotaEvento)
 admin.site.register(Pago, PagoAdmin)
+admin.site.register(Recibo, ReciboAdmin)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)

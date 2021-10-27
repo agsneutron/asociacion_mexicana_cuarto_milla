@@ -5,7 +5,7 @@ Copyright (c) 2021 - AriSan - FusionTI
 
 from django.db import models
 from django.forms.models import model_to_dict
-from smart_selects.db_fields import ChainedForeignKey
+from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField, GroupedForeignKey
 
 # Catalogs Models
 
@@ -484,24 +484,32 @@ class inscripcion(models.Model):
 
 # Modelo de Registro de Cuota de Evento
 class Pago(models.Model):
-    inscripcion = models.ForeignKey(inscripcion, verbose_name="Inscripcion", null=False, blank=False, on_delete=models.CASCADE,)
+    evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
 
     cuota = ChainedForeignKey(CuotaEvento,
-                                 chained_field="inscripcion.evento",
+                                 chained_field="evento",
                                  chained_model_field="evento",
                                  show_all=False,
                                  auto_choose=True,
                                  sort=True,
                                  null=True,
                                  blank=True)
-    #cuota = models.ForeignKey(CuotaEvento, verbose_name="Cuota", null=False, blank=False, on_delete=models.CASCADE, )
-    cuotaPagada = models.FloatField(verbose_name='Cuota Recibida', null=False, blank=False,)
-    cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
-    conceptoPago = models.CharField(verbose_name="Concepto de Pago", null=False, blank=False, max_length=250,)
-    fechaPago = models.DateField(auto_now=True, verbose_name='Fecha de Pago')
+
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE, )
+    ejemplar = ChainedManyToManyField(Ejemplares,
+                                 chained_field="cuadra",
+                                 chained_model_field="cuadra",
+                                 horizontal=False,
+                                 null=True,
+                                 blank=True)
+
+    cuotaPagada = models.FloatField(verbose_name='Monto Recibido', null=False, blank=False,)
+    #cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
+    conceptoPago = models.CharField(verbose_name="Concepto del Pago", null=False, blank=False, max_length=250,)
+    fechaPago = models.DateField(auto_now=True, verbose_name='Fecha del Pago')
     fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
-    numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)
-    valorRecibido = models.CharField(verbose_name="Valor Recibido en", null=False, blank=False, max_length=500 )
+    #numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)
+    valorRecibido = models.CharField(verbose_name="Valor Recibido En ...:", null=False, blank=False, max_length=500 )
 
     class Meta:
         #ordering = ['evento']
@@ -511,20 +519,48 @@ class Pago(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['cuota'] = str(self.cuota)
-        dict['inscripcion'] = str(self.inscripcion)
+        dict['cuota'] = str(self.cuota.tipoCuota.nombre)
+        dict['evento'] = str(self.evento.nombre)
         dict['cuotaPagada'] = str(self.cuotaPagada)
-        dict['cuotaLetra'] = str(self.cuotaLetra)
+        dict['cuotaLetra'] = ""
         dict['conceptoPago'] = str(self.conceptoPago)
         dict['fechaPago'] = str(self.fechaPago)
         dict['fechaRegistro'] = str(self.fechaRegistro)
-        dict['numeroRecibo'] = str(self.numeroRecibo)
         dict['valorRecibido'] = str(self.valorRecibido)
 
         return dict
 
     def __str__(self):
-        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre)
+        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre)
 
     def __unicode__(self):
-        return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre)
+        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre)
+
+
+
+
+# Modelo de Registro recibos
+class Recibo(models.Model):
+    pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE,)
+    numero_recibo = models.IntegerField(verbose_name= "Número de Recibo", null=False, blank=False, unique=True)
+    observaciones = models.CharField(verbose_name="Observaciones", null=True, blank=True, max_length=500 )
+    fecha_registro = models.DateField(auto_now=True, verbose_name='Fecha de registro')
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Recibo"
+        verbose_name_plural = "Recibos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['Pago'] = str(self.pago.evento.nombre) +' - ' +str(self.pago.cuota.tipoCuota.nombre)
+        dict['cuadra'] = str(self.pago.cuadra.nombre)
+
+        return dict
+
+    def __str__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+
+    def __unicode__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
