@@ -10,8 +10,8 @@ from apps.amcm.forms import *
 from django.conf.urls import url
 from django.utils.html import format_html
 
-# Administrador para el catálogo Cuotas.
 
+# Administrador para el catálogo Cuotas.
 class CuotaAdmin(admin.ModelAdmin):
     model = Cuotas
     #fields = ('nombre', 'descripcion', 'monto', 'tipoCuota')
@@ -24,7 +24,6 @@ class CuotaAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class TipoCuotaAdmin(admin.ModelAdmin):
     model = TipoCuota
     #fields = ('nombre', 'descripcion',)
@@ -35,8 +34,8 @@ class TipoCuotaAdmin(admin.ModelAdmin):
         (('Tipo de Cuota'),
          {'fields': ('nombre', 'descripcion',)}),)
 
-# administrador tipo evento
 
+# administrador tipo evento
 class TipoEventoAdmin(admin.ModelAdmin):
     model = TipoEvento
     #fields = ('nombre', 'descripcion',)
@@ -47,8 +46,8 @@ class TipoEventoAdmin(admin.ModelAdmin):
         (('Tipo de Evento'),
          {'fields': ('nombre', 'descripcion',)}),)
 
-# Administrador para el catálogo Cuotas.
 
+# Administrador para el catálogo Cuotas.
 class DescuentoAdmin(admin.ModelAdmin):
     model = Descuentos
     #fields = ('nombre', 'descripcion', 'porcentaje')
@@ -61,7 +60,6 @@ class DescuentoAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class SexoAdmin(admin.ModelAdmin):
     model = Sexo
     #fields = ('nombre',)
@@ -74,7 +72,6 @@ class SexoAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class NacionalidadAdmin(admin.ModelAdmin):
     model = Nacionalidad
     # fields = ('nombre', 'abreviatura')
@@ -133,7 +130,6 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
 
 
-
 class CondicionesEventoInlineAdmin(admin.TabularInline):
     model = CondicionesEvento
     fields = ('limite', 'tipoCondicion', 'valor', 'especificacion', )
@@ -146,7 +142,6 @@ class CondicionesEventoInlineAdmin(admin.TabularInline):
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
 
 
-
 class FechasEventoInlineAdmin(admin.TabularInline):
     model = FechasEvento
     fields = ('tipoFecha', 'fecha', 'evento' )
@@ -157,7 +152,6 @@ class FechasEventoInlineAdmin(admin.TabularInline):
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
-
 
 
 class EventoAdmin(admin.ModelAdmin):
@@ -176,7 +170,6 @@ class EventoAdmin(admin.ModelAdmin):
         self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', )
 
         return super(EventoAdmin, self).changelist_view(request, extra_context)
-
 
     def ficha_link(self, obj):
         return format_html(
@@ -204,7 +197,6 @@ class EventoAdmin(admin.ModelAdmin):
 #
 #     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
 #     fieldsets = ((('Evento'), {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
-#
 #
 #
 #     def get_form(self, request, obj=None, **kwargs):
@@ -242,7 +234,6 @@ class EventoAdmin(admin.ModelAdmin):
 #         return my_urls + urls
 
 
-
 class InscripcionAdmin(admin.ModelAdmin):
     model = inscripcion
     actions = None
@@ -259,7 +250,6 @@ class PagoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     list_display = ('inscripcion', 'cuotaPagada', 'numeroRecibo')
-
 
 
 admin.site.register(Cuotas, CuotaAdmin)

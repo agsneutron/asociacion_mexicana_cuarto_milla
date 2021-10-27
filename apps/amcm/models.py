@@ -318,10 +318,10 @@ class Nacionalidad(models.Model):
 class Cuadras(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=200, null=False, blank=False)
     representante = models.CharField(verbose_name="Representante", max_length=150, null=False, blank=False)
-    telefono = models.CharField(verbose_name="Teléfono", max_length=15, null=False, blank=False)
-    celular = models.CharField(verbose_name="Celular", max_length=15, null=False, blank=False)
-    correoElectronico = models.CharField(verbose_name="Correo Electrónico", max_length=100, null=False, blank=False)
-    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
+    telefono = models.CharField(verbose_name="Teléfono", max_length=15, null=False, blank=True)
+    celular = models.CharField(verbose_name="Celular", max_length=15, null=False, blank=True)
+    correoElectronico = models.CharField(verbose_name="Correo Electrónico", max_length=100, null=False, blank=True)
+    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=True)
 
     class Meta:
         ordering = ['nombre']
@@ -398,7 +398,7 @@ class Evento(models.Model):
     bolsa = models.FloatField(verbose_name="Bolsa", null=False, blank=False)
     fondo = models.FloatField(verbose_name="Fondo",  null=False, blank=False)
     temporada = models.IntegerField(verbose_name="Temporada",  null=False, blank=False)
-    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
+    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=True)
 
     tipoEvento = models.ForeignKey(TipoEvento, verbose_name="Tipo de Evento", null=False, blank=False, on_delete=models.CASCADE,)
     #fechasEvento = models.ForeignKey(FechasEvento, verbose_name="Fechas del Evento", null=False, blank=False, on_delete=models.CASCADE,)
