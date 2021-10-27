@@ -24,6 +24,18 @@ class CuotaAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
+class EstatusEjemplarAdmin(admin.ModelAdmin):
+    model = TipoCuota
+    #fields = ('nombre', 'descripcion',)
+    actions = None
+    list_per_page = 20
+    list_display = ('nombre', 'descripcion',)
+    fieldsets = (
+        (('Estatus dek Ejemplar'),
+         {'fields': ('nombre', 'descripcion',)}),)
+
+
+# Administrador para el catálogo Cuotas.
 class TipoCuotaAdmin(admin.ModelAdmin):
     model = TipoCuota
     #fields = ('nombre', 'descripcion',)
@@ -89,15 +101,15 @@ class EjemplarAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
-    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
+    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'estatus')
     fieldsets = (
         (('Ejemplares'),
-         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', 'estatus',)}),)
 
 
 class EjemplarInlineAdmin(admin.StackedInline):
     model = Ejemplares
-    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', )
+    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre','estatus', )
     actions = None
     extra = 1
     list_per_page = 20
@@ -252,6 +264,15 @@ class PagoAdmin(admin.ModelAdmin):
     list_display = ('inscripcion', 'cuotaPagada', 'numeroRecibo')
 
 
+class ReasignaEjemplarAdmin(admin.ModelAdmin):
+    model = ReasignaEjemplar
+    actions = None
+    list_per_page = 20
+    list_display = ('ejemplar', 'cuadra',)
+
+
+
+
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
@@ -267,3 +288,5 @@ admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
 admin.site.register(inscripcion, InscripcionAdmin)
+admin.site.register(EstatusEjemplar, EstatusEjemplarAdmin)
+admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)

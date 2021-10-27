@@ -36,7 +36,7 @@ class Descuentos(models.Model):
         return self.nombre
 
 
-#catalogo para tipo de cuotas
+#catalogo para tipo de evento
 class TipoEvento(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=True)
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
@@ -45,6 +45,30 @@ class TipoEvento(models.Model):
         ordering = ['nombre']
         verbose_name = "Tipo de Evento"
         verbose_name_plural = "Tipos de Evento"
+
+    def __str__(self):
+        return self.nombre
+
+    def __unicode__(self):
+        return self.nombre
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = str(self.nombre)
+        dict['descripcion'] = str(self.descripcion)
+        return dict
+
+
+#catalogo para estatus de ejemplares
+class EstatusEjemplar(models.Model):
+    nombre = models.CharField(verbose_name="Estatus", max_length=100, null=False, blank=False, unique=True)
+    descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = "Estatus de Ejemplar"
+        verbose_name_plural = "Estatus de Ejemplares"
 
     def __str__(self):
         return self.nombre
@@ -358,6 +382,7 @@ class Ejemplares(models.Model):
     color = models.CharField(verbose_name="Color", max_length=100, null=False, blank=False)
     padre = models.CharField(verbose_name="Padre del Caballo", max_length=100, null=False, blank=False)
     madre = models.CharField(verbose_name="Madre del Caballo", max_length=100, null=False, blank=False)
+    estatus = models.ForeignKey(EstatusEjemplar, verbose_name="Estatus del Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
     observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
 
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False,on_delete=models.CASCADE,)
@@ -379,6 +404,7 @@ class Ejemplares(models.Model):
         dict['padre'] = str(self.padre)
         dict['madre'] = str(self.madre)
         dict['cuadra'] = str(self.cuadra.nombre)
+        dict['estatus'] = str(self.estatus)
 
         return dict
 
@@ -519,3 +545,9 @@ class Pago(models.Model):
 
     def __unicode__(self):
         return str(self.inscripcion) + ' ' + str(self.cuota.tipoCuota.nombre)
+
+
+# modelo reasignacion de cuadra
+class ReasignaEjemplar(models.Model):
+    ejemplar =  models.ForeignKey(Ejemplares, verbose_name="Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
