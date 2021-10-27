@@ -10,8 +10,8 @@ from apps.amcm.forms import *
 from django.conf.urls import url
 from django.utils.html import format_html
 
-# Administrador para el catálogo Cuotas.
 
+# Administrador para el catálogo Cuotas.
 class CuotaAdmin(admin.ModelAdmin):
     model = Cuotas
     #fields = ('nombre', 'descripcion', 'monto', 'tipoCuota')
@@ -24,7 +24,18 @@ class CuotaAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
+class EstatusEjemplarAdmin(admin.ModelAdmin):
+    model = TipoCuota
+    #fields = ('nombre', 'descripcion',)
+    actions = None
+    list_per_page = 20
+    list_display = ('nombre', 'descripcion',)
+    fieldsets = (
+        (('Estatus dek Ejemplar'),
+         {'fields': ('nombre', 'descripcion',)}),)
 
+
+# Administrador para el catálogo Cuotas.
 class TipoCuotaAdmin(admin.ModelAdmin):
     model = TipoCuota
     #fields = ('nombre', 'descripcion',)
@@ -35,8 +46,8 @@ class TipoCuotaAdmin(admin.ModelAdmin):
         (('Tipo de Cuota'),
          {'fields': ('nombre', 'descripcion',)}),)
 
-# administrador tipo evento
 
+# administrador tipo evento
 class TipoEventoAdmin(admin.ModelAdmin):
     model = TipoEvento
     #fields = ('nombre', 'descripcion',)
@@ -47,8 +58,8 @@ class TipoEventoAdmin(admin.ModelAdmin):
         (('Tipo de Evento'),
          {'fields': ('nombre', 'descripcion',)}),)
 
-# Administrador para el catálogo Cuotas.
 
+# Administrador para el catálogo Cuotas.
 class DescuentoAdmin(admin.ModelAdmin):
     model = Descuentos
     #fields = ('nombre', 'descripcion', 'porcentaje')
@@ -61,7 +72,6 @@ class DescuentoAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class SexoAdmin(admin.ModelAdmin):
     model = Sexo
     #fields = ('nombre',)
@@ -74,7 +84,6 @@ class SexoAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class NacionalidadAdmin(admin.ModelAdmin):
     model = Nacionalidad
     # fields = ('nombre', 'abreviatura')
@@ -92,15 +101,15 @@ class EjemplarAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
-    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
+    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'estatus')
     fieldsets = (
         (('Ejemplares'),
-         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', 'estatus',)}),)
 
 
 class EjemplarInlineAdmin(admin.StackedInline):
     model = Ejemplares
-    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', )
+    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre','estatus', )
     actions = None
     extra = 1
     list_per_page = 20
@@ -133,7 +142,6 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
 
 
-
 class CondicionesEventoInlineAdmin(admin.TabularInline):
     model = CondicionesEvento
     fields = ('limite', 'tipoCondicion', 'valor', 'especificacion', )
@@ -146,7 +154,6 @@ class CondicionesEventoInlineAdmin(admin.TabularInline):
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
 
 
-
 class FechasEventoInlineAdmin(admin.TabularInline):
     model = FechasEvento
     fields = ('tipoFecha', 'fecha', 'evento' )
@@ -157,7 +164,6 @@ class FechasEventoInlineAdmin(admin.TabularInline):
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
-
 
 
 class EventoAdmin(admin.ModelAdmin):
@@ -176,7 +182,6 @@ class EventoAdmin(admin.ModelAdmin):
         self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', )
 
         return super(EventoAdmin, self).changelist_view(request, extra_context)
-
 
     def ficha_link(self, obj):
         return format_html(
@@ -204,7 +209,6 @@ class EventoAdmin(admin.ModelAdmin):
 #
 #     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
 #     fieldsets = ((('Evento'), {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
-#
 #
 #
 #     def get_form(self, request, obj=None, **kwargs):
@@ -242,7 +246,6 @@ class EventoAdmin(admin.ModelAdmin):
 #         return my_urls + urls
 
 
-
 class InscripcionAdmin(admin.ModelAdmin):
     model = inscripcion
     actions = None
@@ -268,6 +271,14 @@ class ReciboAdmin(admin.ModelAdmin):
 
 
 
+class ReasignaEjemplarAdmin(admin.ModelAdmin):
+    model = ReasignaEjemplar
+    actions = None
+    list_per_page = 20
+    list_display = ('ejemplar', 'cuadra',)
+
+
+
 
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
@@ -285,3 +296,5 @@ admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
 admin.site.register(inscripcion, InscripcionAdmin)
+admin.site.register(EstatusEjemplar, EstatusEjemplarAdmin)
+admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)
