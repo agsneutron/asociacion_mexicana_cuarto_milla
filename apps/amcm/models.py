@@ -557,10 +557,16 @@ class Pago(models.Model):
         return dict
 
     def __str__(self):
-        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre)
+        cadena=''
+        for obj in self.ejemplar.all():
+            cadena+=obj.nombre + ' '
+        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) + ' '+ cadena
 
     def __unicode__(self):
-        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre)
+        cadena = ''
+        for obj in self.ejemplar.all():
+            cadena += obj.nombre + ' '
+        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) +' ' + cadena
 
 
 

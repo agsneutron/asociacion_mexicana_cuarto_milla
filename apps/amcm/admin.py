@@ -172,14 +172,14 @@ class EventoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
-    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link',)
+    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
         (('Evento'),
          {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
 
     def changelist_view(self, request, extra_context=None):
 
-        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', )
+        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', 'pago_link',)
 
         return super(EventoAdmin, self).changelist_view(request, extra_context)
 
@@ -200,6 +200,13 @@ class EventoAdmin(admin.ModelAdmin):
         )
     edit_link.short_description = 'Editar'
     edit_link.allow_tags = True
+
+    def pago_link(self, obj):
+        return format_html('<a href="/admin/amcm/pago/?evento_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+            obj.id,
+        )
+    pago_link.short_description = 'Pagos'
+    pago_link.allow_tags = True
 
 # @admin.register(Evento)
 # class EventoAdmin(admin.ModelAdmin):
@@ -261,7 +268,21 @@ class PagoAdmin(admin.ModelAdmin):
     model = Pago
     actions = None
     list_per_page = 20
-    list_display = ('evento', 'cuadra', 'cuota')
+    list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
+
+    def edit_link(self, obj):
+        return format_html('<a href="/admin/amcm/pago/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
+            obj.id,
+        )
+    edit_link.short_description = 'Editar'
+    edit_link.allow_tags = True
+
+    def recibo_link(self, obj):
+        return format_html('<a href="/admin/amcm/recibo/add/?pago_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+            obj.id,
+        )
+    recibo_link.short_description = 'Recibos'
+    recibo_link.allow_tags = True
 
 class ReciboAdmin(admin.ModelAdmin):
     model = Recibo
