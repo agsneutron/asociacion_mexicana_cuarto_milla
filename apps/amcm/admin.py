@@ -137,6 +137,12 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = 20
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["tipoCuota"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -149,6 +155,15 @@ class CondicionesEventoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = 20
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["limite"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = formset.form.base_fields["tipoCondicion"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -160,6 +175,13 @@ class FechasEventoInlineAdmin(admin.TabularInline):
     actions = None
     extra = 0
     list_per_page = 20
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["tipoFecha"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
 
     # fieldsets = (
     #     (('Ejemplares'),
@@ -176,6 +198,20 @@ class EventoAdmin(admin.ModelAdmin):
     fieldsets = (
         (('Evento'),
          {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+
+
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(EventoAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['tipoEvento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['descuento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+        return form
+
 
     def changelist_view(self, request, extra_context=None):
 
@@ -297,8 +333,6 @@ class ReasignaEjemplarAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     list_display = ('ejemplar', 'cuadra',)
-
-
 
 
 admin.site.register(Cuotas, CuotaAdmin)

@@ -461,7 +461,6 @@ class Evento(models.Model):
         return self.nombre
 
 
-
 # Modelo de Registro de inscripción
 class inscripcion(models.Model):
     evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
