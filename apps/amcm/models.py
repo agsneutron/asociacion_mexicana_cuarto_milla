@@ -239,10 +239,10 @@ class CuotaEvento(models.Model):
         return dict
 
     def __str__(self):
-        return self.tipoCuota.nombre
+        return self.tipoCuota.nombre + ' - $ ' + str(self.monto)
 
     def __unicode__(self):
-        return self.tipoCuota.nombre
+        return self.tipoCuota.nombre + ' - $ ' + str(self.monto)
 
 
 #catalogo para tipoFechas
@@ -521,15 +521,17 @@ class Pago(models.Model):
                                  auto_choose=True,
                                  sort=True,
                                  null=True,
-                                 blank=True)
+                                 blank=True,
+                                )
 
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE, )
     ejemplar = ChainedManyToManyField(Ejemplares,
-                                 chained_field="cuadra",
-                                 chained_model_field="cuadra",
-                                 horizontal=False,
-                                 null=True,
-                                 blank=True)
+                                      chained_field="cuadra",
+                                      chained_model_field="cuadra",
+                                      horizontal=False,
+                                      null=True,
+                                      blank=True,
+                                      limit_choices_to={"estatus__nombre": 'ACTIVO'})
 
     cuotaPagada = models.FloatField(verbose_name='Monto Recibido', null=False, blank=False,)
     #cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)

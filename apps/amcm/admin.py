@@ -106,6 +106,23 @@ class EjemplarAdmin(admin.ModelAdmin):
         (('Ejemplares'),
          {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', 'estatus',)}),)
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(EjemplarAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['cuadra']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['sexo']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['nacionalidad']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['estatus']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+        return form
+
 
 class EjemplarInlineAdmin(admin.StackedInline):
     model = Ejemplares
@@ -113,6 +130,19 @@ class EjemplarInlineAdmin(admin.StackedInline):
     actions = None
     extra = 1
     list_per_page = 20
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["sexo"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = formset.form.base_fields["nacionalidad"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = formset.form.base_fields["estatus"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
 
     # fieldsets = (
     #     (('Ejemplares'),
@@ -307,6 +337,24 @@ class PagoAdmin(admin.ModelAdmin):
     list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'cuadra', 'ejemplar', 'cuotaPagada', 'estatus_credito','conceptoPago','valorRecibido','fechaPago')
 
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PagoAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['evento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['cuadra']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['cuota']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['ejemplar']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return form
+
+
     def edit_link(self, obj):
         return format_html('<a href="/admin/amcm/pago/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
             obj.id,
@@ -327,6 +375,17 @@ class ReciboAdmin(admin.ModelAdmin):
     list_per_page = 20
     list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones')
 
+    fields = (
+    'pago', 'numero_recibo', 'fecha_registro','observaciones')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(ReciboAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['pago']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+
+        return form
 
 
 class ReasignaEjemplarAdmin(admin.ModelAdmin):
