@@ -5,8 +5,11 @@ Copyright (c) 2021 - AriSan - FusionTI
 
 from django.db import models
 from django.forms.models import model_to_dict
-from smart_selects.db_fields import ChainedForeignKey
-
+from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField, GroupedForeignKey
+from django.utils.timezone import now
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db.models.query_utils import Q
 # Catalogs Models
 
 #catalogo para descuentos
@@ -36,7 +39,7 @@ class Descuentos(models.Model):
         return self.nombre
 
 
-#catalogo para tipo de cuotas
+#catalogo para tipo de evento
 class TipoEvento(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=True)
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
@@ -45,6 +48,30 @@ class TipoEvento(models.Model):
         ordering = ['nombre']
         verbose_name = "Tipo de Evento"
         verbose_name_plural = "Tipos de Evento"
+
+    def __str__(self):
+        return self.nombre
+
+    def __unicode__(self):
+        return self.nombre
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = str(self.nombre)
+        dict['descripcion'] = str(self.descripcion)
+        return dict
+
+
+#catalogo para estatus de ejemplares
+class EstatusEjemplar(models.Model):
+    nombre = models.CharField(verbose_name="Estatus", max_length=100, null=False, blank=False, unique=True)
+    descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = "Estatus de Ejemplar"
+        verbose_name_plural = "Estatus de Ejemplares"
 
     def __str__(self):
         return self.nombre
@@ -212,10 +239,10 @@ class CuotaEvento(models.Model):
         return dict
 
     def __str__(self):
-        return self.tipoCuota.nombre
+        return self.tipoCuota.nombre + ' - $ ' + str(self.monto)
 
     def __unicode__(self):
-        return self.tipoCuota.nombre
+        return self.tipoCuota.nombre + ' - $ ' + str(self.monto)
 
 
 #catalogo para tipoFechas
@@ -318,10 +345,10 @@ class Nacionalidad(models.Model):
 class Cuadras(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=200, null=False, blank=False)
     representante = models.CharField(verbose_name="Representante", max_length=150, null=False, blank=False)
-    telefono = models.CharField(verbose_name="Teléfono", max_length=15, null=False, blank=False)
-    celular = models.CharField(verbose_name="Celular", max_length=15, null=False, blank=False)
-    correoElectronico = models.CharField(verbose_name="Correo Electrónico", max_length=100, null=False, blank=False)
-    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
+    telefono = models.CharField(verbose_name="Teléfono", max_length=15, null=False, blank=True)
+    celular = models.CharField(verbose_name="Celular", max_length=15, null=False, blank=True)
+    correoElectronico = models.CharField(verbose_name="Correo Electrónico", max_length=100, null=False, blank=True)
+    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=True)
 
     class Meta:
         ordering = ['nombre']
@@ -358,6 +385,7 @@ class Ejemplares(models.Model):
     color = models.CharField(verbose_name="Color", max_length=100, null=False, blank=False)
     padre = models.CharField(verbose_name="Padre del Caballo", max_length=100, null=False, blank=False)
     madre = models.CharField(verbose_name="Madre del Caballo", max_length=100, null=False, blank=False)
+    estatus = models.ForeignKey(EstatusEjemplar, verbose_name="Estatus del Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
     observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
 
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False,on_delete=models.CASCADE,)
@@ -379,6 +407,7 @@ class Ejemplares(models.Model):
         dict['padre'] = str(self.padre)
         dict['madre'] = str(self.madre)
         dict['cuadra'] = str(self.cuadra.nombre)
+        dict['estatus'] = str(self.estatus)
 
         return dict
 
@@ -398,7 +427,7 @@ class Evento(models.Model):
     bolsa = models.FloatField(verbose_name="Bolsa", null=False, blank=False)
     fondo = models.FloatField(verbose_name="Fondo",  null=False, blank=False)
     temporada = models.IntegerField(verbose_name="Temporada",  null=False, blank=False)
-    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
+    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=True)
 
     tipoEvento = models.ForeignKey(TipoEvento, verbose_name="Tipo de Evento", null=False, blank=False, on_delete=models.CASCADE,)
     #fechasEvento = models.ForeignKey(FechasEvento, verbose_name="Fechas del Evento", null=False, blank=False, on_delete=models.CASCADE,)
@@ -433,42 +462,6 @@ class Evento(models.Model):
 
     def __unicode__(self):
         return self.nombre
-
-
-# Modelo de Registro de Evento
-class RegistroCuotaEvento(models.Model):
-    evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
-    cuadras = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
-    ejemplares = models.ManyToManyField(Ejemplares, verbose_name='Ejemplares', null=False, blank=False,)
-    cuotaEvento = models.ForeignKey(CuotaEvento, verbose_name='Cuotas', null=False, blank=False, on_delete=models.CASCADE,)
-    fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
-    valorRecibido = models.CharField(verbose_name="Valor Recibido en", null=False, blank=False, max_length=500 )
-
-    class Meta:
-        ordering = ['evento']
-        verbose_name = "Registro a Evento"
-        verbose_name_plural = "Registro a Evento"
-
-    def to_serializable_dict(self):
-        dict = model_to_dict(self)
-        dict['id'] = str(self.id)
-        dict['evento'] = self.evento
-        dict['cuadra'] = self.cuadras
-        dict['ejemplar'] =self.ejemplares
-        dict['cuotaevento'] = str(self.cuotaEvento)
-        dict['fecharegistro'] = str(self.fechaRegistro)
-        dict['valorrecibido'] = self.valorRecibido
-
-
-        # dics[''] = self.
-
-        return dict
-
-    def __str__(self):
-        return self.evento.nombre + ' ' + self.cuadras.nombre + ' ' + self.cuotaEvento
-
-    def __unicode__(self):
-        return self.evento.nombre + ' ' + self.cuadras.nombre + ' ' + self.cuotaEvento
 
 
 # Modelo de Registro de inscripción
@@ -516,3 +509,168 @@ class inscripcion(models.Model):
 
     def __unicode__(self):
         return self.evento.nombre + ' ' + self.cuadra.nombre
+
+# Modelo de Registro de Cuota de Evento
+class Pago(models.Model):
+    evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
+
+    cuota = ChainedForeignKey(CuotaEvento,
+                                 chained_field="evento",
+                                 chained_model_field="evento",
+                                 show_all=False,
+                                 auto_choose=True,
+                                 sort=True,
+                                 null=True,
+                                 blank=True,
+                                )
+
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE, )
+    ejemplar = ChainedManyToManyField(Ejemplares,
+                                      chained_field="cuadra",
+                                      chained_model_field="cuadra",
+                                      horizontal=False,
+                                      null=True,
+                                      blank=True,
+                                      limit_choices_to={"estatus__nombre": 'ACTIVO'})
+
+    cuotaPagada = models.FloatField(verbose_name='Monto Recibido', null=False, blank=False,)
+    #cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
+    conceptoPago = models.CharField(verbose_name="Concepto del Pago", null=False, blank=False, max_length=250,)
+    fechaPago = models.DateField(verbose_name='Fecha del Pago' ,null=True, blank=True, editable=True,default=now())
+    fechaRegistro = models.DateField(verbose_name='Fecha de Registro',null=False, blank=False, editable=True,default=now())
+    #numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)
+    valorRecibido = models.CharField(verbose_name="Valor Recibido En ...:", null=False, blank=False, max_length=500 )
+
+    PAGADO = 'PAGADO'
+    CREDITO = 'CREDITO'
+    PAGO_CHOICES = (
+        (PAGADO, 'PAGADO'),
+        (CREDITO, 'CREDITO'),
+    )
+    estatus_credito = models.CharField(max_length=15, choices=PAGO_CHOICES, default=PAGADO,
+                              verbose_name="Estatus del Pago")
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Pago"
+        verbose_name_plural = "Pagos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['cuota'] = str(self.cuota.tipoCuota.nombre)
+        dict['evento'] = str(self.evento.nombre)
+        dict['cuotaPagada'] = str(self.cuotaPagada)
+        dict['cuotaLetra'] = ""
+        dict['conceptoPago'] = str(self.conceptoPago)
+        dict['fechaPago'] = str(self.fechaPago)
+        dict['fechaRegistro'] = str(self.fechaRegistro)
+        dict['valorRecibido'] = str(self.valorRecibido)
+
+        return dict
+
+    def __str__(self):
+        cadena=''
+        for obj in self.ejemplar.all():
+            cadena+=obj.nombre + ' '
+        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) + ' '+ cadena
+
+    def __unicode__(self):
+        cadena = ''
+        for obj in self.ejemplar.all():
+            cadena += obj.nombre + ' '
+        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) +' ' + cadena
+
+
+@receiver(post_save, sender=Pago, dispatch_uid='save_credito')
+def save_credito(sender, instance, **kwargs):
+    print(instance)
+
+    try:
+        existe = Credito.objects.get(pago=instance)
+        if instance.estatus_credito=='PAGADO':
+            existe.pagado='SI'
+            existe.fecha_pago=now()
+            existe.save()
+    except Credito.DoesNotExist:
+        if instance.estatus_credito=='CREDITO':
+            credito = Credito(pago=instance, importe=instance.cuotaPagada, fecha_registro=now(), pagado='NO',fecha_pago=None)
+            credito.save()
+
+
+
+    #     project_section.save()
+    # # Creating the sections for each saved project.
+    # saved_section = Pago.objects.filter(Q(project=instance) & Q(section=section))
+    #
+    # # If no record was found for the specific section.
+    # if not saved_section.exists():
+    #     project_section = ProjectSections(project=instance, section=section, last_edit_date=now(), status=1)
+    #     print "Saving..."
+    #     project_section.save()
+
+# Modelo de Registro recibos
+class Recibo(models.Model):
+    pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE,)
+    numero_recibo = models.IntegerField(verbose_name= "Número de Recibo", null=False, blank=False, unique=True)
+    observaciones = models.CharField(verbose_name="Observaciones", null=True, blank=True, max_length=500 )
+    fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,default=now())
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Recibo"
+        verbose_name_plural = "Recibos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['Pago'] = str(self.pago.evento.nombre) +' - ' +str(self.pago.cuota.tipoCuota.nombre)
+        dict['cuadra'] = str(self.pago.cuadra.nombre)
+
+        return dict
+
+    def __str__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+
+    def __unicode__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+
+# modelo reasignacion de cuadra
+class ReasignaEjemplar(models.Model):
+    ejemplar =  models.ForeignKey(Ejemplares, verbose_name="Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
+
+# Modelo de Registro CRÉDITO
+class Credito(models.Model):
+    pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE,)
+    importe = models.FloatField(verbose_name='Importe', null=False, blank=False,)
+    fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,default=now())
+    fecha_pago = models.DateField(verbose_name='Fecha de pago', null=True, blank=True, editable=True,
+                                      default=now())
+    SI = 'SI'
+    NO = 'NO'
+    ESTATUS_CHOICES = (
+        (SI, 'SI'),
+        (NO, 'NO'),
+    )
+    pagado = models.CharField(max_length=15, choices=ESTATUS_CHOICES, default=NO,
+                                       verbose_name="Pagado?")
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Crédito"
+        verbose_name_plural = "Créditos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['Pago'] = str(self.pago.evento.nombre) +' - ' +str(self.pago.cuota.tipoCuota.nombre)
+        dict['cuadra'] = str(self.pago.cuadra.nombre)
+
+        return dict
+
+    def __str__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.pago.cuadra.nombre)
+
+    def __unicode__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.pago.cuadra.nombre)

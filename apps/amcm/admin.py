@@ -8,9 +8,10 @@ from apps.amcm.models import *
 from apps.amcm import views
 from apps.amcm.forms import *
 from django.conf.urls import url
+from django.utils.html import format_html
+
 
 # Administrador para el catálogo Cuotas.
-
 class CuotaAdmin(admin.ModelAdmin):
     model = Cuotas
     #fields = ('nombre', 'descripcion', 'monto', 'tipoCuota')
@@ -23,7 +24,18 @@ class CuotaAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
+class EstatusEjemplarAdmin(admin.ModelAdmin):
+    model = TipoCuota
+    #fields = ('nombre', 'descripcion',)
+    actions = None
+    list_per_page = 20
+    list_display = ('nombre', 'descripcion',)
+    fieldsets = (
+        (('Estatus dek Ejemplar'),
+         {'fields': ('nombre', 'descripcion',)}),)
 
+
+# Administrador para el catálogo Cuotas.
 class TipoCuotaAdmin(admin.ModelAdmin):
     model = TipoCuota
     #fields = ('nombre', 'descripcion',)
@@ -34,8 +46,8 @@ class TipoCuotaAdmin(admin.ModelAdmin):
         (('Tipo de Cuota'),
          {'fields': ('nombre', 'descripcion',)}),)
 
-# administrador tipo evento
 
+# administrador tipo evento
 class TipoEventoAdmin(admin.ModelAdmin):
     model = TipoEvento
     #fields = ('nombre', 'descripcion',)
@@ -46,8 +58,8 @@ class TipoEventoAdmin(admin.ModelAdmin):
         (('Tipo de Evento'),
          {'fields': ('nombre', 'descripcion',)}),)
 
-# Administrador para el catálogo Cuotas.
 
+# Administrador para el catálogo Cuotas.
 class DescuentoAdmin(admin.ModelAdmin):
     model = Descuentos
     #fields = ('nombre', 'descripcion', 'porcentaje')
@@ -60,7 +72,6 @@ class DescuentoAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class SexoAdmin(admin.ModelAdmin):
     model = Sexo
     #fields = ('nombre',)
@@ -73,7 +84,6 @@ class SexoAdmin(admin.ModelAdmin):
 
 
 # Administrador para el catálogo Cuotas.
-
 class NacionalidadAdmin(admin.ModelAdmin):
     model = Nacionalidad
     # fields = ('nombre', 'abreviatura')
@@ -91,18 +101,48 @@ class EjemplarAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
-    list_display = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color',)
+    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'estatus')
     fieldsets = (
         (('Ejemplares'),
-         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', 'estatus',)}),)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(EjemplarAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['cuadra']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['sexo']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['nacionalidad']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['estatus']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+        return form
 
 
 class EjemplarInlineAdmin(admin.StackedInline):
     model = Ejemplares
-    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', )
+    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre','estatus', )
     actions = None
     extra = 1
     list_per_page = 20
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["sexo"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = formset.form.base_fields["nacionalidad"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = formset.form.base_fields["estatus"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
 
     # fieldsets = (
     #     (('Ejemplares'),
@@ -127,10 +167,15 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = 20
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["tipoCuota"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
-
 
 
 class CondicionesEventoInlineAdmin(admin.TabularInline):
@@ -140,10 +185,18 @@ class CondicionesEventoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = 20
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["limite"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = formset.form.base_fields["tipoCondicion"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
-
 
 
 class FechasEventoInlineAdmin(admin.TabularInline):
@@ -153,10 +206,16 @@ class FechasEventoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = 20
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["tipoFecha"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
+
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
-
 
 
 class EventoAdmin(admin.ModelAdmin):
@@ -165,10 +224,55 @@ class EventoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
-    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
+    list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
         (('Evento'),
          {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+
+
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(EventoAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['tipoEvento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['descuento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+        return form
+
+
+    def changelist_view(self, request, extra_context=None):
+
+        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', 'pago_link',)
+
+        return super(EventoAdmin, self).changelist_view(request, extra_context)
+
+    def ficha_link(self, obj):
+        return format_html(
+            '<a href="/indicadores/view/accion/{}/">{}. {}</a>',
+            obj.id,
+            obj.numero,
+            obj.nombre,
+
+        )
+    ficha_link.short_description = 'Acción'
+    ficha_link.allow_tags = True
+
+    def edit_link(self, obj):
+        return format_html('<a href="/admin/amcm/evento/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
+            obj.id,
+        )
+    edit_link.short_description = 'Editar'
+    edit_link.allow_tags = True
+
+    def pago_link(self, obj):
+        return format_html('<a href="/admin/amcm/pago/?evento_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+            obj.id,
+        )
+    pago_link.short_description = 'Pagos'
+    pago_link.allow_tags = True
 
 # @admin.register(Evento)
 # class EventoAdmin(admin.ModelAdmin):
@@ -178,7 +282,6 @@ class EventoAdmin(admin.ModelAdmin):
 #
 #     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento',)
 #     fieldsets = ((('Evento'), {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
-#
 #
 #
 #     def get_form(self, request, obj=None, **kwargs):
@@ -216,7 +319,6 @@ class EventoAdmin(admin.ModelAdmin):
 #         return my_urls + urls
 
 
-
 class InscripcionAdmin(admin.ModelAdmin):
     model = inscripcion
     actions = None
@@ -226,6 +328,85 @@ class InscripcionAdmin(admin.ModelAdmin):
         (('Inscripción'),
          {'fields': ('evento', 'cuadra', 'ejemplar',  'status', )}),)
     exclude = ('fechaRegistro',)
+
+
+class PagoAdmin(admin.ModelAdmin):
+    model = Pago
+    actions = None
+    list_per_page = 20
+    list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
+    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', 'cuotaPagada', 'estatus_credito','conceptoPago','valorRecibido','fechaPago')
+
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(PagoAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['evento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['cuadra']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['cuota']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['ejemplar']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return form
+
+
+    def edit_link(self, obj):
+        return format_html('<a href="/admin/amcm/pago/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
+            obj.id,
+        )
+    edit_link.short_description = 'Editar'
+    edit_link.allow_tags = True
+
+    def recibo_link(self, obj):
+        return format_html('<a href="/admin/amcm/recibo/add/?pago_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+            obj.id,
+        )
+    recibo_link.short_description = 'Recibos'
+    recibo_link.allow_tags = True
+
+class ReciboAdmin(admin.ModelAdmin):
+    model = Recibo
+    actions = None
+    list_per_page = 20
+    list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
+
+    def edit_link(self, obj):
+        return format_html('<a href="/admin/amcm/recibo/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
+            obj.id,
+        )
+    edit_link.short_description = 'Editar'
+    edit_link.allow_tags = True
+
+    def recibo_link(self, obj):
+        return format_html('<a href="/amcm/get_recibo_pdf/?recibo_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+            obj.id,
+        )
+    recibo_link.short_description = 'Imprime'
+    recibo_link.allow_tags = True
+
+    fields = (
+    'pago', 'numero_recibo', 'fecha_registro','observaciones')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(ReciboAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['pago']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+
+        return form
+
+
+class ReasignaEjemplarAdmin(admin.ModelAdmin):
+    model = ReasignaEjemplar
+    actions = None
+    list_per_page = 20
+    list_display = ('ejemplar', 'cuadra',)
 
 
 admin.site.register(Cuotas, CuotaAdmin)
@@ -238,9 +419,11 @@ admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(CuotaEvento)
-admin.site.register(RegistroCuotaEvento)
+admin.site.register(Pago, PagoAdmin)
+admin.site.register(Recibo, ReciboAdmin)
 admin.site.register(Limite)
 admin.site.register(TipoCondicion)
 admin.site.register(TipoEvento, TipoEventoAdmin)
-
 admin.site.register(inscripcion, InscripcionAdmin)
+admin.site.register(EstatusEjemplar, EstatusEjemplarAdmin)
+admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)

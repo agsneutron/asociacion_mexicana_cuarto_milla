@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="canonical" href="https://appseed.us/admin-dashboards/django-dashboard-argon">
+
+    <title>
+        AMCM - {% block title %} Open-Source Admin Panel {% endblock %} | AppSeed
+    </title>
+
+
+    <!-- BLOQUE de scripts DJANGO -->
+    <!-- Argon CSS -->
+    <link rel="stylesheet" href="/static/assets/css/argon.css?v=1.2.0" type="text/css">
+    <style type="text/css">
+        @page {
+                size: letter portrait;
+
+                -webkit-print-color-adjust: exact;
+
+            table {
+                -pdf-keep-with-next: true;
+                height:100pt
+            }
+            @frame header_frame {           /* Static Frame */
+                    -pdf-frame-content: header_content;
+                    left: 50pt; width: 512pt; top: 90pt; height: 500pt;
+                }
+            @frame content_frame {          /* Content Frame */
+                     left: 50pt; width: 512pt; top: 120pt; height: 632pt;
+                }
+            @frame footer_frame {           /* Another static Frame */
+                    -pdf-frame-content: footer_content;
+                    left: 50pt; width: 512pt; top: 732pt; height: 300pt;
+            }
+        }
+        </style>
+
+</head>
+
+<body class="">
+
+    <div class="container-fluid my-3 py-3" id="content_frame">
+        <div class="row">
+            <div class="col-md-10 col-lg-8 col-sm-10 mx-auto">
+
+                <div style="width: 612px; height: 792px" class="border-danger">
+                    <div class="table-responsive">
+
+                        <table class="table text-right border" style="margin-bottom: 0px">
+                            <thead>
+                            <tr>
+                                <th colspan="2" scope="col" class="pe-2 text-center ps-2 p-0"
+                                    style="opacity:0;padding-top: 0.45rem !important;font-size: 13px;font-weight: bolder;width: 76%;    vertical-align: top;    line-height: 17px;padding-bottom: 0rem;">
+                                    Asociación Mexicana de Criadores y Caballistas<br>de Caballos Cuarto de Milla
+                                    A.C.<br><span><hr
+                                        style="border: 0;border-top: 1px ;margin: 0 10px;"></span></th>
+                                <th scope="col" class="pe-2 text-center ps-2 p-0"
+                                    style="padding-top: 0.55rem !important;font-size: 13px;font-weight: bold;padding-bottom: 0rem;    border: 0px ;">
+                                    <br><span style="    font-size: 18px;">53811</span></th>
+
+                            </tr>
+                            <tr>
+                                <th style="opacity:0;padding-left: 4px !important;font-size: 6px; vertical-align: top"
+                                    scope="col" class="text-left p-0">Av. del Conscripto Nº 311 Col. Lomas de
+                                    Sotelo,<br>Zona de caballerizas Int. del Hipódromo de las Américas<br> Delegación
+                                    Miguel Hidalgo. C.P. 11200. CDMX.<br>amccccm@yahoo.com.mx<br>www.amcm.com.mx
+                                </th>
+                                <th scope="col" class="text-right p-0"
+                                    style="opacity:0;padding-left: 13px !important;font-size: 6px; vertical-align: top">
+                                    Tels. (55)
+                                    5294-5283, 5294-5256<br> 5294-5246 Nº de fax (55) 5080-4035<br>9 a 15 hrs.
+                                </th>
+                                <th scope="col" class="text-center p-0"
+                                    style="    border: 0px ;padding-top: 10px !important;">
+                                    <span style="opacity:0;">Fecha</span><br>
+                                    <div style="width: 100%; display: flex;    border-top: 0px ;">
+                                        <span
+                                                style="width: 33.3%;font-size: 12px;height: 30px;">20<br><span
+                                                style="opacity:0;">Día</span></span><span
+                                            style="width: 33.3%;font-size: 12px;height: 30px;">10<br><span
+                                            style="opacity:0;">Mes</span></span><span
+                                            style="width: 33.3%;font-size: 12px;height: 30px;">2021<br><span
+                                            style="opacity:0;">Año</span></span>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="table text-right"
+                               style="border: 0px ;border-top: 0px ;    margin-bottom: 0;">
+                            <tbody>
+                            <tr align="left">
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Recibimos del Sr.
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    La cantidad de $
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Por concepto de:
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Valor recibido en:
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-left" style="padding-top: 10px; display: flex">
+                        <div style="text-align: left;margin-left: 100px;font-size: 13px;font-weight: 700;text-transform: uppercase;">
+                            Saldo por pagar
+                        </div>
+                        <div style="font-size: 20px;line-height: 18px;position: absolute;left: 517px;">
+                            <div style="position: relative;">61 <span style="font-size: 14px">$1,000</span></div>
+
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <hr style="border: 0;border-top: 1px ;margin: 0 140px;">
+                        <div style="opacity:0;font-size: 10px;line-height: 10px;">Firma de</div>
+                        <div style="opacity:0;font-size: 10px;">Asociación Mexicana de Criadores y Caballistas de
+                            Caballos Cuarto
+                            de Milla A.C.
+                        </div>
+                    </div>
+                    {#---------------- segundo bloque de recibo solo datos ------------------#}
+                    {#---------------- segundo bloque de recibo solo datos ------------------#}
+                    <div class="table-responsive" style="padding: 1.5rem 1.5rem 0 1.5rem;margin-top: 34px;">
+                        <table class="table text-right border" style="margin-bottom: 0px">
+                            <thead>
+                            <tr>
+                                <th colspan="2" scope="col" class="pe-2 text-center ps-2 p-0"
+                                    style="opacity:0;padding-top: 0.45rem !important;font-size: 13px;font-weight: bolder;width: 76%;    vertical-align: top;    line-height: 17px;padding-bottom: 0rem;">
+                                    Asociación Mexicana de Criadores y Caballistas<br>de Caballos Cuarto de Milla
+                                    A.C.<br><span><hr
+                                        style="border: 0;border-top: 1px ;margin: 0 10px;"></span></th>
+                                <th scope="col" class="pe-2 text-center ps-2 p-0"
+                                    style="padding-top: 0.55rem !important;font-size: 13px;font-weight: bold;padding-bottom: 0rem;    border: 0px ;">
+                                    <br><span style="    font-size: 18px;">53811</span></th>
+
+                            </tr>
+                            <tr>
+                                <th style="opacity:0;padding-left: 4px !important;font-size: 6px; vertical-align: top"
+                                    scope="col" class="text-left p-0">Av. del Conscripto Nº 311 Col. Lomas de
+                                    Sotelo,<br>Zona de caballerizas Int. del Hipódromo de las Américas<br> Delegación
+                                    Miguel Hidalgo. C.P. 11200. CDMX.<br>amccccm@yahoo.com.mx<br>www.amcm.com.mx
+                                </th>
+                                <th scope="col" class="text-right p-0"
+                                    style="opacity:0;padding-left: 13px !important;font-size: 6px; vertical-align: top">
+                                    Tels. (55)
+                                    5294-5283, 5294-5256<br> 5294-5246 Nº de fax (55) 5080-4035<br>9 a 15 hrs.
+                                </th>
+                                <th scope="col" class="text-center p-0"
+                                    style="    border: 0px ;padding-top: 10px !important;">
+                                    <span style="opacity:0;">Fecha</span><br>
+                                    <div style="width: 100%; display: flex;    border-top: 0px ;">
+                                        <span
+                                                style="width: 33.3%;font-size: 12px;height: 30px;">20<br><span
+                                                style="opacity:0;">Día</span></span><span
+                                            style="width: 33.3%;font-size: 12px;height: 30px;">10<br><span
+                                            style="opacity:0;">Mes</span></span><span
+                                            style="width: 33.3%;font-size: 12px;height: 30px;">2021<br><span
+                                            style="opacity:0;">Año</span></span>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="table text-right"
+                               style="border: 0px ;border-top: 0px ;    margin-bottom: 0;">
+                            <tbody>
+                            <tr align="left">
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Recibimos del Sr.
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    La cantidad de $
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Por concepto de:
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="opacity:0;font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Valor recibido en:
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;font-weight: 700;text-transform: uppercase;">
+                                    Dato dato
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-left" style="padding-top: 10px; display: flex">
+                        <div style="text-align: left;margin-left: 100px;font-size: 13px;opacity: 0">Saldo por pagar
+                        </div>
+                        <div style="font-size: 20px;line-height: 18px;position: absolute;left: 517px;">
+                            <div style="position: relative;">61 <span style="font-size: 14px">$1,000</span></div>
+                            <div style="position: absolute;margin-top: 10px;">61 <span
+                                    style="font-size: 14px">$500</span></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <hr style="border: 0;border-top: 1px ;margin: 0 140px;">
+                        <div style="opacity:0;font-size: 10px;line-height: 10px;">Firma de</div>
+                        <div style="opacity:0;font-size: 10px;">Asociación Mexicana de Criadores y Caballistas de
+                            Caballos Cuarto
+                            de Milla A.C.
+                        </div>
+                    </div>
+
+                    <div style="position: absolute;top: 0;z-index: -1;">
+                        <img src="/static/admin/img/recibohippodromo.jpg" class="img-fluid"
+                             style="width: 612px;height: 792px;opacity: .3;">
+                    </div>
+                </div>
+
+                <div style="width: 612px; height: 792px" class="border-danger d-none">
+                    <div class="table-responsive" style="    padding: 1.5rem 1.5rem 0 1.5rem;">
+                        <table class="table text-right border" style="margin-bottom: 0px">
+                            <thead>
+                            <tr>
+                                <th colspan="2" scope="col" class="pe-2 text-center ps-2 p-0"
+                                    style="padding-top: 0.45rem !important;font-size: 13px;font-weight: bolder;width: 76%;    vertical-align: top;    line-height: 17px;padding-bottom: 0rem;">
+                                    Asociación Mexicana de Criadores y Caballistas<br>de Caballos Cuarto de Milla
+                                    A.C.<br><span><hr
+                                        style="border: 0;border-top: 1px ;margin: 0 10px;"></span></th>
+                                <th scope="col" class="pe-2 text-center ps-2 p-0"
+                                    style="padding-top: 0.55rem !important;font-size: 13px;font-weight: bold;padding-bottom: 0rem;    border: 1px ;">
+                                    Recibo<br><span style="    font-size: 18px;">53811</span></th>
+
+                            </tr>
+                            <tr>
+                                <th style="padding-left: 4px !important;font-size: 6px; vertical-align: top"
+                                    scope="col" class="text-left p-0">Av. del Conscripto Nº 311 Col. Lomas de
+                                    Sotelo,<br>Zona de caballerizas Int. del Hipódromo de las Américas<br> Delegación
+                                    Miguel Hidalgo. C.P. 11200. CDMX.<br>amccccm@yahoo.com.mx<br>www.amcm.com.mx
+                                </th>
+                                <th scope="col" class="text-right p-0"
+                                    style="padding-left: 13px !important;font-size: 6px; vertical-align: top">Tels. (55)
+                                    5294-5283, 5294-5256<br> 5294-5246 Nº de fax (55) 5080-4035<br>9 a 15 hrs.
+                                </th>
+                                <th scope="col" class="text-center p-0"
+                                    style="    border: 1px ;padding-top: 10px !important;">
+                                    <span>Fecha</span><br>
+                                    <div style="width: 100%; display: flex;    border-top: 1px ;"><span
+                                            style="width: 33.3%;">20<br>Día</span><span
+                                            style="width: 33.3%;">10<br>Mes</span><span style="width: 33.3%;">2021<br>Año</span>
+                                    </div>
+                                </th>
+                            </tr>
+                            </thead>
+                        </table>
+                        <table class="table text-right"
+                               style="border: 1px ;border-top: 1px ;    margin-bottom: 0;">
+                            <tbody>
+                            <tr align="left">
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Recibimos del Sr.
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    1
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    La cantidad de $
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    1
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Por concepto de:
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    1
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;">
+                                    Valor recibido en:
+                                </td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    1
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-left pl-3 pr-0 py-0"
+                                    style="font-size: 0.671rem;text-align: left;width: 1%;white-space: nowrap;border-top: 1px ;border-bottom: 1px ;"></td>
+                                <td class="py-0 pl-0 pr-3"
+                                    style="font-size: 0.671rem;text-align: left;border-top: 1px ;border-bottom: 1px ;">
+                                    &nbsp;
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-left" style="padding-top: 10px; display: flex">
+                        <div style="text-align: left;margin-left: 115px;font-size: 14px;">Saldo por pagar</div>
+                        <div style="margin-left: 285px;font-size: 20px;line-height: 18px;">
+                            <div style="position: relative;">61 <span style="font-size: 14px">$1,000</span></div>
+                            <div style="position: absolute;margin-top: 10px;">61 <span
+                                    style="font-size: 14px">$500</span></div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <hr style="border: 0;border-top: 1px ;margin: 0 140px;">
+                        <div style="font-size: 10px;line-height: 10px;">Firma de</div>
+                        <div style="font-size: 10px;">Asociación Mexicana de Criadores y Caballistas de Caballos Cuarto
+                            de Milla A.C.
+                        </div>
+                    </div>
+                    <div style="position: absolute;top: 0;z-index: -1;">
+                        <img src="/static/admin/img/recibohippodromo.jpg" class="img-fluid"
+                             style="width: 612px;height: 792px;opacity: .3;">
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
