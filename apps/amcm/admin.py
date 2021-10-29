@@ -289,7 +289,21 @@ class ReciboAdmin(admin.ModelAdmin):
     model = Recibo
     actions = None
     list_per_page = 20
-    list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones')
+    list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
+
+    def edit_link(self, obj):
+        return format_html('<a href="/admin/amcm/recibo/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
+            obj.id,
+        )
+    edit_link.short_description = 'Editar'
+    edit_link.allow_tags = True
+
+    def recibo_link(self, obj):
+        return format_html('<a href="/amcm/get_recibo_pdf/?recibo_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+            obj.id,
+        )
+    recibo_link.short_description = 'Imprime'
+    recibo_link.allow_tags = True
 
 
 
