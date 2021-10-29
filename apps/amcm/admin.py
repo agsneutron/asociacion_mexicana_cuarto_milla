@@ -305,6 +305,7 @@ class PagoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
+    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', 'cuotaPagada', 'estatus_credito','conceptoPago','valorRecibido','fechaPago')
 
     def edit_link(self, obj):
         return format_html('<a href="/admin/amcm/pago/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',

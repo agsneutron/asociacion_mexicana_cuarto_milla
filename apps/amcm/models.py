@@ -6,7 +6,10 @@ Copyright (c) 2021 - AriSan - FusionTI
 from django.db import models
 from django.forms.models import model_to_dict
 from smart_selects.db_fields import ChainedForeignKey, ChainedManyToManyField, GroupedForeignKey
-
+from django.utils.timezone import now
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.db.models.query_utils import Q
 # Catalogs Models
 
 #catalogo para descuentos
@@ -531,10 +534,19 @@ class Pago(models.Model):
     cuotaPagada = models.FloatField(verbose_name='Monto Recibido', null=False, blank=False,)
     #cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
     conceptoPago = models.CharField(verbose_name="Concepto del Pago", null=False, blank=False, max_length=250,)
-    fechaPago = models.DateField(auto_now=True, verbose_name='Fecha del Pago')
-    fechaRegistro = models.DateField(auto_now=True, verbose_name='Fecha de Registro')
+    fechaPago = models.DateField(verbose_name='Fecha del Pago' ,null=True, blank=True, editable=True,default=now())
+    fechaRegistro = models.DateField(verbose_name='Fecha de Registro',null=False, blank=False, editable=True,default=now())
     #numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)
     valorRecibido = models.CharField(verbose_name="Valor Recibido En ...:", null=False, blank=False, max_length=500 )
+
+    PAGADO = 'PAGADO'
+    CREDITO = 'CREDITO'
+    PAGO_CHOICES = (
+        (PAGADO, 'PAGADO'),
+        (CREDITO, 'CREDITO'),
+    )
+    estatus_credito = models.CharField(max_length=15, choices=PAGO_CHOICES, default=PAGADO,
+                              verbose_name="Estatus del Pago")
 
     class Meta:
         #ordering = ['evento']
@@ -568,14 +580,39 @@ class Pago(models.Model):
         return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) +' ' + cadena
 
 
+@receiver(post_save, sender=Pago, dispatch_uid='save_credito')
+def save_credito(sender, instance, **kwargs):
+    print(instance)
 
+    try:
+        existe = Credito.objects.get(pago=instance)
+        if instance.estatus_credito=='PAGADO':
+            existe.pagado='SI'
+            existe.fecha_pago=now()
+            existe.save()
+    except Credito.DoesNotExist:
+        if instance.estatus_credito=='CREDITO':
+            credito = Credito(pago=instance, importe=instance.cuotaPagada, fecha_registro=now(), pagado='NO',fecha_pago=None)
+            credito.save()
+
+
+
+    #     project_section.save()
+    # # Creating the sections for each saved project.
+    # saved_section = Pago.objects.filter(Q(project=instance) & Q(section=section))
+    #
+    # # If no record was found for the specific section.
+    # if not saved_section.exists():
+    #     project_section = ProjectSections(project=instance, section=section, last_edit_date=now(), status=1)
+    #     print "Saving..."
+    #     project_section.save()
 
 # Modelo de Registro recibos
 class Recibo(models.Model):
     pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE,)
     numero_recibo = models.IntegerField(verbose_name= "Número de Recibo", null=False, blank=False, unique=True)
     observaciones = models.CharField(verbose_name="Observaciones", null=True, blank=True, max_length=500 )
-    fecha_registro = models.DateField(auto_now=True, verbose_name='Fecha de registro')
+    fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,default=now())
 
     class Meta:
         #ordering = ['evento']
@@ -600,3 +637,38 @@ class Recibo(models.Model):
 class ReasignaEjemplar(models.Model):
     ejemplar =  models.ForeignKey(Ejemplares, verbose_name="Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
+
+# Modelo de Registro CRÉDITO
+class Credito(models.Model):
+    pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE,)
+    importe = models.FloatField(verbose_name='Importe', null=False, blank=False,)
+    fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,default=now())
+    fecha_pago = models.DateField(verbose_name='Fecha de pago', null=True, blank=True, editable=True,
+                                      default=now())
+    SI = 'SI'
+    NO = 'NO'
+    ESTATUS_CHOICES = (
+        (SI, 'SI'),
+        (NO, 'NO'),
+    )
+    pagado = models.CharField(max_length=15, choices=ESTATUS_CHOICES, default=NO,
+                                       verbose_name="Pagado?")
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Crédito"
+        verbose_name_plural = "Créditos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['Pago'] = str(self.pago.evento.nombre) +' - ' +str(self.pago.cuota.tipoCuota.nombre)
+        dict['cuadra'] = str(self.pago.cuadra.nombre)
+
+        return dict
+
+    def __str__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.pago.cuadra.nombre)
+
+    def __unicode__(self):
+        return str(self.pago.evento.nombre) + ' ' + str(self.pago.cuadra.nombre)
