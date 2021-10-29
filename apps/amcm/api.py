@@ -11,7 +11,41 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 import xhtml2pdf.pisa as pisa
 from django.utils import timezone
-import io as StringIO
+import six as StringIO
+
+
+def html_to_pdf(content, output):
+    """
+    Generate a pdf using a string content
+
+    Parameters
+    ----------
+    content : str
+        content to write in the pdf file
+    output  : str
+        name of the file to create
+    """
+    # Open file to write
+    result_file = open(output, "w+b")  # w+b to write in binary mode.
+
+    # convert HTML to PDF
+    pisa_status = pisa.CreatePDF(
+        content,  # the HTML to convert
+        dest=result_file  # file handle to recieve result
+    )
+
+    # close output file
+    result_file.close()
+
+    result = pisa_status.err
+
+    if not result:
+        print("Successfully created PDF")
+    else:
+        print("Error: unable to create the PDF")
+
+        # return False on success and True on errors
+    return result
 
 class Render():
     @staticmethod
@@ -19,12 +53,12 @@ class Render():
         filename = 'dictamenFactibilidad.pdf'
         template = get_template(path)
         html = template.render(params)
-        response = io.StringIO()
+        response = io.buffer = BytesIO()
 
-        pdf = pisa.pisaDocument(io.StringIO(html.encode("UTF-8")), response, path=path)
+        #pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), response, path=path)
         #https://www.it-swarm-es.com/es/django/django-pisa-agregar-imagenes-pdf-salida/968337910/
 
-        #pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), response,link_callback=path)
+        pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), response,link_callback=path)
         if not pdf.err:
             response = HttpResponse(response.getvalue(), content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
@@ -46,6 +80,27 @@ class Render():
         pdf = pisa.pisaDocument(StringIO.StringIO(
             html.encode("UTF-8")), result)
         result.close()
+
+
+
+    @staticmethod
+    def from_template(template, output):
+        """
+        Generate a pdf from a html file
+
+        Parameters
+        ----------
+        source : str
+            content to write in the pdf file
+        output  : str
+            name of the file to create
+        """
+        # Reading our template
+        source_html = open(template, "r")
+        content = source_html.read()  # the HTML to convert
+        source_html.close()  # close template file
+
+        html_to_pdf(content, output)
 
 # ******************************************** renderear PDF ***********************************************
 
