@@ -44,3 +44,6 @@ text-align: center;
     color: #ff0000;
     padding-left: 10px !important;
 }
+td>p{
+    display:none
+}
