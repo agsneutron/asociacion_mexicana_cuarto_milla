@@ -121,7 +121,7 @@ USE_L10N = True
 USE_TZ = True
 
 # vida del token
-SESSION_COOKIE_AGE = 600
+SESSION_COOKIE_AGE = 60000
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 #############################################################
 # SRC: https://devcenter.heroku.com/articles/django-assets
