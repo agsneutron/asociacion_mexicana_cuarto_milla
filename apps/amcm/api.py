@@ -60,7 +60,7 @@ class Render():
         #pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), response, path=path)
         #https://www.it-swarm-es.com/es/django/django-pisa-agregar-imagenes-pdf-salida/968337910/
 
-        pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), response,link_callback=path)
+        pdf = pisa.CreatePDF(io.BytesIO(html.encode("UTF-8")), response,link_callback=path)
         if not pdf.err:
             response = HttpResponse(response.getvalue(), content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
