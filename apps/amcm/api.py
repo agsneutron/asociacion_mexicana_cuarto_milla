@@ -52,7 +52,7 @@ def html_to_pdf(content, output):
 class Render():
     @staticmethod
     def render(path, params):
-        filename = 'dictamenFactibilidad.pdf'
+        filename = 'recibo.pdf'
         template = get_template(path)
         html = template.render(params)
         response = io.buffer = BytesIO()
@@ -128,4 +128,4 @@ class GenerarReciboPDF(ListView):
 
 
 
-        return Render.render('amcm/recibo_PDF.html', params)
+        return Render.render('amcm/recibo.html', params)
