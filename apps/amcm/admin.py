@@ -263,9 +263,16 @@ class InscripcionAdmin(admin.ModelAdmin):
          {'fields': ('evento', 'cuadra', 'ejemplar',  'status', )}),)
     exclude = ('fechaRegistro',)
 
+class CuentasPagoInlineAdmin(admin.StackedInline):
+    model = CuentasPago
+    actions = None
+    extra = 1
+    list_per_page = 5
+
 
 class PagoAdmin(admin.ModelAdmin):
     model = Pago
+    inlines = [CuentasPagoInlineAdmin, ]
     actions = None
     list_per_page = 20
     list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
