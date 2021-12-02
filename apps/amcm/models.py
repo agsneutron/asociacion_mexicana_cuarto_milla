@@ -340,6 +340,29 @@ class Nacionalidad(models.Model):
     def __unicode__(self):
         return self.nombre
 
+# catalogo para cuentas contables
+class CuentasContables(models.Model):
+    codigo = models.IntegerField(verbose_name="Código", null=False, blank=False)
+    nombre = models.CharField(verbose_name="Nombre", max_length=200, null=False, blank=False, unique=True)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = "Cuenta Contable"
+        verbose_name_plural = "Cuentas Contables"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = str(self.nombre)
+        return dict
+
+    def __str__(self):
+        return self.nombre
+
+    def __unicode__(self):
+        return self.nombre
+
+
 
 # Modelo de Cuadras
 class Cuadras(models.Model):
@@ -581,7 +604,6 @@ class Pago(models.Model):
             cadena += obj.nombre + ' '
         return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) +' ' + cadena
 
-
 @receiver(post_save, sender=Pago, dispatch_uid='save_credito')
 def save_credito(sender, instance, **kwargs):
     print(instance)
@@ -608,6 +630,32 @@ def save_credito(sender, instance, **kwargs):
     #     project_section = ProjectSections(project=instance, section=section, last_edit_date=now(), status=1)
     #     print "Saving..."
     #     project_section.save()
+
+
+# catalogo para cuentas contables
+class CuentasPago(models.Model):
+    pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False,on_delete=models.CASCADE,)
+    cuenta = models.ForeignKey(CuentasContables, verbose_name="Cuenta Contable", null=False, blank=False,on_delete=models.CASCADE, )
+    importe = models.FloatField(verbose_name='Importe', blank=False, null=False, default=0)
+    fecha_registro = models.DateField(verbose_name='Fecha de Registro', null=False, blank=False, editable=True,default=now())
+
+
+    class Meta:
+        verbose_name = "Cuenta - Pago"
+        verbose_name_plural = "Cuentas - Pago"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['fecha_registro'] = str(self.fecha_registro)
+        return dict
+
+    def __str__(self):
+        return self.cuenta.nombre
+
+    def __unicode__(self):
+        return self.cuenta.nombre
+
 
 # Modelo de Registro recibos
 class Recibo(models.Model):
