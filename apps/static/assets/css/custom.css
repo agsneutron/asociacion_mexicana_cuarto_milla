@@ -47,3 +47,13 @@ text-align: center;
 td>p{
     display:none
 }
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.datetimeshortcuts{
+        position: absolute;
+    right: 28px;
+    top: 40px;
+}
