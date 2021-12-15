@@ -332,7 +332,7 @@ class InscripcionAdmin(admin.ModelAdmin):
 class CuentasPagoInlineAdmin(admin.StackedInline):
     model = CuentasPago
     actions = None
-    extra = 1
+    extra = 0
     list_per_page = 5
 
 
@@ -342,7 +342,7 @@ class PagoAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = 20
     list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
-    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', 'cuotaPagada', 'estatus_credito','conceptoPago','valorRecibido','fechaPago')
+    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago', 'estatus_credito',), ('fechaPago', 'valorRecibido',), )
 
 
     def get_form(self, request, obj=None, **kwargs):
@@ -375,6 +375,7 @@ class PagoAdmin(admin.ModelAdmin):
         )
     recibo_link.short_description = 'Recibos'
     recibo_link.allow_tags = True
+
 
 class ReciboAdmin(admin.ModelAdmin):
     model = Recibo
