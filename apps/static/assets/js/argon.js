@@ -1391,68 +1391,68 @@ var BarStackedChart = (function() {
 
 'use strict';
 
-var DatatableBasic = (function() {
+	var DatatableBasic = (function() {
 
-	// Variables
+		// Variables
 
-	var $dtBasic = $('#result_list');
-
-
-	// Methods
-
-	function init($this) {
-
-		// Basic options. For more options check out the Datatables Docs:
-		// https://datatables.net/manual/options
-
-		var options = {
+		var $dtBasic = $('#result_list');
 
 
-                bInfo: false,
-                pageLength: 5,
-                bLengthChange: false, //used to hide the property
-                language: {
-				paginate: {
-					previous: "<i class='fas fa-angle-left'>",
-					next: "<i class='fas fa-angle-right'>"
-				},
-                    "sProcessing": "Procesando...",
-                    "sLengthMenu": "Mostrar _MENU_ registros",
-                    "sZeroRecords": "No se encontraron resultados",
-                    "sEmptyTable": "NingÃºn dato disponible en esta tabla",
-                    "sInfo": "",
-                    "sInfoEmpty": "",
-                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-                    "sInfoPostFix": "",
-                    "sSearch": "Buscar:",
-                    "sUrl": "",
-                    "sInfoThousands": ",",
-                    "sLoadingRecords": "Cargando...",
-                    "oPaginate": {
-                        "sFirst": "Primero",
-                        "sLast": "Ãšltimo",
-                        "sNext": "Siguiente",
-                        "sPrevious": "Anterior"
-                    }
-                },
-		};
+		// Methods
 
-		// Init the datatable
+		function init($this) {
 
-		var table = $this.on( 'init.dt', function () {
-			$('div.dataTables_length select').removeClass('custom-select custom-select-sm');
+			// Basic options. For more options check out the Datatables Docs:
+			// https://datatables.net/manual/options
 
-	    }).DataTable(options);
-	}
+			var options = {
 
 
-	// Events
+					bInfo: false,
+					pageLength: 5,
+					bLengthChange: false, //used to hide the property
+					language: {
+					paginate: {
+						previous: "<i class='fas fa-angle-left'>",
+						next: "<i class='fas fa-angle-right'>"
+					},
+						"sProcessing": "Procesando...",
+						"sLengthMenu": "Mostrar _MENU_ registros",
+						"sZeroRecords": "No se encontraron resultados",
+						"sEmptyTable": "NingÃºn dato disponible en esta tabla",
+						"sInfo": "",
+						"sInfoEmpty": "",
+						"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix": "",
+						"sSearch": "Buscar:",
+						"sUrl": "",
+						"sInfoThousands": ",",
+						"sLoadingRecords": "Cargando...",
+						"oPaginate": {
+							"sFirst": "Primero",
+							"sLast": "Ãšltimo",
+							"sNext": "Siguiente",
+							"sPrevious": "Anterior"
+						}
+					},
+			};
 
-	if ($dtBasic.length) {
-		init($dtBasic);
-	}
+			// Init the datatable
 
-})();
+			var table = $this.on( 'init.dt', function () {
+				$('div.dataTables_length select').removeClass('custom-select custom-select-sm');
+
+			}).DataTable(options);
+		}
+
+
+		// Events
+
+		if ($dtBasic.length) {
+			init($dtBasic);
+		}
+
+	})();
 
 
 //

@@ -44,3 +44,16 @@ text-align: center;
     color: #ff0000;
     padding-left: 10px !important;
 }
+td>p{
+    display:none
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.datetimeshortcuts{
+        position: absolute;
+    right: 28px;
+    top: 40px;
+}

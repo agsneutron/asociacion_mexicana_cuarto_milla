@@ -27,8 +27,33 @@
                     {% if field.field.help_text %}
                         <div class="help">{{ field.field.help_text|safe }}</div>
                     {% endif %}
+
                 </div>
             {% endfor %}
+                {% if forloop.last %}
+                    <div class="">
+                        <p><strong>Monto por Pagar :</strong> </p>
+                        <p style="color: red;" id="totalpago"><strong>$ 0.00</strong></p>
+                    </div>
+                {% endif %}
         </div>
     {% endfor %}
 </fieldset>
+
+<script>
+
+    $(document).ready(function () {
+        var ejemplares = [];
+               $("#id_ejemplar").on('change', function(e) {
+
+                   var selected = $(e.target).val();
+                   alert(selected.length);
+
+                   var cuota =  $("#id_cuota option:selected" ).text();
+                   var indice = cuota.indexOf("$");
+                   var valor_cuota = cuota.substr(indice+1, cuota.length);
+                   alert(valor_cuota);
+                    document.getElementById("totalpago").innerText= "$ " + valor_cuota * selected.length ;
+               });
+            });
+</script>
