@@ -47,12 +47,12 @@
                $("#id_ejemplar").on('change', function(e) {
 
                    var selected = $(e.target).val();
-                   alert(selected.length);
+
 
                    var cuota =  $("#id_cuota option:selected" ).text();
                    var indice = cuota.indexOf("$");
                    var valor_cuota = cuota.substr(indice+1, cuota.length);
-                   alert(valor_cuota);
+
                     document.getElementById("totalpago").innerText= "$ " + valor_cuota * selected.length ;
                });
             });
