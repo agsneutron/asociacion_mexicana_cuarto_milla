@@ -113,7 +113,27 @@ class GenerarReciboPDF(ListView):
         anterior=False;
         recibo_id = request.GET.get('recibo_id')
         recibo = Recibo.objects.get(id=recibo_id)
-        saldo=recibo.pago.cuota.monto - recibo.pago.cuotaPagada
+        ejemplares=recibo.pago.ejemplar.all()
+        total_ejemplares=0
+        monto_pagado=0
+        for ejemplar in ejemplares:
+            total_ejemplares +=1
+        pagos = Pago.objects.filter(evento=recibo.pago.evento,cuota=recibo.pago.cuota,cuadra=recibo.pago.cuadra,id__lt=recibo.pago.id)
+        for pago in pagos:
+            if set(list(ejemplares)) == set(list(pago.ejemplar.all())):
+                monto_pagado += pago.cuotaPagada
+
+        arrCuentas=[]
+        cuentas = recibo.pago.cuentaspago_set.all()
+        for cuenta in cuentas:
+            cuenta_json={
+                'nombre':cuenta.cuenta.nombre,
+                'importe':'{:,.2f}'.format(cuenta.importe),
+                'codigo':cuenta.cuenta.codigo
+            }
+            arrCuentas.append(cuenta_json)
+
+        saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
 
         params = {
             'no_recibo': recibo.numero_recibo,
@@ -126,6 +146,7 @@ class GenerarReciboPDF(ListView):
             'concepto': recibo.pago.conceptoPago,
             'recibido_en': recibo.pago.valorRecibido,
             'saldo': 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo),
+            'cuentas':arrCuentas
             }
 
 
