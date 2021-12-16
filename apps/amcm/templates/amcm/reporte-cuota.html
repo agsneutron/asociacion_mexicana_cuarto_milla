@@ -4,23 +4,23 @@
 
 {% block content %}
 
-  <div class="header bg-primary pb-6">
+  <div class="header pb-6">
     <div class="container-fluid">
       <div class="header-body">
         <div class="row align-items-center py-4">
           <div class="col-lg-6 col-7">
-            <h6 class="h2 text-white d-inline-block mb-0">Cuotas</h6>
+            <h6 class="h2 d-inline-block mb-0">Reporte por Cuotas</h6>
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
               <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Tables</li>
+                <li class="breadcrumb-item"><a href="/amcm/reporte">Reportes por Eventos</a></li>
+                <li class="breadcrumb-item active" aria-current="page"></li>
               </ol>
             </nav>
           </div>
           <div class="col-lg-6 col-5 text-right">
-            <a href="#" class="btn btn-sm btn-neutral">New</a>
-            <a href="#" class="btn btn-sm btn-neutral">Filters</a>
+            <a href="#" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>
+{#            <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
           </div>
         </div>
       </div>
@@ -34,268 +34,145 @@
         <div class="card">
           <!-- Card header -->
           <div class="card-header border-0">
-            <h3 class="mb-0">FUTURITY</h3>
+            <h3 class="mb-0"></h3>
           </div>
           <!-- Light table -->
           <div class="table-responsive">
-            <table class="table align-items-center table-flush">
+            <table   class="table align-items-center table-flush">
               <thead class="thead-light">
-                <tr>
-                  <th scope="col" class="sort" data-sort="name" width="40%">Evento</th>
-                    <th scope="col" class="sort" data-sort="name">Temporada</th>
-                  <th scope="col" class="sort" data-sort="budget">Distancia</th>
-                  <th scope="col" class="sort" data-sort="status">Eliminatoria</th>
-                  <th scope="col">Final</th>
-                     <th scope="col">Cuotas</th>
-                  <th scope="col"></th>
+                <tr align="center">
+                  <th scope="col" class="sort" data-sort="name" colspan="3"><h3>{{ evento.nombre }}</h3></th>
+
                 </tr>
+                <tr align="center">
+                  <th scope="col" class="sort" data-sort="name" colspan="3">{{ evento.descripcion }}</th>
+
+                </tr>
+                <tr align="right">
+                  <th scope="col" class="sort" data-sort="name" colspan="3"><h4>DISTANCIA: {{ evento.yardas }} YARDAS</h4></th>
+
+                </tr>
+
+
+                {% for cuota in evento.cuotas_evento %}
+              <tr>
+                  <th scope="col" class="sort" data-sort="name" width="20%">&nbsp;</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%"> ${{ cuota.monto }}</th>
+                </tr>
+                {% endfor %}
+                <tr align="right">
+                  <th scope="col" class="sort" data-sort="name" colspan="3">&nbsp;</th>
+
+                </tr>
+                {% for fecha in evento.fechas_evento %}
+                <tr>
+                  <th scope="col" class="sort" data-sort="name" width="20%">&nbsp;</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%">{{ fecha.tipoFecha }}</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</th>
+                </tr>
+              {% endfor %}
+
               </thead>
               <tbody class="list">
-                {% for obj in futurity %}
+
                 <tr>
-                  <th scope="row">
-                    <div class="media align-items-center">
-{#                      <a href="#" class="avatar rounded-circle mr-3">#}
-{#                        <img alt="Image placeholder" src="/static/assets/img/theme/bootstrap.jpg">#}
-{#                      </a>#}
-                      <div class="media-body">
-                        <span class="name mb-0 text-sm">{{ obj.nombre }}</span>
-                      </div>
-                    </div>
-                  </th>
                     <td class="budget">
-                      {{ obj.temporada }}
                   </td>
                   <td class="budget">
-                      {{ obj.yardas }} yardas
                   </td>
                   <td>
-                    <span class="badge badge-dot mr-4">
-                      {% for inscripcion in obj.fechas_evento %}
-                          {% if inscripcion.tipoFecha == "ELIMINATORIA" %}
-                              <i class="bg-warning"></i>
-                                <span class="status">
-                                    {{ inscripcion.fecha }}<br/>
-                          {% endif %}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- Recibos por Cuadras -->
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header border-0">
+            <h3 class="mb-0"></h3>
+          </div>
+          <div class="table-responsive">
+
+              <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr align="center">
+                    <th scope="col" class="sort" data-sort="name" width="50%">&nbsp;</th>
+                    {% for cuota in cuotas %}
+                    <th scope="col" class="sort" data-sort="name">
+                        {{ cuota.tipoCuota }} <br/>
+                        {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>
+                       $ {{ cuota.monto }} <br/>
+                    </th>
+                    {% endfor %}
+                </tr>
+              </thead>
+              </table>
+
+          {% for obj in cuadras %}
+
+              <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort" data-sort="name" width="5%">
+                           &nbsp;
+                        </th>
+                        <th scope="col" class="sort" data-sort="name" width="50%">{{ obj.cuadra.nombre }}</th>
+                        <th scope="col" class="sort" data-sort="name">
+                            {{ obj.cuadra.telefono }}
+                        </th>
+                        <th scope="col" class="sort" data-sort="name">
+                            {{ obj.cuadra.representante }}
+                        </th>
+                        <th scope="col" class="sort" data-sort="name">
+                            {{ obj.cuadra.correoElectronico }}
+                        </th>
+                    </tr>
+                  </thead>
+                 <tbody class="list">
+              {% for ejemplar_obj in obj.ejemplares %}
+                <tr>
+                  <th scope="row">
+
+                      <div class="media align-items-center">
+                          <div class="media-body">
+                            <span class="name mb-0 text-sm">{{ ejemplar_obj.ejemplar.id }}</span>
+                          </div>
+                      </div>
+                  </th>
+                  <td class="budget">
+                      {{ ejemplar_obj.ejemplar.nombre }}
+                  </td>
+                  <td class="budget" style="text-align: left">
+                      {% for cuota_cuotas in ejemplar_obj.cuotas %}
+                          {% for recibo_obj in cuota_cuotas.recibo %}
+                              {{ recibo_obj.numero_recibo }}
+                          {% endfor %}
                       {% endfor %}
-                    </span>
                   </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-warning"></i>
-                      <span class="status">{% for inscripcion in obj.fechas_evento %} {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha }}{% endif %}{% endfor %}</span>
-                    </span>
-                  </td>
-                  <td>
-                    <a href="/reporte_cuota/?id={{ obj.id }}">
-                      <button type="button" class="btn btn-outline-secondary btn-sm">
-                          <i class="fas fa-file-invoice-dollar"></i>
-                      </button>
-                    </a>
-                  </td>
+              {% endfor %}
+          </tr>
 
-                  <td class="text-right">
-                    <div class="dropdown">
-                      <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                    {% endfor %}
               </tbody>
-            </table>
-          </div>
-          <!-- Card footer -->
-          <div class="card-footer py-4">
-            <nav aria-label="...">
-              <ul class="pagination justify-content-end mb-0">
-                <li class="page-item disabled">
-                  <a class="page-link" href="#" tabindex="-1">
-                    <i class="fas fa-angle-left"></i>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                </li>
-                <li class="page-item active">
-                  <a class="page-link" href="#">1</a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                  <a class="page-link" href="#">
-                    <i class="fas fa-angle-right"></i>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Derby table -->
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header border-0">
-            <h3 class="mb-0">DERBY</h3>
-          </div>
-          <div class="table-responsive">
-              <table class="table align-items-center table-flush">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col" class="sort" data-sort="name" width="40%">Evento</th>
-                    <th scope="col" class="sort" data-sort="name">Temporada</th>
-                  <th scope="col" class="sort" data-sort="budget">Distancia</th>
-                  <th scope="col" class="sort" data-sort="status">Eliminatoria</th>
-                  <th scope="col">Final</th>
-                    <th scope="col">Cuotas</th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="list">
-                {% for obj in derby %}
-                <tr>
-                  <th scope="row">
-                    <div class="media align-items-center">
-{#                      <a href="#" class="avatar rounded-circle mr-3">#}
-{#                        <img alt="Image placeholder" src="/static/assets/img/theme/bootstrap.jpg">#}
-{#                      </a>#}
-                      <div class="media-body">
-                        <span class="name mb-0 text-sm">{{ obj.nombre }}</span>
-                      </div>
-                    </div>
-                  </th>
-                    <td class="budget">
-                      {{ obj.temporada }}
-                  </td>
-                  <td class="budget">
-                      {{ obj.yardas }} yardas
-                  </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-warning"></i>
-                      <span class="status">{% for inscripcion in obj.fechas_evento %} {% if inscripcion.tipoFecha == "ELIMINATORIA" %} {{ inscripcion.fecha }} <br/>{% endif %}{% endfor %}</span>
-                    </span>
-                  </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-warning"></i>
-                      <span class="status">{% for inscripcion in obj.fechas_evento %} {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha }}{% endif %}{% endfor %}</span>
-                    </span>
-                  </td>
-                  <td>
-                      <button type="button" class="btn btn-outline-secondary btn-sm">
-                          <i class="fas fa-file-invoice-dollar"></i>
-                      </button>
+              </table>
+            {% endfor %}
 
-                  </td>
-                  <td class="text-right">
-                    <div class="dropdown">
-                      <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                    {% endfor %}
-              </tbody>
-            </table>
+
+
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Clasico table -->
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header border-0">
-            <h3 class="mb-0">CLASICO</h3>
-          </div>
-          <div class="table-responsive">
-              <table class="table align-items-center table-flush">
-              <thead class="thead-light">
-                <tr>
-                  <th scope="col" class="sort" data-sort="name" width="40%">Evento</th>
-                  <th scope="col" class="sort" data-sort="name">Temporada</th>
-                  <th scope="col" class="sort" data-sort="budget">Distancia</th>
-                  <th scope="col" class="sort" data-sort="status">Eliminatoria</th>
-                  <th scope="col">Final</th>
-                    <th scope="col">Cuotas</th>
-                  <th scope="col"></th>
-                </tr>
-              </thead>
-              <tbody class="list">
-                {% for obj in clasico %}
-                <tr>
-                  <th scope="row">
-                    <div class="media align-items-center">
-{#                      <a href="#" class="avatar rounded-circle mr-3">#}
-{#                        <img alt="Image placeholder" src="/static/assets/img/theme/bootstrap.jpg">#}
-{#                      </a>#}
-                      <div class="media-body">
-                        <span class="name mb-0 text-sm">{{ obj.nombre }}</span>
-                      </div>
-                    </div>
-                  </th>
-                    <td class="budget">
-                      {{ obj.temporada }}
-                  </td>
-                  <td class="budget">
-                      {{ obj.yardas }} yardas
-                  </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-warning"></i>
-                      <span class="status">{% for inscripcion in obj.fechas_evento %} {% if inscripcion.tipoFecha == "ELIMINATORIA" %} {{ inscripcion.fecha }}{% endif %}{% endfor %}</span>
-                    </span>
-                  </td>
-                  <td>
-                    <span class="badge badge-dot mr-4">
-                      <i class="bg-warning"></i>
-                      <span class="status">{% for inscripcion in obj.fechas_evento %} {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha }}{% endif %}{% endfor %}</span>
-                    </span>
-                  </td>
-                  <td>
-                      <button type="button" class="btn btn-outline-secondary btn-sm">
-                          <i class="fas fa-file-invoice-dollar"></i>
-                      </button>
 
-                  </td>
-                  <td class="text-right">
-                    <div class="dropdown">
-                      <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v"></i>
-                      </a>
-                      <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                    {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% include "includes/footer.html" %}
+        {% include "includes/footer.html" %}
 
   </div>
 

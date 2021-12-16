@@ -233,7 +233,7 @@ class CuotaEvento(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['fechaVencimiento'] = str(self.fechaVencimiento)
+        dict['fechaVencimiento'] = self.fechaVencimiento
         dict['monto'] = str(self.monto)
         dict['tipoCuota'] = self.tipoCuota
         return dict
@@ -284,7 +284,7 @@ class FechasEvento(models.Model):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
         dict['tipoFecha'] = str(self.tipoFecha)
-        dict['fecha'] = str(self.fecha)
+        dict['fecha'] = self.fecha
         return dict
 
     def __str__(self):
