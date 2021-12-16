@@ -58,6 +58,6 @@ td>p{
     right: 28px;
     top: 40px;
 }
-#result_list_two_wrapper{
-
+.inline-group .tabular tr.has_original td {
+    position: relative;
 }
