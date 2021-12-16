@@ -1392,14 +1392,107 @@ var BarStackedChart = (function() {
 'use strict';
 
 	var DatatableBasic = (function() {
-
 		// Variables
-
 		var $dtBasic = $('#result_list');
-
-
 		// Methods
+		function init($this) {
 
+			// Basic options. For more options check out the Datatables Docs:
+			// https://datatables.net/manual/options
+
+			var options = {
+					bInfo: false,
+					pageLength: 5,
+					bLengthChange: false, //used to hide the property
+					language: {
+					paginate: {
+						previous: "<i class='fas fa-angle-left'>",
+						next: "<i class='fas fa-angle-right'>"
+					},
+						"sProcessing": "Procesando...",
+						"sLengthMenu": "Mostrar _MENU_ registros",
+						"sZeroRecords": "No se encontraron resultados",
+						"sEmptyTable": "NingÃºn dato disponible en esta tabla",
+						"sInfo": "",
+						"sInfoEmpty": "",
+						"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix": "",
+						"sSearch": "Buscar:",
+						"sUrl": "",
+						"sInfoThousands": ",",
+						"sLoadingRecords": "Cargando...",
+						"oPaginate": {
+							"sFirst": "Primero",
+							"sLast": "Ãšltimo",
+							"sNext": "Siguiente",
+							"sPrevious": "Anterior"
+						}
+					},
+			};
+			// Init the datatable
+			var table = $this.on( 'init.dt', function () {
+				$('div.dataTables_length select').removeClass('custom-select custom-select-sm');
+
+			}).DataTable(options);
+		}
+		// Events
+		if ($dtBasic.length) {
+			init($dtBasic);
+		}
+
+		//
+// Datatable 2
+//
+var $dtBasicTwo = $('#result_list_two');
+		// Methods
+		function init($this) {
+			// Basic options. For more options check out the Datatables Docs:
+			// https://datatables.net/manual/options
+			var options = {
+					bInfo: false,
+					pageLength: 5,
+					bLengthChange: false, //used to hide the property
+					language: {
+					paginate: {
+						previous: "<i class='fas fa-angle-left'>",
+						next: "<i class='fas fa-angle-right'>"
+					},
+						"sProcessing": "Procesando...",
+						"sLengthMenu": "Mostrar _MENU_ registros",
+						"sZeroRecords": "No se encontraron resultados",
+						"sEmptyTable": "NingÃºn dato disponible en esta tabla",
+						"sInfo": "",
+						"sInfoEmpty": "",
+						"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+						"sInfoPostFix": "",
+						"sSearch": "Buscar:",
+						"sUrl": "",
+						"sInfoThousands": ",",
+						"sLoadingRecords": "Cargando...",
+						"oPaginate": {
+							"sFirst": "Primero",
+							"sLast": "Ãšltimo",
+							"sNext": "Siguiente",
+							"sPrevious": "Anterior"
+						}
+					},
+			};
+			// Init the datatable
+			var table = $this.on( 'init.dt', function () {
+				$('div.dataTables_length select').removeClass('custom-select custom-select-sm');
+
+			}).DataTable(options);
+		}
+		// Events
+		if ($dtBasicTwo.length) {
+			init($dtBasicTwo);
+		}
+
+		//
+// Datatable 3
+//
+		var $dtBasicThree = $('#result_list_Three');
+		// Methods
 		function init($this) {
 
 			// Basic options. For more options check out the Datatables Docs:
@@ -1444,15 +1537,24 @@ var BarStackedChart = (function() {
 
 			}).DataTable(options);
 		}
-
-
 		// Events
-
-		if ($dtBasic.length) {
-			init($dtBasic);
+		if ($dtBasicThree.length) {
+			init($dtBasicThree);
 		}
 
 	})();
+
+//
+// Datatable 2
+//
+
+
+
+	//
+// Datatable 2
+//
+
+
 
 
 //

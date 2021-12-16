@@ -4,6 +4,7 @@
 
 .breadcrumb {
     background-color: transparent;
+        margin-bottom: 0rem;
 }
 .navbar-vertical.navbar-expand-xs .navbar-nav .nav-link {
     padding: 0.675rem 1.1rem;
@@ -19,8 +20,8 @@
     margin-bottom: 75px;
 }
 #result_list_wrapper{
-    padding-left: 30px !important;
-    padding-right: 30px !important;
+    /*padding-left: 30px !important;*/
+    /*padding-right: 30px !important;*/
 }
 
 .dataTables_filter>label {
@@ -56,4 +57,7 @@ td>p{
         position: absolute;
     right: 28px;
     top: 40px;
+}
+#result_list_two_wrapper{
+
 }
