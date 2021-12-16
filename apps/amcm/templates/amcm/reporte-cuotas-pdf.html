@@ -164,251 +164,59 @@
 
     <table style="width: 100%;">
         <tr>
-            <td colspan="2" style="width: 80%;text-align: center">
-                <p style="font-size: 17px">Asociación Mexicana de Criadores y Caballistas<br>de Caballos Cuarto de Milla
-                    A.C.</p>
+            <td colspan="3" style="width: 100%;text-align: center">
+                <p style="font-size: 17px">{{ evento.nombre }}</p>
             </td>
-            <td style="width: 20%; text-align: center; border: 1px solid #000">
-                <p style="margin: 1px; font-size: 4px">.</p>
-                <p style="font-size: 12px; margin-top: 3px; margin-bottom: 0px">RECIBO</p>
-                <hr style="margin: 2px 0;">
-                <p style="margin-top: 10px; margin-bottom: 5px;font-size: 14px">{{ no_recibo }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <hr style="border: 0;border-top: 1px solid #000;">
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 35%;text-align: left">
-                <p style="font-size: 10px;line-height: 10px;">Av. del Conscripto Nº 311 Col. Lomas de
-                    Sotelo,<br>Zona de caballerizas Int. del Hipódromo de las Américas<br> Delegación
-                    Miguel Hidalgo. C.P. 11200. CDMX.<br>amccccm@yahoo.com.mx<br>www.amcm.com.mx</p>
-            </td>
-            <td style="width: 35%;text-align: right">
-                <p style="font-size: 10px;line-height: 10px; margin-right: 10px;">Tels. (55)
-                    5294-5283, 5294-5256<br> 5294-5246 Nº de fax (55) 5080-4035<br>9 a 15 hrs.</p>
-            </td>
-            <td style="width: 20%; text-align: center; border: 1px solid #000">
-                <p style="margin: 1px; font-size: 2px">.</p>
-                <span>Fecha</span><br>
-                <hr style="margin-top: 2px;margin-bottom: 2px;">
-                <table>
-                    <tr style="height: 5px">
-                        <td colspan="3" style="height: 5px"></td>
-                    </tr>
-                    <tr style="text-align: center;">
-                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">
-                            {{ dia }}</p>Día
-                        </td>
-                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">
-                            {{ mes }}</p>Mes
-                        </td>
-                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">
-                            {{ anio }}</p>Año
-                        </td>
-                    </tr>
-                </table>
 
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: center">
+                 <p style="font-size: 15px">{{ evento.descripcion }}</p>
             </td>
         </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: left">
+                <p style="font-size: 15px;line-height: 10px; text-align: right">DISTANCIA: {{ evento.yardas }} YARDAS</p>
+            </td>
+
+
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: left">
+                <p style="font-size: 15px;line-height: 10px; text-align: right">&nbsp;</p>
+            </td>
+
+
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: left">
+                <p style="font-size: 15px;line-height: 10px; text-align: right">&nbsp;</p>
+            </td>
+        </tr>
+
+         {% for cuota in evento.cuotas_evento %}
+              <tr>
+                  <td width="20%">&nbsp;</td>
+                  <td width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
+                  <td width="40%"> $ {{ cuota.monto }}</td>
+                </tr>
+                {% endfor %}
+                <tr align="right">
+                  <td scope="col" class="sort" data-sort="name" colspan="3">&nbsp;</td>
+
+                </tr>
+                {% for fecha in evento.fechas_evento %}
+                <tr>
+                  <td width="20%">&nbsp;</td>
+                  <td width="40%">{{ fecha.tipoFecha }}</td>
+                  <td width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</td>
+                </tr>
+              {% endfor %}
+
     </table>
     <br>
-    <table style="width: 100%;">
-        <tbody>
-        <tr style="border: 1px solid #000;">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Recibimos del Sr.: {{ usuario }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">La cantidad de: {{ importe }} {{ importe_letra }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Por concepto de: {{ concepto }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Valor recibido en: {{ recibido_en }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-    <table style="width: 100%;">
-        <tr>
-            <td style="width: 15%"></td>
-            <td style="width: 65%">
-                <table>
-                    <tr>
-                        <td style="width: 33%">{{ saldo }}</td>
-                        <td style="width: 33%"></td>
-                        <td style="width: 33%">
 
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">
-                            <hr>
-                        </td>
 
-                    </tr>
-                    <tr>
-                        <td colspan="3" style="text-align: center">Firma de<br>
-                            Asociación Mexicana de Criadores y Caballistas de Caballos Cuarto
-                            de Milla A.C.
-                        </td>
-                    </tr>
-                </table>
-            </td>
-            <td style="width: 20%">
-                <table>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
-
-                </table>
-            </td>
-        </tr>
-    </table>
-
-<br>
-    <br>
-    <br>
-    <br>
-<br>
-    <br>
-    <br>
-
-        <table style="width: 100%;">
-        <tr>
-            <td colspan="2" style="width: 80%;text-align: center">
-                <p style="font-size: 17px">Asociación Mexicana de Criadores y Caballistas<br>de Caballos Cuarto de Milla
-                    A.C.</p>
-            </td>
-            <td style="width: 20%; text-align: center; border: 1px solid #000">
-<p style="margin: 1px; font-size: 4px">.</p>
-                <p style="font-size: 12px; margin-top: 3px; margin-bottom: 0px">RECIBO</p>
-                <hr style="margin: 2px 0;">
-                <p style="margin-top: 10px; margin-bottom: 5px;font-size: 14px">{{ no_recibo }}</p>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <hr style="border: 0;border-top: 1px solid #000;">
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 35%;text-align: left">
-                <p style="font-size: 10px;line-height: 10px;">Av. del Conscripto Nº 311 Col. Lomas de
-                    Sotelo,<br>Zona de caballerizas Int. del Hipódromo de las Américas<br> Delegación
-                    Miguel Hidalgo. C.P. 11200. CDMX.<br>amccccm@yahoo.com.mx<br>www.amcm.com.mx</p>
-            </td>
-            <td style="width: 35%;text-align: right">
-                <p style="font-size: 10px;line-height: 10px; margin-right: 10px;">Tels. (55)
-                    5294-5283, 5294-5256<br> 5294-5246 Nº de fax (55) 5080-4035<br>9 a 15 hrs.</p>
-            </td>
-            <td style="width: 20%; text-align: center; border: 1px solid #000">
-                <p style="margin: 1px; font-size: 2px">.</p>
-                <span>Fecha</span><br>
-                <hr style="margin-top: 2px;margin-bottom: 2px;">
-                <table>
-                    <tr style="height: 5px">
-                        <td colspan="3" style="height: 5px"></td>
-                    </tr>
-                    <tr style="text-align: center;">
-                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">
-                            {{ dia }}</p>Día
-                        </td>
-                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">
-                            {{ mes }}</p>Mes
-                        </td>
-                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">
-                            {{ anio }}</p>Año
-                        </td>
-                    </tr>
-                </table>
-
-            </td>
-        </tr>
-    </table>
-    <br>
-    <table style="width: 100%;">
-        <tbody>
-        <tr style="border: 1px solid #000;">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Recibimos del Sr.: {{ usuario }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">La cantidad de: {{ importe }} {{ importe_letra }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Por concepto de: {{ concepto }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Valor recibido en: {{ recibido_en }}</p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        </tbody>
-    </table>
 
 
 </div>
