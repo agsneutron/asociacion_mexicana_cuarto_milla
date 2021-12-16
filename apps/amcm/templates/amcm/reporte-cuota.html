@@ -140,7 +140,7 @@
 {#                 {{ obj.ejemplares }}#}
               {% for ejemplar_obj in obj.ejemplares %}
                 <tr>
-                  <th scope="row">
+                  <th scope="col" width="5%">
 
                       <div class="media align-items-center">
                           <div class="media-body">
@@ -148,15 +148,15 @@
                           </div>
                       </div>
                   </th>
-                  <td class="budget">
+                  <td class="budget" width="50%">
                       {{ ejemplar_obj.ejemplar.nombre }}
                   </td>
 
 
                       {% for cuota_cuotas in ejemplar_obj.cuotas %}
-                        <td class="budget" style="text-align: left">
+                        <td scope="col" class="budget" style="text-align: left">
+                        &nbsp;
                           {% for recibo_obj in cuota_cuotas.recibo %}
-
                               {{ recibo_obj.numero_recibo }}
                           {% endfor %}
                            </td>
