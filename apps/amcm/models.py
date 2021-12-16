@@ -472,11 +472,29 @@ class Evento(models.Model):
         dict['temporada'] = str(self.temporada)
         dict['observaciones'] = self.observaciones
         dict['tipoEvento'] = self.tipoEvento
-        dict['fechaEvento'] = self.fechasEvento
+        #dict['fechaEvento'] = self.fechasEvento
         dict['descuento'] = self.descuento
 
-        #dics[''] = self.
+        # datos para el modelo de fechas
+        fechasevento = []
+        for obj in self.fechasevento_set.all():
+            det = obj.to_serializable_dict()
+            fechasevento.append(det)
+        dict['fechas_evento'] = fechasevento
 
+        # datos para el modelo de cuotas
+        cuotasevento = []
+        for obj in self.cuotaevento_set.all():
+            det = obj.to_serializable_dict()
+            cuotasevento.append(det)
+        dict['cuotas_evento'] = cuotasevento
+
+        # datos para el modelo de condiciones
+        condicionesevento = []
+        for obj in self.condicionesevento_set.all():
+            det = obj.to_serializable_dict()
+            condicionesevento.append(det)
+        dict['condiciones_evento'] = condicionesevento
 
         return dict
 
