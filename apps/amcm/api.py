@@ -206,18 +206,24 @@ class getReporteCuotas(ListView):
             cuadras_set = []
             i= 1
             #evento.append(all_evento.to_serializable_dict())
+            #obtener las cuotas asociadas al evento
             cuotas_evento = CuotaEvento.objects.filter(evento_id=obj.id).order_by('fechaVencimiento')
             for cuota in cuotas_evento:
                 cuotas_set.append(cuota.to_serializable_dict())
 
+            # los pagos asociados al evento
             all_pagos = Pago.objects.filter(Q(evento=obj.id))
+            # obtenener las cuadras distintas encontradas en los pagos
             cuadras_evento = Pago.objects.filter(Q(evento=obj.id)).values_list('cuadra', flat=True).distinct()
             for obj_cuadra in cuadras_evento:
                 cuadra = Cuadras.objects.get(id=obj_cuadra)
+                #por cada cuadra  obtengo los ejemplares para obtener los pagos de los ejemplares
                 cuadra_ejemplares = []
                 for pago_ejemplar in all_pagos:
                     ejemplar_pago_set = pago_ejemplar.ejemplar.all()
                     #cuadra_ejemplares = []
+
+                    #por cada ejemplar obtener los pagos y sus recibos
                     for ejemplar_object in ejemplar_pago_set:
                         ejemplar_recibos = []
                         for obj_cuota in cuotas_evento:
