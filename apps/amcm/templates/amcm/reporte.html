@@ -9,7 +9,7 @@
             <div class="header-body">
                 <div class="row align-items-center py-4">
                     <div class="col-lg-6 col-7">
-                        <h6 class="h2 d-inline-block mb-0">Reportes</h6>
+                        <h6 class="h2 d-inline-block mb-0">Reportes por Eventos</h6>
                         <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
@@ -37,7 +37,7 @@
                         <table class="table table-flush" id="result_list">
                             <thead class="thead-light">
                             <tr>
-                                <th>Evento</th>
+                                <th width="30%">Evento</th>
                                 <th>Temporada</th>
                                 <th>Distancia</th>
                                 <th>Eliminatoria</th>
@@ -59,7 +59,7 @@
                                               {% if inscripcion.tipoFecha == "ELIMINATORIA" %}
                                                   <i class="bg-warning"></i>
                                                   <span class="status">
-                                                        {{ inscripcion.fecha }}<br>
+                                                        {{ inscripcion.fecha|date:"d-m-Y" }}<br>
                                                   </span>
                                               {% endif %}
                                           {% endfor %}
@@ -69,13 +69,13 @@
                                        <span class="badge badge-dot mr-4">
                                         <i class="bg-warning"></i>
                                         <span class="status">{% for inscripcion in obj.fechas_evento %}
-                                            {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha }}
+                                            {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha|date:"d-m-Y" }}
                                             {% endif %}{% endfor %}
                                         </span>
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="/reporte-cuota/?id={{ obj.id }}">
+                                        <a href="/amcm/reporte-cuota/?id={{ obj.id }}">
                                             <button type="button" class="btn btn-outline-secondary btn-sm">
                                                 <i class="far fa-file-alt"></i>
                                             </button>
@@ -217,7 +217,7 @@
                         <table class="table table-flush" id="result_list_two">
                             <thead class="thead-light">
                             <tr>
-                                <th>Evento</th>
+                                <th width="40%">Evento</th>
                                 <th>Temporada</th>
                                 <th>Distancia</th>
                                 <th>Eliminatoria</th>
@@ -237,7 +237,7 @@
                        <span class="badge badge-dot mr-4">
                       <i class="bg-warning"></i>
                       <span class="status">{% for inscripcion in obj.fechas_evento %}
-                          {% if inscripcion.tipoFecha == "ELIMINATORIA" %} {{ inscripcion.fecha }} <br/>
+                          {% if inscripcion.tipoFecha == "ELIMINATORIA" %} {{ inscripcion.fecha|date:"d-m-Y" }} <br/>
                           {% endif %}{% endfor %}</span>
                     </span>
                                     </td>
@@ -245,14 +245,16 @@
                        <span class="badge badge-dot mr-4">
                       <i class="bg-warning"></i>
                       <span class="status">{% for inscripcion in obj.fechas_evento %}
-                          {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha }}
+                          {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha|date:"d-m-Y" }}
                           {% endif %}{% endfor %}</span>
                     </span>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm">
-                                            <i class="fas fa-file-invoice-dollar"></i>
-                                        </button>
+                                         <a href="/amcm/reporte-cuota/?id={{ obj.id }}">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm">
+                                                <i class="far fa-file-alt"></i>
+                                            </button>
+                                        </a>
                                     </td>
                                     <td>
                                         <div class="dropdown">
@@ -354,14 +356,14 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">CLASICO</h3>
+                        <h3 class="mb-0">CLÁSICOS</h3>
                     </div>
 
                     <div class="table-responsive py-4">
                         <table class="table table-flush" id="result_list_Three">
                             <thead class="thead-light">
                             <tr>
-                                <th>Evento</th>
+                                <th width="40%">Evento</th>
                                 <th>Temporada</th>
                                 <th>Distancia</th>
                                 <th>Eliminatoria</th>
@@ -381,7 +383,7 @@
                                      <span class="badge badge-dot mr-4">
                       <i class="bg-warning"></i>
                       <span class="status">{% for inscripcion in obj.fechas_evento %}
-                          {% if inscripcion.tipoFecha == "ELIMINATORIA" %} {{ inscripcion.fecha }}
+                          {% if inscripcion.tipoFecha == "ELIMINATORIA" %} {{ inscripcion.fecha|date:"d-m-Y" }}
                           {% endif %}{% endfor %}</span>
                     </span>
                                     </td>
@@ -389,14 +391,16 @@
                                      <span class="badge badge-dot mr-4">
                       <i class="bg-warning"></i>
                       <span class="status">{% for inscripcion in obj.fechas_evento %}
-                          {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha }}
+                          {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha|date:"d-m-Y" }}
                           {% endif %}{% endfor %}</span>
                     </span>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm">
-                                            <i class="fas fa-file-invoice-dollar"></i>
-                                        </button>
+                                         <a href="/amcm/reporte-cuota/?id={{ obj.id }}">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm">
+                                                <i class="far fa-file-alt"></i>
+                                            </button>
+                                        </a>
                                     </td>
                                     <td>
                                         <div class="dropdown">
