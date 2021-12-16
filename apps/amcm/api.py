@@ -180,12 +180,60 @@ class getReporteCuotas(ListView):
             idEvento = request.GET.get('id')
 
         try:
-            all_evento = Evento.objects.filter(id=idEvento)
-            evento = []
-            for obj in all_evento:
-                evento.append(obj.to_serializable_dict())
+            obj = Evento.objects.get(id=idEvento)
 
-            cuotas = []
+            cuotas_set = []
+            cuadras = []
+            ejemplar_recibos = []
+            cuadras_set = []
+            i= 1
+            #evento.append(all_evento.to_serializable_dict())
+            cuotas_evento = CuotaEvento.objects.filter(evento_id=obj.id).order_by('fechaVencimiento')
+            for cuota in cuotas_evento:
+                cuotas_set.append(cuota.to_serializable_dict())
+
+            all_pagos = Pago.objects.filter(Q(evento=obj.id))
+            cuadras_evento = Pago.objects.filter(Q(evento=obj.id)).values_list('cuadra', flat=True).distinct()
+            for obj_cuadra in cuadras_evento:
+                cuadra = Cuadras.objects.get(id=obj_cuadra)
+                cuadra_ejemplares = []
+                for pago_ejemplar in all_pagos:
+                    ejemplar_pago_set = pago_ejemplar.ejemplar.all()
+                    for ejemplar_object in ejemplar_pago_set:
+                        for obj_cuota in cuotas_evento:
+                            pago_cuota = Pago.objects.filter(Q(cuota = obj_cuota) & Q(estatus_cuota="PAGADO") & Q(cuadra = obj_cuadra) & Q(ejemplar = ejemplar_object)) #
+                            if pago_cuota:
+                                registro = {}
+                                ejemplar_recibos = []
+                                for ejemplar_cuota_pago in pago_cuota:
+                                    recibo_pago = Recibo.objects.filter(Q(pago=ejemplar_cuota_pago))
+                                    recibos = []
+                                    if recibo_pago:
+                                        for recibo in recibo_pago:
+                                            recibos.append(recibo.to_serializable_dict())
+                                    registro = {
+                                        #'cuadra' : cuadra,
+                                        'cuota': ejemplar_cuota_pago.cuota,
+                                        'recibo': recibos
+                                    }
+                                ejemplar_recibos.append(registro)
+                            else:
+                                registro = {
+                                    # 'cuadra' : cuadra,
+                                    'cuota': obj_cuota.to_serializable_dict(),
+                                    'recibo': []
+                                }
+                                ejemplar_recibos.append(registro)
+                            ejemplar = {
+                                'ejemplar': ejemplar_object.to_serializable_dict(),
+                                'cuotas': ejemplar_recibos
+                            }
+                        cuadra_ejemplares.append(ejemplar)
+                    cuadras_data = {
+                        'cuadra' : cuadra.to_serializable_dict(),
+                        'ejemplares' : cuadra_ejemplares
+                    }
+                    cuadras_set.append(cuadras_data)
 
         except Evento.DoesNotExist:
             return HttpResponse(
@@ -193,10 +241,11 @@ class getReporteCuotas(ListView):
                 'application/json; charset=utf-8')
 
         params = {
-            "evento": evento,
-            "cuotas": cuotas
+            "evento": obj.to_serializable_dict(),
+            "cuotas": cuotas_set,
+            "cuadras": cuadras_set
         }
-
+        print(params)
         # from django.template import loader
         # template = loader.get_template('ficha.html')
         # return HttpResponse(template.render(params, request))
