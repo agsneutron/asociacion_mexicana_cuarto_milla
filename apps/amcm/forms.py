@@ -28,18 +28,28 @@ class PagoForm(forms.ModelForm):
 
         estatus_cuota = True
         ejemplares = self.cleaned_data['ejemplar']
+        ejemplares_total=0
+        for ejemplar in ejemplares:
+            ejemplares_total+=1
 
         pagos = Pago.objects.filter(evento=self.cleaned_data['evento'],
                                     cuadra=self.cleaned_data['cuadra'],estatus_cuota='PENDIENTE').exclude(cuota=self.cleaned_data['cuota'])
+        monto_pagado=0
+        monto_cuota=0
+        nombre_cuota=''
         for pago in pagos:
             ejemplares_pago = pago.ejemplar.all()
             if set(list(ejemplares)) == set(list(ejemplares_pago)):
+                monto_cuota = pago.cuota.monto
+                nombre_cuota = pago.cuota.tipoCuota.nombre
+                monto_pagado+=pago.cuotaPagada
                 estatus_cuota=False
 
-
+        monto_a_pagar = (monto_cuota * ejemplares_total)
+        adeudo = monto_a_pagar-monto_pagado
         if estatus_cuota == False:
             self._errors["cuota"] = self.error_class(
-                ['no se puede pagar esta cuota, hay cuotas pendientes de pago'])
+                ['no se puede pagar esta cuota, la ' + nombre_cuota + ' tiene un pago pendiente de: $' + '{:,.2f}'.format(adeudo)])
             # self.fields['advance_payment_amount'].
             raise forms.ValidationError("Error")
 
