@@ -19,7 +19,7 @@
             </nav>
           </div>
           <div class="col-lg-6 col-5 text-right">
-            <a href="#" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>
+            <a href="/amcm/reporte-cuota-pdf/?id={{ evento.id }}" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>
 {#            <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
           </div>
         </div>
@@ -137,9 +137,10 @@
                     </tr>
                   </thead>
                  <tbody class="list">
+{#                 {{ obj.ejemplares }}#}
               {% for ejemplar_obj in obj.ejemplares %}
                 <tr>
-                  <th scope="row">
+                  <th scope="col" width="5%">
 
                       <div class="media align-items-center">
                           <div class="media-body">
@@ -147,16 +148,20 @@
                           </div>
                       </div>
                   </th>
-                  <td class="budget">
+                  <td class="budget" width="50%">
                       {{ ejemplar_obj.ejemplar.nombre }}
                   </td>
-                  <td class="budget" style="text-align: left">
+
+
                       {% for cuota_cuotas in ejemplar_obj.cuotas %}
+                        <td scope="col" class="budget" style="text-align: left">
+                        &nbsp;
                           {% for recibo_obj in cuota_cuotas.recibo %}
                               {{ recibo_obj.numero_recibo }}
                           {% endfor %}
+                           </td>
                       {% endfor %}
-                  </td>
+
               {% endfor %}
           </tr>
 

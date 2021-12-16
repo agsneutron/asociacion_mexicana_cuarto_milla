@@ -12,4 +12,5 @@ urlpatterns = [
     path('get_recibo_pdf/', api.GenerarReciboPDF.as_view(), name="recibo"),
     url(r'^reporte/', login_required(api.getReporteEventos.as_view())),
     url(r'^reporte-cuota/', login_required(api.getReporteCuotas.as_view())),
+    url(r'^reporte-cuota-pdf/', login_required(api.getReporteCuotasPDF.as_view())),
 ]
