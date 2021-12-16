@@ -457,6 +457,8 @@ class Evento(models.Model):
     descuento = models.ForeignKey(Descuentos, verbose_name="Descuento", null=True, blank=True, on_delete=models.CASCADE,)
     #condicionesEvento = models.ForeignKey(CondicionesEvento, verbose_name="Condiciones del Evento", null=False, blank=False, on_delete=models.CASCADE,)
 
+    elegibles_evento = models.ForeignKey('self', verbose_name='Elegibles de: ', null=True, blank=True,on_delete=models.CASCADE,)
+
     class Meta:
         ordering = ['nombre']
         verbose_name = "Evento"

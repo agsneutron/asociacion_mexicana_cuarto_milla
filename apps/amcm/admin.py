@@ -227,7 +227,7 @@ class EventoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
         (('Evento'),
-         {'fields': ('nombre', 'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+         {'fields': ('nombre','elegibles_evento' ,'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
 
 
 
@@ -370,9 +370,19 @@ class PagoAdmin(admin.ModelAdmin):
     edit_link.allow_tags = True
 
     def recibo_link(self, obj):
-        return format_html('<a href="/admin/amcm/recibo/add/?pago_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
-            obj.id,
-        )
+        try:
+            recibo = Recibo.objects.get(pago__id=obj.id)
+            return format_html(
+                '<a href="/amcm/get_recibo_pdf/?recibo_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-print"></i></button></a>',
+                recibo.id,
+                )
+
+        except Recibo.DoesNotExist:
+            return format_html(
+                '<a href="/admin/amcm/recibo/add/?pago_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+                obj.id,
+                )
+
     recibo_link.short_description = 'Recibos'
     recibo_link.allow_tags = True
 
@@ -397,7 +407,7 @@ class ReciboAdmin(admin.ModelAdmin):
     edit_link.allow_tags = True
 
     def recibo_link(self, obj):
-        return format_html('<a href="/amcm/get_recibo_pdf/?recibo_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+        return format_html('<a href="/amcm/get_recibo_pdf/?recibo_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fa fa-print"></i></button></a>',
             obj.id,
         )
     recibo_link.short_description = 'Imprime'
@@ -417,7 +427,7 @@ class ReciboAdmin(admin.ModelAdmin):
         if pago_id:
             pago = Pago.objects.filter(pk=pago_id)
         else:
-            pago = Pago.objects.all()
+            pago = Pago.objects.all().order_by('id')
         # self.fields['pago'].attrs['value'] = str(pago.id)
         field = form.base_fields['pago']
         field.queryset = pago
