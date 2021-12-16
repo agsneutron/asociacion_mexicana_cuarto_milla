@@ -337,7 +337,7 @@ class CuentasPagoInlineAdmin(admin.StackedInline):
 
 
 class PagoAdmin(admin.ModelAdmin):
-    model = Pago
+    form = PagoForm
     inlines = [CuentasPagoInlineAdmin, ]
     actions = None
     list_per_page = 20
@@ -375,6 +375,10 @@ class PagoAdmin(admin.ModelAdmin):
         )
     recibo_link.short_description = 'Recibos'
     recibo_link.allow_tags = True
+
+    def save_model(self, request, obj, form, change):
+        print("ok")
+        return super(PagoAdmin, self).save_model(request, obj, form, change)
 
 
 class ReciboAdmin(admin.ModelAdmin):

@@ -5,9 +5,9 @@ LOCAL_SETTINGS = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'amcm_db',
-        'USER': 'root',
-        'PASSWORD': '',
+        'NAME': 'fusionti_amcm_db',
+        'USER': 'fusionti_amcm_user',
+        'PASSWORD': 'lfcaeuNGTW#;',
         'HOST': '',
         'PORT': '',
     }

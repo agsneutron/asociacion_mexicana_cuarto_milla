@@ -569,6 +569,7 @@ class Pago(models.Model):
     ejemplar = ChainedManyToManyField(Ejemplares,
                                       chained_field="cuadra",
                                       chained_model_field="cuadra",
+                                      related_name='ejemplar_related_fields',
                                       horizontal=False,
                                       null=True,
                                       blank=True,
@@ -584,12 +585,20 @@ class Pago(models.Model):
 
     PAGADO = 'PAGADO'
     CREDITO = 'CREDITO'
+    PENDIENTE = 'PENDIENTE'
     PAGO_CHOICES = (
         (PAGADO, 'PAGADO'),
         (CREDITO, 'CREDITO'),
     )
     estatus_credito = models.CharField(max_length=15, choices=PAGO_CHOICES, default=PAGADO,
                               verbose_name="Estatus del Pago")
+
+    PAGO_CUOTA_CHOICES = (
+        (PAGADO, 'PAGADO'),
+        (PENDIENTE, 'PENDIENTE'),
+    )
+    estatus_cuota = models.CharField(max_length=15, choices=PAGO_CUOTA_CHOICES, default=PAGADO,
+                                       verbose_name="Estatus de Pago de Cuota")
 
     class Meta:
         #ordering = ['evento']
@@ -622,10 +631,16 @@ class Pago(models.Model):
             cadena += obj.nombre + ' '
         return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) +' ' + cadena
 
+    def save(self, *args, **kwargs):
+        canSave = True
+
+        super(Pago, self).save(*args, **kwargs)
+
+
+
 @receiver(post_save, sender=Pago, dispatch_uid='save_credito')
 def save_credito(sender, instance, **kwargs):
     print(instance)
-
     try:
         existe = Credito.objects.get(pago=instance)
         if instance.estatus_credito=='PAGADO':
