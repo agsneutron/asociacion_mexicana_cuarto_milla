@@ -276,7 +276,7 @@ class getReporteCuotas(ListView):
         # template = loader.get_template('ficha.html')
         # return HttpResponse(template.render(params, request))
 
-        return render(request, 'amcm/reporte-cuota.html', params)
+        return render(request, 'amcm/reporte_cuota.html', params)
 
 
 class getReporteCuotasPDF(ListView):
@@ -358,4 +358,4 @@ class getReporteCuotasPDF(ListView):
             "mensaje": "success"
         }
 
-        return Render.renderCuota('amcm/reporte-cuota-pdf.html', params)
+        return Render.renderCuota('amcm/reporte_cuota_pdf.html', params)
