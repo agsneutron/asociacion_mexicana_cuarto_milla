@@ -349,7 +349,7 @@ class getReporteCuotasPDF(ListView):
                 "cuadras": [],
                 "mensaje": "No fue posible generar el reporte"
             }
-            return Render.render('amcm/reporte-cuota-pdf.html', params)
+            return Render.render('amcm/reporte_cuotas_pdf.html', params)
 
         params = {
             "evento": obj.to_serializable_dict(),
@@ -358,4 +358,4 @@ class getReporteCuotasPDF(ListView):
             "mensaje": "success"
         }
 
-        return Render.renderCuota('amcm/reporte_cuota_pdf.html', params)
+        return Render.renderCuota('amcm/reporte_cuotas_pdf.html', params)

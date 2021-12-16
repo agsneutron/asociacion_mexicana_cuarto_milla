@@ -10,7 +10,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     path('get_recibo_pdf/', api.GenerarReciboPDF.as_view(), name="recibo"),
-    url(r'^reporte/', login_required(api.getReporteEventos.as_view())),
-    url(r'^reporte_cuota/', login_required(api.getReporteCuotas.as_view())),
-    url(r'^reporte_cuota_pdf/', login_required(api.getReporteCuotasPDF.as_view())),
+    url(r'^get_reporte/', login_required(api.getReporteEventos.as_view())),
+    url(r'^get_reporte_cuota/', login_required(api.getReporteCuotas.as_view())),
+    url(r'^get_reporte_cuota_pdf/', login_required(api.getReporteCuotasPDF.as_view())),
 ]
