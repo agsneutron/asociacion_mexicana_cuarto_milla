@@ -15,13 +15,14 @@
                     {% if not line.fields|length_is:'1' and not field.is_readonly %}
                         {{ field.errors }}{% endif %}
                     {% if field.is_checkbox %}
-                        {{ field.field }}{{ field.label_tag }}
+                        {{ field.field }}
+                        {{ field.label_tag }}
                     {% else %}
                         {{ field.label_tag }}
                         {% if field.is_readonly %}
                             <div class="readonly">{{ field.contents }}</div>
                         {% else %}
-                            {{ field.field }}
+                            {{ field.field}}
                         {% endif %}
                     {% endif %}
                     {% if field.field.help_text %}

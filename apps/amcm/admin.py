@@ -341,7 +341,7 @@ class PagoAdmin(admin.ModelAdmin):
     inlines = [CuentasPagoInlineAdmin, ]
     actions = None
     list_per_page = 20
-    list_display = ('evento', 'cuadra', 'cuota','edit_link','recibo_link')
+    list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago', 'estatus_credito',), ('fechaPago', 'valorRecibido',), )
 
 
@@ -383,9 +383,11 @@ class PagoAdmin(admin.ModelAdmin):
 
 class ReciboAdmin(admin.ModelAdmin):
     model = Recibo
+    form = ReciboForm
     actions = None
     list_per_page = 20
     list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
+    fields = ('pago', 'numero_recibo', 'observaciones', 'fecha_registro',)
 
     def edit_link(self, obj):
         return format_html('<a href="/admin/amcm/recibo/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
@@ -405,8 +407,20 @@ class ReciboAdmin(admin.ModelAdmin):
     'pago', 'numero_recibo', 'fecha_registro','observaciones')
 
     def get_form(self, request, obj=None, **kwargs):
+        if obj is not None:
+            pago_id = obj.pago.id
+        else:
+            pago_id = request.GET.get('pago_id')
+
+        self.param = pago_id
         form = super(ReciboAdmin, self).get_form(request, obj, **kwargs)
+        if pago_id:
+            pago = Pago.objects.filter(pk=pago_id)
+        else:
+            pago = Pago.objects.all()
+        # self.fields['pago'].attrs['value'] = str(pago.id)
         field = form.base_fields['pago']
+        field.queryset = pago
         field.widget.can_add_related = False
         field.widget.can_change_related = False
 

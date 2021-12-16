@@ -23,10 +23,32 @@ class PagoForm(forms.ModelForm):
         super(PagoForm, self).__init__(*args, **kwargs)
 
 
+    def clean(self):
+        cleaned_data = super(PagoForm, self).clean()
+
+        estatus_cuota = True
+        ejemplares = self.cleaned_data['ejemplar']
+
+        pagos = Pago.objects.filter(evento=self.cleaned_data['evento'],
+                                    cuadra=self.cleaned_data['cuadra'],estatus_cuota='PENDIENTE').exclude(cuota=self.cleaned_data['cuota'])
+        for pago in pagos:
+            ejemplares_pago = pago.ejemplar.all()
+            if set(list(ejemplares)) == set(list(ejemplares_pago)):
+                estatus_cuota=False
+
+
+        if estatus_cuota == False:
+            self._errors["cuota"] = self.error_class(
+                ['no se puede pagar esta cuota, hay cuotas pendientes de pago'])
+            # self.fields['advance_payment_amount'].
+            raise forms.ValidationError("Error")
+
     def save(self, commit=True):
         # instance = super(PagoForm, self).save(commit=False)
         # if instance.id is not None:  # Revisa si existe ese objeto
         #     a = Pago.objects.filter(id=instance.id).first()
+
+
         ejemplares = self.cleaned_data['ejemplar']
         ejemplares_total = 0
         for ejemplar in ejemplares:
@@ -47,5 +69,15 @@ class PagoForm(forms.ModelForm):
             self.instance.estatus_cuota = 'PENDIENTE'
         else:
             self.instance.estatus_cuota = 'PAGADO'
+            for pago in pagos:
+                pago.estatus_cuota='PAGADO'
+                pago.save()
         return super(PagoForm, self).save(commit)
 
+class ReciboForm(forms.ModelForm):
+    class Meta:
+        model = Recibo
+        fields = "__all__"
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(ReciboForm, self).__init__(*args, **kwargs)
