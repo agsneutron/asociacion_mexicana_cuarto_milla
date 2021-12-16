@@ -1,6 +1,8 @@
 # coding=utf-8
 import io
 import json
+
+from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.list import ListView
@@ -129,3 +131,74 @@ class GenerarReciboPDF(ListView):
 
 
         return Render.render('amcm/recibo.html', params)
+
+
+class getReporteEventos(ListView):
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            all_eventos = Evento.objects.filter(tipoEvento=1)
+            futurity = []
+            for obj in all_eventos:
+                futurity.append(obj.to_serializable_dict())
+
+            all_eventos = Evento.objects.filter(tipoEvento=2)
+            derby = []
+            for obj in all_eventos:
+                derby.append(obj.to_serializable_dict())
+
+            all_eventos = Evento.objects.filter(tipoEvento=3)
+            clasico = []
+            for obj in all_eventos:
+                clasico.append(obj.to_serializable_dict())
+
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existen Eventos"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "futurity": futurity,
+            "derby": derby,
+            "clasico": clasico
+        }
+
+        # from django.template import loader
+        # template = loader.get_template('ficha.html')
+        # return HttpResponse(template.render(params, request))
+
+        return render(request, 'amcm/reporte.html', params)
+
+
+class getReporteCuotas(ListView):
+
+    def get(self, request, *args, **kwargs):
+        idEvento = 0
+        if request.GET.get('id') != '':
+            idEvento = request.GET.get('id')
+
+        try:
+            all_evento = Evento.objects.filter(id=idEvento)
+            evento = []
+            for obj in all_evento:
+                evento.append(obj.to_serializable_dict())
+
+            cuotas = []
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existen Eventos"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "evento": evento,
+            "cuotas": cuotas
+        }
+
+        # from django.template import loader
+        # template = loader.get_template('ficha.html')
+        # return HttpResponse(template.render(params, request))
+
+        return render(request, 'amcm/reporte-cuota.html', params)
