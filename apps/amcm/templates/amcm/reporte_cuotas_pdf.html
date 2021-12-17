@@ -268,16 +268,14 @@
                       {{ ejemplar_obj.ejemplar.nombre }}
                   </td>
 
-
-                      {% for cuota_cuotas in ejemplar_obj.cuotas %}
-                        <td scope="col" class="budget" style="text-align: center; padding-top: 2px; padding-left: 2px; padding-bottom: 2px;">
-                        &nbsp;
+                  {% for cuota_cuotas in ejemplar_obj.cuotas %}
+                      <td scope="col" style="text-align: center; padding-top: 2px; padding-left: 2px; padding-bottom: 2px;">
                           {% for recibo_obj in cuota_cuotas.recibo %}
                               {{ recibo_obj.numero_recibo }}
                           {% endfor %}
-                           </td>
-                      {% endfor %}
-                    </tr>
+                      </td>
+                  {% endfor %}
+                </tr>
                   {% if forloop.counter == 30 %}
                      <pdf:nextpage />
                     {% endif %}

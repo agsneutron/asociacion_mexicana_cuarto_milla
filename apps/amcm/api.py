@@ -540,3 +540,68 @@ class getReporteCuotasAcumuladoPDF(ListView):
         }
 
         return Render.renderCuota('amcm/reporte_cuotas_acumulado_pdf.html', params)
+
+
+class getReporteLista(ListView):
+
+    def get(self, request, *args, **kwargs):
+        idEvento = 0
+        if request.GET.get('id') != '':
+            idEvento = request.GET.get('id')
+
+        try:
+            obj = Evento.objects.get(id=idEvento)
+
+            cuotas_set = []
+            cuadras = []
+            ejemplar_recibos = []
+            cuadras_set = []
+            i= 1
+            #evento.append(all_evento.to_serializable_dict())
+            #obtener las cuotas asociadas al evento
+            cuotas_evento = CuotaEvento.objects.filter(evento_id=obj.id).order_by('fechaVencimiento')
+            acumulado_set = []
+
+            for cuota in cuotas_evento:
+                cuotas_set.append(cuota.to_serializable_dict())
+                #obtener los pagos de la cuota
+                total_cuota = 0
+                pagos_cuotas = Pago.objects.filter(Q(evento_id=obj.id) & Q(cuota=cuota)).aggregate(total_por_cuota=Sum('cuotaPagada'))
+                print(pagos_cuotas)
+                pagos_all = Pago.objects.filter(Q(evento_id=obj.id) & Q(cuota=cuota))
+                x = 0
+                for pago_ejemplar in pagos_all:
+                    ejemplares = pago_ejemplar.ejemplar.all()
+
+                    for i in ejemplares:
+                        x = x+1
+
+                if pagos_cuotas['total_por_cuota'] == None:
+                    total_cuota = 0
+                else:
+                    total_cuota = '{:,.2f}'.format(pagos_cuotas['total_por_cuota'])
+
+                registro = {
+                    'cuota': cuota,
+                    'acumulado': total_cuota,
+                    'ejemplares_pago': x
+                }
+                acumulado_set.append(registro)
+
+        except Evento.DoesNotExist:
+            params = {
+                "evento": {},
+                "cuotas": [],
+                "acumulado": [],
+                "message": "success"
+            }
+            return Render.render('amcm/reporte_futurity-garanones-rg2.html', params)
+
+        params = {
+            "evento": obj.to_serializable_dict(),
+            "cuotas": cuotas_set,
+            "acumulado": acumulado_set,
+            "message": "success"
+        }
+
+        return Render.renderCuota('amcm/reporte_futurity-garanones-rg2.html', params)
