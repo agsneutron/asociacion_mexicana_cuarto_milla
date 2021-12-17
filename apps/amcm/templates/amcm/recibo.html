@@ -288,16 +288,13 @@
             </td>
             <td style="width: 20%">
                 <table>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
+                    {% for item in cuentas %}
+                        <tr style="border: 1px solid #000; height: 25px">
+                            <td style="width: 50%; text-align: center"><span style="font-size: 15px">{{ item.codigo }}</span> &nbsp;
+                                {{item.importe}}
+                            </td>
+                        </tr>
+                    {% endfor %}
 
                 </table>
             </td>
@@ -438,16 +435,14 @@
             </td>
             <td style="width: 20%">
                 <table>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
+                    {% for item in cuentas %}
+                        <tr style="border: 1px solid #000; height: 25px">
+                            <td style="width: 50%; text-align: center"><span style="font-size: 15px">{{ item.codigo }}</span> &nbsp;
+                                {{item.importe}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
 
                 </table>
             </td>
