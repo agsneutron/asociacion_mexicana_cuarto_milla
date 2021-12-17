@@ -237,15 +237,15 @@
 
               <table class="table" width="100%">
                   <thead class="thead-light">
-                    <tr style="font-size: 10px;line-height: 10px; text-align: left">
+                    <tr style="font-size: 10px;line-height: 19px; text-align: left; padding-top: 5px;">
                         <th scope="col" class="sort" data-sort="name" width="5%">
                            &nbsp;
                         </th>
-                        <th scope="col" width="45%">{{ obj.cuadra.nombre }}</th>
-                        <th scope="col" >
+                        <th scope="col" width="45%" style="padding-top: 5px;">{{ obj.cuadra.nombre }}</th>
+                        <th scope="col" style="padding-top: 5px;">
                             {{ obj.cuadra.telefono }}
                         </th>
-                        <th scope="col" colspan="3">
+                        <th scope="col" colspan="3" style="padding-top: 5px;">
                             {{ obj.cuadra.representante }}
                             <br/>
                             {{ obj.cuadra.correoElectronico }}
@@ -277,9 +277,12 @@
                           {% endfor %}
                            </td>
                       {% endfor %}
-
+                    </tr>
+                  {% if forloop.counter == 30 %}
+                     <pdf:nextpage />
+                    {% endif %}
               {% endfor %}
-          </tr>
+
 
               </tbody>
               </table>

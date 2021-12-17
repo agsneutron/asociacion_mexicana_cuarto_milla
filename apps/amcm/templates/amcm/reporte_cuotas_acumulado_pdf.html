@@ -196,8 +196,8 @@
         </tr>
             {#        cuotas y fechas del evento#}
          {% for cuota in evento.cuotas_evento %}
-              <tr style="font-size: 13px;line-height: 13px;">
-                  <td width="20%">&nbsp;</td>
+              <tr style="font-size: 13px;line-height: 19px;">
+                  <td width="10%">&nbsp;</td>
                   <td width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
                   <td width="40%"> $ {{ cuota.monto }}</td>
                 </tr>
@@ -207,14 +207,16 @@
 
                 </tr>
                 {% for fecha in evento.fechas_evento %}
-                <tr style="font-size: 13px;line-height: 13px;">
-                  <td width="20%">&nbsp;</td>
+                <tr style="font-size: 13px;line-height: 19px;">
+                  <td width="10%">&nbsp;</td>
                   <td width="40%">{{ fecha.tipoFecha }}</td>
                   <td width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</td>
                 </tr>
               {% endfor %}
 
     </table>
+    <br/>
+    <br/>
     <br/>
     <br/>
         {#    cuotas #}
@@ -232,20 +234,20 @@
 {#                </tr>#}
 {#              </thead>#}
 {#              </table>#}
-               <table class="table align-items-center" >
+               <table width="100%" style="padding-left: 5px;">
                 <thead class="thead-light">
-                    <tr>
+                    <tr style="font-size: 13px;line-height: 19px; padding-top: 4px;" align="center">
                          <th scope="col">
                          &nbsp;
                           </th>
-                          <th scope="col">
-                            CUOTA
+                          <th scope="col" width="30%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
+                            <strong>CUOTA</strong>
                           </th>
-                          <th scope="col">
-                            NUMERO DE EJEMPLARES
+                          <th scope="col" width="30%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
+                              <strong>NUMERO DE EJEMPLARES</strong>
                           </th>
-                          <th scope="col">
-                              MONTO ACUMULADO
+                          <th scope="col" width="30%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
+                              <strong>MONTO ACUMULADO</strong>
                           </th>
                          <th scope="col">
                          &nbsp;
@@ -255,19 +257,19 @@
                  <tbody class="list">
 {#                {{ obj.ejemplares }}#}
               {% for obj in acumulado %}
-                <tr>
+                <tr style="font-size: 13px;line-height: 19px; padding-left: 2px">
                  <th scope="col">
                  &nbsp;
 
                   </th>
-                  <th scope="col">
+                  <th scope="col" style=" border-color: grey; border-width: 1px; border-style: solid; padding-left: 5px; padding-top: 4px;">
                     {{ obj.cuota }}
 
                   </th>
-                  <td scope="col" class="budget">
+                  <td scope="col" class="budget" style=" border-color: grey; border-width: 1px; border-style: solid; padding-left: 5px; padding-top: 4px;">
                       {{ obj.ejemplares_pago }}
                   </td>
-                  <td scope="col" class="budget">
+                  <td scope="col" class="budget" style=" border-color: grey; border-width: 1px; border-style: solid; padding-left: 5px; padding-top: 4px;">
                       $ {{ obj.acumulado }}
                   </td>
                 <th scope="col">
