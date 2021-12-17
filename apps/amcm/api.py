@@ -16,7 +16,7 @@ from django.utils import timezone
 import six as StringIO
 from apps.amcm.models import *
 from apps.lib.utilities import Utilities
-
+from django.db.models import Sum
 
 def html_to_pdf(content, output):
     """
@@ -381,3 +381,146 @@ class getReporteCuotasPDF(ListView):
         }
 
         return Render.renderCuota('amcm/reporte_cuotas_pdf.html', params)
+
+
+class getReporteCuotasAcumulado(ListView):
+
+    def get(self, request, *args, **kwargs):
+        idEvento = 0
+        if request.GET.get('id') != '':
+            idEvento = request.GET.get('id')
+
+        try:
+            obj = Evento.objects.get(id=idEvento)
+
+            cuotas_set = []
+            cuadras = []
+            ejemplar_recibos = []
+            cuadras_set = []
+            i= 1
+            #evento.append(all_evento.to_serializable_dict())
+            #obtener las cuotas asociadas al evento
+            cuotas_evento = CuotaEvento.objects.filter(evento_id=obj.id).order_by('fechaVencimiento')
+            acumulado_set = []
+
+            for cuota in cuotas_evento:
+                cuotas_set.append(cuota.to_serializable_dict())
+                #obtener los pagos de la cuota
+                pagos_cuotas = Pago.objects.filter(Q(evento_id=obj.id) & Q(cuota=cuota)).aggregate(total_por_cuota=Sum('cuotaPagada'))
+                print(pagos_cuotas)
+                pagos_all = Pago.objects.filter(Q(evento_id=obj.id) & Q(cuota=cuota))
+                x = 0
+                for pago_ejemplar in pagos_all:
+                    ejemplares = pago_ejemplar.ejemplar.all()
+
+                    for i in ejemplares:
+                        x = x+1
+
+                registro = {
+                    'cuota': cuota,
+                    'acumulado': pagos_cuotas['total_por_cuota'],
+                    'ejemplares_pago': x
+                }
+                acumulado_set.append(registro)
+
+
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existen Eventos"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "evento": obj.to_serializable_dict(),
+            "cuotas": cuotas_set,
+            "acumulado": acumulado_set
+        }
+        #print(params)
+        # from django.template import loader
+        # template = loader.get_template('ficha.html')
+        # return HttpResponse(template.render(params, request))
+
+        return render(request, 'amcm/reporte_cuota_acumulado.html', params)
+
+
+
+class getReporteCuotasAcumuladoPDF(ListView):
+
+    def get(self, request, *args, **kwargs):
+        idEvento = 0
+        if request.GET.get('id') != '':
+            idEvento = request.GET.get('id')
+
+        try:
+            obj = Evento.objects.get(id=idEvento)
+
+            cuotas_set = []
+            cuadras = []
+            ejemplar_recibos = []
+            cuadras_set = []
+            i= 1
+            #evento.append(all_evento.to_serializable_dict())
+            cuotas_evento = CuotaEvento.objects.filter(evento_id=obj.id).order_by('fechaVencimiento')
+            for cuota in cuotas_evento:
+                cuotas_set.append(cuota.to_serializable_dict())
+
+            all_pagos = Pago.objects.filter(Q(evento=obj.id))
+            cuadras_evento = Pago.objects.filter(Q(evento=obj.id)).values_list('cuadra', flat=True).distinct()
+            for obj_cuadra in cuadras_evento:
+                cuadra = Cuadras.objects.get(id=obj_cuadra)
+                cuadra_ejemplares = []
+                for pago_ejemplar in all_pagos:
+                    ejemplar_pago_set = pago_ejemplar.ejemplar.all()
+                    for ejemplar_object in ejemplar_pago_set:
+                        for obj_cuota in cuotas_evento:
+                            pago_cuota = Pago.objects.filter(Q(cuota = obj_cuota) & Q(estatus_cuota="PAGADO") & Q(cuadra = obj_cuadra) & Q(ejemplar = ejemplar_object)) #
+                            if pago_cuota:
+                                registro = {}
+                                ejemplar_recibos = []
+                                for ejemplar_cuota_pago in pago_cuota:
+                                    recibo_pago = Recibo.objects.filter(Q(pago=ejemplar_cuota_pago))
+                                    recibos = []
+                                    if recibo_pago:
+                                        for recibo in recibo_pago:
+                                            recibos.append(recibo.to_serializable_dict())
+                                    registro = {
+                                        #'cuadra' : cuadra,
+                                        'cuota': ejemplar_cuota_pago.cuota,
+                                        'recibo': recibos
+                                    }
+                                ejemplar_recibos.append(registro)
+                            else:
+                                registro = {
+                                    # 'cuadra' : cuadra,
+                                    'cuota': obj_cuota.to_serializable_dict(),
+                                    'recibo': []
+                                }
+                                ejemplar_recibos.append(registro)
+                            ejemplar = {
+                                'ejemplar': ejemplar_object.to_serializable_dict(),
+                                'cuotas': ejemplar_recibos
+                            }
+                        cuadra_ejemplares.append(ejemplar)
+                    cuadras_data = {
+                        'cuadra' : cuadra.to_serializable_dict(),
+                        'ejemplares' : cuadra_ejemplares
+                    }
+                    cuadras_set.append(cuadras_data)
+
+        except Evento.DoesNotExist:
+            params = {
+                "evento": "",
+                "cuotas": [],
+                "cuadras": [],
+                "mensaje": "No fue posible generar el reporte"
+            }
+            return Render.render('amcm/reporte_cuotas_pdf.html', params)
+
+        params = {
+            "evento": obj.to_serializable_dict(),
+            "cuotas": cuotas_set,
+            "cuadras": cuadras_set,
+            "mensaje": "success"
+        }
+
+        return Render.renderCuota('amcm/reporte_cuotas_acumulado_pdf.html', params)
