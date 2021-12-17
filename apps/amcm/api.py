@@ -239,8 +239,9 @@ class getReporteCuotas(ListView):
             for obj_cuadra in cuadras_evento:
                 cuadra = Cuadras.objects.get(id=obj_cuadra)
                 #por cada cuadra  obtengo los ejemplares para obtener los pagos de los ejemplares
+                pagos=Pago.objects.filter(evento=obj,cuadra=cuadra)
                 cuadra_ejemplares = []
-                for pago_ejemplar in all_pagos:
+                for pago_ejemplar in pagos:
                     ejemplar_pago_set = pago_ejemplar.ejemplar.all()
                     #cuadra_ejemplares = []
 
@@ -248,21 +249,21 @@ class getReporteCuotas(ListView):
                     for ejemplar_object in ejemplar_pago_set:
                         ejemplar_recibos = []
                         for obj_cuota in cuotas_evento:
-                            pago_cuota = Pago.objects.filter(Q(cuota = obj_cuota) & Q(estatus_cuota="PAGADO") & Q(cuadra = obj_cuadra) & Q(ejemplar = ejemplar_object)) #
-                            if pago_cuota:
-                                registro = {}
-                                #ejemplar_recibos = []
-                                for ejemplar_cuota_pago in pago_cuota:
-                                    recibo_pago = Recibo.objects.filter(Q(pago=ejemplar_cuota_pago))
-                                    recibos = []
-                                    if recibo_pago:
-                                        for recibo in recibo_pago:
-                                            recibos.append(recibo.to_serializable_dict())
-                                    registro = {
-                                        #'cuadra' : cuadra,
-                                        'cuota': ejemplar_cuota_pago.cuota,
-                                        'recibo': recibos
-                                    }
+                            pagos_cuota = Pago.objects.filter(Q(cuota = obj_cuota) & Q(estatus_cuota="PAGADO") & Q(cuadra = obj_cuadra) & Q(ejemplar = ejemplar_object)) #
+                            if pagos_cuota:
+                                recibos = []
+                                for pago_cuota in pagos_cuota:
+                                    registro = {}
+                                    try:
+                                        recibo_pago = Recibo.objects.get(Q(pago=pago_cuota))
+                                        recibos.append(recibo_pago.to_serializable_dict())
+                                    except Recibo.DoesNotExist:
+                                        registro = {}
+
+                                registro = {
+                                    'cuota': pago_cuota.cuota,
+                                    'recibo': recibos
+                                }
                                 ejemplar_recibos.append(registro)
                             else:
                                 registro = {
