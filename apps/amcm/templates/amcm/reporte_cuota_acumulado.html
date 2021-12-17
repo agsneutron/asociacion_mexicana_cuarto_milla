@@ -8,8 +8,8 @@
     <div class="container-fluid">
       <div class="header-body">
         <div class="row align-items-center py-4">
-          <div class="col-lg-6 col-7">
-            <h6 class="h2 d-inline-block mb-0">Reporte por Cuotas</h6>
+          <div class="col-lg-7 col-9">
+            <h6 class="h2 d-inline-block mb-0">Reporte por Cuotas Acumulado</h6>
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
               <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                 <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
@@ -18,7 +18,7 @@
               </ol>
             </nav>
           </div>
-          <div class="col-lg-6 col-5 text-right">
+          <div class="col-lg-5 col-5 text-right">
             <a href="/amcm/get_reporte_cuota_pdf/?id={{ evento.id }}" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>
 {#            <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
           </div>
@@ -101,73 +101,71 @@
           </div>
           <div class="table-responsive">
 
-              <table class="table align-items-center table-flush">
-              <thead class="thead-light">
-                <tr align="center" >
-                    <th scope="col" class="sort" data-sort="name" width="50%">&nbsp;</th>
-                    {% for cuota in cuotas %}
-                    <th scope="col" class="sort" data-sort="name" style="border-style: solid;border-width: 1px; border-color: grey;">
-                        {{ cuota.tipoCuota }} <br/>
-                        {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>
-                       $ {{ cuota.monto }} <br/>
-                    </th>
-                    {% endfor %}
-                </tr>
-              </thead>
-              </table>
+{#              <table class="table align-items-center table-flush">#}
+{#              <thead class="thead-light">#}
+{#                <tr align="center" >#}
+{#                    <th scope="col" class="sort" data-sort="name" width="30%">&nbsp;</th>#}
+{#                    {% for cuota in cuotas %}#}
+{#                    <th scope="col" class="sort" data-sort="name" style="border-style: solid;border-width: 1px; border-color: grey;">#}
+{#                        {{ cuota.tipoCuota }} <br/>#}
+{#                        {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>#}
+{#                       $ {{ cuota.monto }} <br/>#}
+{#                    </th>#}
+{#                    {% endfor %}#}
+{#                </tr>#}
+{#              </thead>#}
+{#              </table>#}
 
-          {% for obj in cuadras %}
 
-              <table class="table align-items-center table-flush">
-                  <thead class="thead-light">
+
+              <table class="table align-items-center table-flush" >
+                <thead class="thead-light">
                     <tr>
-                        <th scope="col" class="sort" data-sort="name" width="5%">
-                           &nbsp;
-                        </th>
-                        <th scope="col" class="sort" data-sort="name" width="45%">{{ obj.cuadra.nombre }}</th>
-                        <th scope="col" class="sort" data-sort="name">
-                            {{ obj.cuadra.telefono }}
-                        </th>
-                        <th scope="col" class="sort" data-sort="name">
-                            {{ obj.cuadra.representante }}
-                        </th>
-                        <th scope="col" class="sort" data-sort="name">
-                            {{ obj.cuadra.correoElectronico }}
-                        </th>
-                    </tr>
-                  </thead>
+                         <th scope="col">
+                         &nbsp;
+                          </th>
+                          <th scope="col">
+                            CUOTA
+                          </th>
+                          <th scope="col">
+                            NUMERO DE EJEMPLARES
+                          </th>
+                          <th scope="col">
+                              MONTO ACUMULADO
+                          </th>
+                         <th scope="col">
+                         &nbsp;
+                          </th>
+                 </tr>
+                </thead>
                  <tbody class="list">
 {#                {{ obj.ejemplares }}#}
-              {% for ejemplar_obj in obj.ejemplares %}
+              {% for obj in acumulado %}
                 <tr>
-                  <th scope="col" width="5%">
+                 <th scope="col">
+                 &nbsp;
 
-                      <div class="media align-items-center">
-                          <div class="media-body">
-                            <span class="name mb-0 text-sm">{{ ejemplar_obj.ejemplar.id }}</span>
-                          </div>
-                      </div>
                   </th>
-                  <td class="budget" width="45%">
-                      {{ ejemplar_obj.ejemplar.nombre }}
+                  <th scope="col">
+                    {{ obj.cuota }}
+
+                  </th>
+                  <td scope="col" class="budget">
+                      {{ obj.ejemplares_pago }}
                   </td>
+                  <td scope="col" class="budget">
+                      $ {{ obj.acumulado }}
+                  </td>
+                <th scope="col">
+                 &nbsp;
 
-
-                      {% for cuota_cuotas in ejemplar_obj.cuotas %}
-                        <td scope="col" class="budget" style="text-align: left">
-                        &nbsp;
-                          {% for recibo_obj in cuota_cuotas.recibo %}
-                              {{ recibo_obj.numero_recibo }}
-                          {% endfor %}
-                           </td>
-                      {% endfor %}
-
-              {% endfor %}
-          </tr>
+                  </th>
+                 </tr>
+                  {% endfor %}
 
               </tbody>
               </table>
-            {% endfor %}
+
 
 
 
