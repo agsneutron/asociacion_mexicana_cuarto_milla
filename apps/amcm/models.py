@@ -294,6 +294,30 @@ class FechasEvento(models.Model):
         return self.tipoFecha.nombre
 
 
+#modelo para Cuentas Contables  del evento
+
+class CuentasEvento(models.Model):
+    cuenta = models.ForeignKey('CuentasContables', verbose_name='Cuenta Contable', blank=False, null=False, default=0, on_delete=models.CASCADE,)
+    evento = models.ForeignKey('Evento', verbose_name='Evento', blank=False, null=False,  on_delete=models.CASCADE,)
+
+    class Meta:
+        verbose_name = "Cuentas Contables del Evento"
+        verbose_name_plural = "Cuentas Contables del Evento"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['cuenta'] = self.cuenta
+        dict['evento'] = self.evento
+        return dict
+
+    def __str__(self):
+        return self.cuenta.nombre
+
+    def __unicode__(self):
+        return self.cuenta.nombre
+
+
 
 #catalogo para tipo de cuotas
 class Sexo(models.Model):
@@ -340,10 +364,20 @@ class Nacionalidad(models.Model):
     def __unicode__(self):
         return self.nombre
 
+
 # catalogo para cuentas contables
 class CuentasContables(models.Model):
     codigo = models.IntegerField(verbose_name="Código", null=False, blank=False)
     nombre = models.CharField(verbose_name="Nombre", max_length=200, null=False, blank=False, unique=True)
+
+    ACTIVA = 'ACTIVA'
+    INACTIVA = 'INACTIVA'
+    STATUS_CHOICES = (
+        (ACTIVA, 'ACTIVA'),
+        (INACTIVA, 'INACTIVA'),
+    )
+    estatus = models.CharField(max_length=15, choices=STATUS_CHOICES, default=ACTIVA,
+                              verbose_name="Estatus de Cuenta")
 
     class Meta:
         ordering = ['nombre']
@@ -354,6 +388,7 @@ class CuentasContables(models.Model):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
         dict['nombre'] = str(self.nombre)
+        dict['estatus'] = str(self.estatus)
         return dict
 
     def __str__(self):
@@ -553,6 +588,7 @@ class inscripcion(models.Model):
     def __unicode__(self):
         return self.evento.nombre + ' ' + self.cuadra.nombre
 
+
 # Modelo de Registro de Cuota de Evento
 class Pago(models.Model):
     evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
@@ -670,7 +706,7 @@ def save_credito(sender, instance, **kwargs):
 # catalogo para cuentas contables
 class CuentasPago(models.Model):
     pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False,on_delete=models.CASCADE,)
-    cuenta = models.ForeignKey(CuentasContables, verbose_name="Cuenta Contable", null=False, blank=False,on_delete=models.CASCADE, )
+    cuenta = models.ForeignKey(CuentasEvento, verbose_name="Cuenta Contable", null=False, blank=False,on_delete=models.CASCADE, )
     importe = models.FloatField(verbose_name='Importe', blank=False, null=False, default=0)
     fecha_registro = models.DateField(verbose_name='Fecha de Registro', null=False, blank=False, editable=True,default=now())
 
@@ -686,10 +722,10 @@ class CuentasPago(models.Model):
         return dict
 
     def __str__(self):
-        return self.cuenta.nombre
+        return self.cuenta.cuenta.nombre
 
     def __unicode__(self):
-        return self.cuenta.nombre
+        return self.cuenta.cuenta.nombre
 
 
 # Modelo de Registro recibos

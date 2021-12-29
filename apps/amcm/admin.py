@@ -71,6 +71,17 @@ class DescuentoAdmin(admin.ModelAdmin):
          {'fields': ('nombre', 'descripcion', 'porcentaje', )}),)
 
 
+# Administrador para el catálogo Cuentas Contables.
+class CuentasContablesAdmin(admin.ModelAdmin):
+    model = CuentasContables
+    actions = None
+    list_per_page = 20
+    list_display = ('codigo', 'nombre', 'estatus',)
+    fieldsets = (
+        (('Cuentas Contables'),
+         {'fields': ('codigo', 'nombre', 'estatus',)}),)
+
+
 # Administrador para el catálogo Cuotas.
 class SexoAdmin(admin.ModelAdmin):
     model = Sexo
@@ -218,12 +229,27 @@ class FechasEventoInlineAdmin(admin.TabularInline):
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
 
 
+class CuentasEventoInlineAdmin(admin.TabularInline):
+    model = CuentasEvento
+    fields = ('cuenta', )
+    actions = None
+    extra = 0
+    list_per_page = 20
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["cuenta"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
+
+
 class EventoAdmin(admin.ModelAdmin):
     model = Evento
     # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
     list_per_page = 20
-    inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin]
+    inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin, CuentasEventoInlineAdmin]
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
         (('Evento'),
@@ -329,13 +355,12 @@ class InscripcionAdmin(admin.ModelAdmin):
          {'fields': ('evento', 'cuadra', 'ejemplar',  'status', )}),)
     exclude = ('fechaRegistro',)
 
+
 class CuentasPagoInlineAdmin(admin.StackedInline):
     model = CuentasPago
     actions = None
     extra = 0
     list_per_page = 5
-
-
 
 
 class PagoAdmin(admin.ModelAdmin):
@@ -465,3 +490,4 @@ admin.site.register(TipoEvento, TipoEventoAdmin)
 admin.site.register(inscripcion, InscripcionAdmin)
 admin.site.register(EstatusEjemplar, EstatusEjemplarAdmin)
 admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)
+admin.site.register(CuentasContables, CuentasContablesAdmin)
