@@ -336,6 +336,8 @@ class CuentasPagoInlineAdmin(admin.StackedInline):
     list_per_page = 5
 
 
+
+
 class PagoAdmin(admin.ModelAdmin):
     form = PagoForm
     inlines = [CuentasPagoInlineAdmin, ]
