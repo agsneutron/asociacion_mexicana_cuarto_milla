@@ -253,7 +253,7 @@ class EventoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
         (('Evento'),
-         {'fields': ('nombre','elegibles_evento' ,'yardas', 'descripcion', 'bolsa', 'fondo', 'temporada', 'tipoEvento','descuento', 'observaciones', )}),)
+         {'fields': ('nombre', 'temporada', 'tipoEvento',  'descripcion', 'elegibles_evento', 'elegibles_subasta', 'yardas', 'bolsa', 'fondo', 'descuento', 'observaciones', )}),)
 
 
 
@@ -263,6 +263,12 @@ class EventoAdmin(admin.ModelAdmin):
         field.widget.can_add_related = False
         field.widget.can_change_related = False
         field = form.base_fields['descuento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['elegibles_evento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['elegibles_subasta']
         field.widget.can_add_related = False
         field.widget.can_change_related = False
 
@@ -356,20 +362,37 @@ class InscripcionAdmin(admin.ModelAdmin):
     exclude = ('fechaRegistro',)
 
 
-class CuentasPagoInlineAdmin(admin.StackedInline):
+class CuentasPagoInlineAdmin(admin.TabularInline):
     model = CuentasPago
     actions = None
     extra = 0
     list_per_page = 5
 
 
+# Inlines para registro de Forma de PAgo
+class ReferenciaFormaPagoInlineAdmin(admin.TabularInline):
+    model = ReferenciaFormaPago
+    actions = None
+    extra = 0
+    list_per_page = 20
+    list_display = ('formapago', 'referencia',)
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["formapago"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
+
+
+#Admin para modelo de pago, se agregan los inlines de forma de pago y cuentas contables de pago
 class PagoAdmin(admin.ModelAdmin):
     form = PagoForm
-    inlines = [CuentasPagoInlineAdmin, ]
+    inlines = [ReferenciaFormaPagoInlineAdmin, CuentasPagoInlineAdmin, ]
     actions = None
     list_per_page = 20
     list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
-    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago', 'estatus_credito',), ('fechaPago', 'valorRecibido',), )
+    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
 
     def get_form(self, request, obj=None, **kwargs):
@@ -387,7 +410,6 @@ class PagoAdmin(admin.ModelAdmin):
         field.widget.can_add_related = False
         field.widget.can_change_related = False
         return form
-
 
     def edit_link(self, obj):
         return format_html('<a href="/admin/amcm/pago/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
@@ -472,6 +494,45 @@ class ReasignaEjemplarAdmin(admin.ModelAdmin):
     list_display = ('ejemplar', 'cuadra',)
 
 
+#Admin para catalogo forma de pago
+class FormaPagoAdmin(admin.ModelAdmin):
+    model = FormaPago
+    actions = None
+    list_per_page = 20
+    list_display = ('nombre', 'descripcion',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(FormaPagoAdmin, self).get_form(request, obj, **kwargs)
+        field = form.base_fields['nombre']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return form
+
+# Inlines para registro de Listado Elegibles
+class ListadoElegiblesInlineAdmin(admin.TabularInline):
+    model = ListadoElegibles
+    actions = None
+    extra = 0
+    list_per_page = 20
+    list_display = ('cuadra', 'ejemplar',)
+
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super().get_formset(request, obj, **kwargs)
+        field = formset.form.base_fields["cuadra"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        return formset
+
+
+#Admin para catalogo elegible
+class ElegibleAdmin(admin.ModelAdmin):
+    model = Elegible
+    inlines = [ListadoElegiblesInlineAdmin, ]
+    actions = None
+    list_per_page = 20
+    list_display = ('nombre', 'fecha_registro',)
+
+
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
@@ -491,3 +552,5 @@ admin.site.register(inscripcion, InscripcionAdmin)
 admin.site.register(EstatusEjemplar, EstatusEjemplarAdmin)
 admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)
 admin.site.register(CuentasContables, CuentasContablesAdmin)
+admin.site.register(FormaPago, FormaPagoAdmin)
+admin.site.register(Elegible, ElegibleAdmin)

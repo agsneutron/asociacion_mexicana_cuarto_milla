@@ -124,8 +124,8 @@ class Render():
 
         html_to_pdf(content, output)
 
-# ******************************************** renderear PDF ***********************************************
 
+# ******************************************** renderear PDF ***********************************************
 class GenerarReciboPDF(ListView):
     def get(self, request, *args, **kwargs):
         anterior=False;
@@ -145,11 +145,21 @@ class GenerarReciboPDF(ListView):
         cuentas = recibo.pago.cuentaspago_set.all()
         for cuenta in cuentas:
             cuenta_json={
-                'nombre':cuenta.cuenta.nombre,
-                'importe':'{:,.2f}'.format(cuenta.importe),
-                'codigo':cuenta.cuenta.codigo
+                'nombre': cuenta.cuenta.cuenta.nombre,
+                'importe': '{:,.2f}'.format(cuenta.importe),
+                'codigo': cuenta.cuenta.cuenta.codigo
             }
             arrCuentas.append(cuenta_json)
+
+        arrReferenciaFormaPago = []
+        referennciaformapago = recibo.pago.referenciaformapago_set.all()
+        for referencia in referennciaformapago:
+            referencia_json={
+                'nombre': referencia.formapago.nombre,
+                'importe':'{:,.2f}'.format(referencia.importe),
+                'referencia':referencia.referencia
+            }
+            arrReferenciaFormaPago.append(referencia_json)
 
         saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
 
@@ -162,9 +172,11 @@ class GenerarReciboPDF(ListView):
             'importe':'{:,.2f}'.format(recibo.pago.cuotaPagada),
             'importe_letra': '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)',
             'concepto': recibo.pago.conceptoPago,
-            'recibido_en': recibo.pago.valorRecibido,
+            'recibido_en': arrReferenciaFormaPago,
             'saldo': 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo),
-            'cuentas':arrCuentas
+            'cuentas': arrCuentas,
+            'evento': recibo.pago.evento.nombre,
+            'ejemplares': ejemplares,
             }
 
 

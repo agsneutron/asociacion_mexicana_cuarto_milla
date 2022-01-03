@@ -118,8 +118,8 @@ class TipoCondicion(models.Model):
 
     class Meta:
         ordering = ['nombre']
-        verbose_name = "Tipo de Condición"
-        verbose_name_plural = "Tipos de Condiciones"
+        verbose_name = "Limite "
+        verbose_name_plural = "Limite"
 
     def __str__(self):
         return self.nombre
@@ -142,8 +142,8 @@ class Limite(models.Model):
 
     class Meta:
         ordering = ['nombre']
-        verbose_name = "límite de Condición"
-        verbose_name_plural = "límites de Condiciones"
+        verbose_name = "Tipo de Condición"
+        verbose_name_plural = "Tipo de Condiciones"
 
     def __str__(self):
         return self.nombre
@@ -193,8 +193,8 @@ class Cuotas(models.Model):
 #catalogo para cuotas de los eventos
 
 class CondicionesEvento(models.Model):
-    limite = models.ForeignKey('Limite', verbose_name='Limite', null=False, blank=False, on_delete=models.CASCADE,)
-    tipoCondicion = models.ForeignKey('TipoCondicion', verbose_name="Tipo de Condición", null=False, blank=False, on_delete=models.CASCADE,)
+    limite = models.ForeignKey('Limite', verbose_name='Tipo de Condición', null=False, blank=False, on_delete=models.CASCADE,)
+    tipoCondicion = models.ForeignKey('TipoCondicion', verbose_name="Límite", null=False, blank=False, on_delete=models.CASCADE,)
     valor = models.FloatField(verbose_name="Valor", null=False, blank=False, default=0)
     especificacion = models.CharField(verbose_name="Especificación de la Condición", null=False, blank=True, max_length=500, )
     evento = models.ForeignKey('Evento', verbose_name='Evento', null=False, blank=False, on_delete=models.CASCADE,)
@@ -492,7 +492,9 @@ class Evento(models.Model):
     descuento = models.ForeignKey(Descuentos, verbose_name="Descuento", null=True, blank=True, on_delete=models.CASCADE,)
     #condicionesEvento = models.ForeignKey(CondicionesEvento, verbose_name="Condiciones del Evento", null=False, blank=False, on_delete=models.CASCADE,)
 
-    elegibles_evento = models.ForeignKey('self', verbose_name='Elegibles de: ', null=True, blank=True,on_delete=models.CASCADE,)
+    elegibles_evento = models.ForeignKey('self', verbose_name='Elegibles de Evento ', null=True, blank=True,on_delete=models.CASCADE,)
+    elegibles_subasta = models.ForeignKey('Elegible', verbose_name='Elegibles de Subasta ', null=True, blank=True,
+                                         on_delete=models.CASCADE, )
 
     class Meta:
         ordering = ['nombre']
@@ -619,7 +621,7 @@ class Pago(models.Model):
     fechaPago = models.DateField(verbose_name='Fecha del Pago' ,null=True, blank=True, editable=True,default=now())
     fechaRegistro = models.DateField(verbose_name='Fecha de Registro',null=False, blank=False, editable=True,default=now())
     #numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)
-    valorRecibido = models.CharField(verbose_name="Valor Recibido En ...:", null=False, blank=False, max_length=500 )
+    # valorRecibido = models.CharField(verbose_name="Valor Recibido En ...:", null=False, blank=False, max_length=500 ) se elimina campo por Forma PAgo inlines
 
     PAGADO = 'PAGADO'
     CREDITO = 'CREDITO'
@@ -703,7 +705,32 @@ def save_credito(sender, instance, **kwargs):
     #     project_section.save()
 
 
-# catalogo para cuentas contables
+# Modelo de Registro Tipo de Forma de Pago
+class FormaPago(models.Model):
+    nombre = models.CharField(verbose_name="Nombre", null=False, blank=False, max_length=50)
+    descripcion = models.CharField(verbose_name='Descripción', null=True, blank=True, max_length=250)
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Forma de Pago"
+        verbose_name_plural = "Formas de Pago"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = str(self.nombre)
+        dict['descripcion'] = str(self.descripcion)
+
+        return dict
+
+    def __str__(self):
+        return str(self.nombre)
+
+    def __unicode__(self):
+        return str(self.nombre)
+
+
+# registro de montos asignados a la cuenta contable de un PAgo
 class CuentasPago(models.Model):
     pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False,on_delete=models.CASCADE,)
     cuenta = models.ForeignKey(CuentasEvento, verbose_name="Cuenta Contable", null=False, blank=False,on_delete=models.CASCADE, )
@@ -726,6 +753,89 @@ class CuentasPago(models.Model):
 
     def __unicode__(self):
         return self.cuenta.cuenta.nombre
+
+
+# modelo para Nombre de Listado para elegibles
+class Elegible(models.Model):
+    nombre = models.CharField(verbose_name="Nombre", null= False, blank= False, max_length = 250)
+    fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,default=now())
+
+    class Meta:
+        verbose_name = "Elegible"
+        verbose_name_plural = "Elegibles"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = self.nombre
+        dict['fecharegistro'] = self.fecha_registro
+        return dict
+
+    def __str__(self):
+        return self.nombre
+
+    def __unicode__(self):
+        return self.nombre
+
+
+# modelo para listado de elegibles
+class ListadoElegibles(models.Model):
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE, )
+    ejemplar = ChainedManyToManyField(Ejemplares,
+                                      chained_field="cuadra",
+                                      chained_model_field="cuadra",
+                                      related_name='ejemplar_related_elegible',
+                                      horizontal=False,
+                                      null=True,
+                                      blank=True,
+                                      limit_choices_to={"estatus__nombre": 'ACTIVO'})
+    elegible = models.ForeignKey(Elegible, null=False, blank=False, on_delete= models.CASCADE, )
+
+    class Meta:
+        verbose_name = "Listado de Elegibles"
+        verbose_name_plural = "Listados de Elegibles"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['cuadra'] = self.nombre
+        dict['ejemplar'] = self.fecha_registro
+        dict['elegible'] = self.elegible
+        return dict
+
+    def __str__(self):
+        return self.cuadra.nombre
+
+    def __unicode__(self):
+        return self.cuadra.nombre
+
+
+# registro de formas de pago  de un Pago
+class ReferenciaFormaPago(models.Model):
+    pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE, )
+    formapago = models.ForeignKey(FormaPago, verbose_name="Forma de Pago", null=False, blank=False,on_delete=models.CASCADE,)
+    referencia = models.CharField(verbose_name="Referencia", null= False, blank= False, max_length= 100)
+    importe = models.FloatField(verbose_name='Importe', blank=False, null=False, default=0)
+
+
+    class Meta:
+        verbose_name = "Forma - Pago"
+        verbose_name_plural = "Formas - Pago"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['formapago'] = self.formapago
+        dict['referencia'] = self.referencia
+        dict['importe'] = self.importe
+
+        return dict
+
+    def __str__(self):
+        return self.referencia
+
+    def __unicode__(self):
+        return self.referencia
 
 
 # Modelo de Registro recibos
@@ -793,3 +903,4 @@ class Credito(models.Model):
 
     def __unicode__(self):
         return str(self.pago.evento.nombre) + ' ' + str(self.pago.cuadra.nombre)
+

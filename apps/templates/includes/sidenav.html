@@ -60,6 +60,19 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="/admin/amcm/formapago/" class="nav-link {% if 'index' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> D </span>#}
+                                        <span class="sidenav-normal"> Forma de Pago </span>
+                                    </a>
+                                </li>
+                            <li class="nav-item">
+                                    <a href="/admin/amcm/limite/"
+                                       class="nav-link {% if 'alternative' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> A </span>#}
+                                        <span class="sidenav-normal"> Tipo de Condición </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="/admin/amcm/tipocuota/"
                                        class="nav-link {% if 'alternative' in segment %} active {% endif %}">
                                         {#                                        <span class="sidenav-mini-icon"> A </span>#}
@@ -71,6 +84,13 @@
                                        class="nav-link {% if 'alternative' in segment %} active {% endif %}">
                                         {#                                        <span class="sidenav-mini-icon"> A </span>#}
                                         <span class="sidenav-normal"> Tipo de Evento </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/amcm/tipofecha/"
+                                       class="nav-link {% if 'alternative' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> A </span>#}
+                                        <span class="sidenav-normal"> Tipo de Fecha </span>
                                     </a>
                                 </li>
 {#                                <li class="nav-item">#}
@@ -110,6 +130,13 @@
                         <a class="nav-link {% if 'map' in segment %} active {% endif %}" href="/map.html">
                             <i class="ni ni-circle-08 text-secondary"></i>
                             <span class="nav-link-text">Asistentes</span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'map' in segment %} active {% endif %}" href="/admin/amcm/elegible/">
+                            <i class="ni ni-circle-08 text-secondary"></i>
+                            <span class="nav-link-text">Elegibles</span>
                         </a>
                     </li>
                     {#                    <li class="nav-item">#}
