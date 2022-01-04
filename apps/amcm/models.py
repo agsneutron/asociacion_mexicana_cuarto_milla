@@ -435,6 +435,7 @@ class Cuadras(models.Model):
 
 #Catalogo de ejemplares
 class Ejemplares(models.Model):
+    lote = models.IntegerField(verbose_name="Lote", unique=True,blank=False,null=False)
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False)
     edad = models.FloatField(verbose_name="Edad", blank=False, null=False, default=0)
     peso = models.FloatField(verbose_name='Peso', blank=False, null=False, default=0)
@@ -456,6 +457,7 @@ class Ejemplares(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
+        dict['lote'] = str(self.lote)
         dict['nombre'] = str(self.nombre)
         dict['edad'] = str(self.edad)
         dict['peso'] = str(self.peso)
@@ -810,6 +812,32 @@ class ListadoElegibles(models.Model):
         return self.cuadra.nombre
 
 
+#modelo registro de contactos
+class Contacto(models.Model):
+    nombre = models.CharField(verbose_name="Nombre", null= False, blank= False, max_length= 200)
+    telefono = models.CharField(verbose_name="Teléfono", max_length=15, null=True, blank=True)
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
+
+    class Meta:
+        verbose_name = "Contacto"
+        verbose_name_plural = "Contactos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = self.nombre
+        dict['telefono'] = self.telefono
+        dict['cuadra'] = self.cuadra
+
+        return dict
+
+    def __str__(self):
+        return self.nombre
+
+    def __unicode__(self):
+        return self.nombre
+
+
 # registro de formas de pago  de un Pago
 class ReferenciaFormaPago(models.Model):
     pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE, )
@@ -864,10 +892,12 @@ class Recibo(models.Model):
     def __unicode__(self):
         return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
 
+
 # modelo reasignacion de cuadra
 class ReasignaEjemplar(models.Model):
     ejemplar =  models.ForeignKey(Ejemplares, verbose_name="Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE,)
+
 
 # Modelo de Registro CRÉDITO
 class Credito(models.Model):

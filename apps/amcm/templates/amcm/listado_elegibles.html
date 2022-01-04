@@ -1,0 +1,118 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Listado {% endblock title %}
+
+{% block content %}
+
+    <div class="header pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 d-inline-block mb-0">Listado Elegibles</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href="/admin/amcm/evento/">Eventos</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Elegibles para el {{ evento }}</h3>
+                    </div>
+                    <!-- futuritys -->
+                    <div class="table-responsive pb-4">
+                        {{cuadras}}
+
+                        <table class="table table-flush" id="result_list">
+                            <thead class="thead-light">
+                            <tr>
+                                <th width="30%">Evento</th>
+                                <th>Temporada</th>
+                                <th>Distancia</th>
+                                <th>Eliminatoria</th>
+                                <th>Final</th>
+                                <th>Cuotas</th>
+                                <th>...</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for obj in cuadra %}
+                                <tr>
+                                    <td>{{ obj.nombre }}</td>
+                                    <td>{{ obj.temporada }}</td>
+                                    <td>{{ obj.yardas }} yardas</td>
+                                    <td>
+                                        <span class="badge badge-dot mr-4">
+                                          {% for inscripcion in obj.fechas_evento %}
+                                              {% if inscripcion.tipoFecha == "ELIMINATORIA" %}
+                                                  <i class="bg-warning"></i>
+                                                  <span class="status">
+                                                        {{ inscripcion.fecha|date:"d-m-Y" }}<br>
+                                                  </span>
+                                              {% endif %}
+                                          {% endfor %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                       <span class="badge badge-dot mr-4">
+                                        <i class="bg-warning"></i>
+                                        <span class="status">{% for inscripcion in obj.fechas_evento %}
+                                            {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha|date:"d-m-Y" }}
+                                            {% endif %}{% endfor %}
+                                        </span>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="/amcm/get_reporte_cuota/?id={{ obj.id }}">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm">
+                                                <i class="far fa-file-alt"></i>
+                                            </button>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
+                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                                <a class="dropdown-item" href="/amcm/get_reporte_cuota_acumulado/?id={{ obj.id }}"><i class="far fa-list-alt"></i>Acumulado</a>
+                                                <a class="dropdown-item" href="/amcm/get_reporte_cuota_acumulado_pdf/?id={{ obj.id }}"><i class="far fa-file-pdf"></i> Acumulado</a>
+                                                <a class="dropdown-item" href="/amcm/get_reporte_cuota_pdf/?id={{ obj.id }}"><i class="far fa-file-pdf"></i> Cuotas</a>
+                                                <a class="dropdown-item" href="/amcm/get_reporte_lista_pdf/?id={{ obj.id }}"><i class="far fa-file-pdf"></i> Listado</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

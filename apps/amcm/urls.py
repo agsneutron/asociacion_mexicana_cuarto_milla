@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^get_reporte_cuota_acumulado/', login_required(api.getReporteCuotasAcumulado.as_view())),
     url(r'^get_reporte_cuota_acumulado_pdf/', login_required(api.getReporteCuotasAcumuladoPDF.as_view())),
     url(r'^get_reporte_lista_pdf/', login_required(api.getReporteLista.as_view())),
+    url(r'^get_listado_elegibles/', login_required(api.getListadoElegibles.as_view())),
 ]

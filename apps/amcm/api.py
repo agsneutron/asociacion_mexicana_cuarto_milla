@@ -179,9 +179,43 @@ class GenerarReciboPDF(ListView):
             'ejemplares': ejemplares,
             }
 
-
-
         return Render.render('amcm/recibo.html', params)
+
+
+class getListadoElegibles(ListView):
+
+    def get(self, request, *args, **kwargs):
+        evento_id = request.GET.get('evento_id')
+
+        try:
+            all_evento = Evento.objects.get(id=evento_id)
+            elegibles = {
+                'cuadra': [],
+                'ejemplar': []
+            }
+            if all_evento.elegibles_evento != None:
+                elegibles = ListadoElegibles.objects.filter(id=all_evento.elegibles_evento.id)
+            else:
+                elegibles = ListadoElegibles.objects.filter(elegible_id=all_evento.elegibles_evento)
+                cuadras = []
+                for obj in elegibles:
+                    cuadras.append(obj.to_serializable_dict())
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existe lista de elegibles"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "cuadras": cuadras,
+            "evento": all_evento
+        }
+
+        # from django.template import loader
+        # template = loader.get_template('ficha.html')
+        # return HttpResponse(template.render(params, request))
+
+        return render(request, 'amcm/listado_elegibles.html', params)
 
 
 class getReporteEventos(ListView):

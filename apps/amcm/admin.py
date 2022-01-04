@@ -112,10 +112,10 @@ class EjemplarAdmin(admin.ModelAdmin):
     #fields = ('nombre',)
     actions = None
     list_per_page = 20
-    list_display = ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'estatus')
+    list_display = ('cuadra', 'lote', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'estatus')
     fieldsets = (
         (('Ejemplares'),
-         {'fields': ('cuadra', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', 'estatus',)}),)
+         {'fields': ('cuadra', 'lote',  'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre', 'estatus',)}),)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(EjemplarAdmin, self).get_form(request, obj, **kwargs)
@@ -134,10 +134,19 @@ class EjemplarAdmin(admin.ModelAdmin):
 
         return form
 
+#inlines para asignar datos de contacto a Cuadras
+class ContactoInlineAdmin(admin.TabularInline):
+    model= Contacto
+    fields = ('nombre', 'telefono')
+    actions = None
+    extra = 0
+    list_per_page = 20
 
+
+#inlines para asignar ejemplares a cuadras
 class EjemplarInlineAdmin(admin.StackedInline):
     model = Ejemplares
-    fields = ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre','estatus', )
+    fields = ('lote', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre','estatus', )
     actions = None
     extra = 1
     list_per_page = 20
@@ -165,7 +174,7 @@ class CuadraAdmin(admin.ModelAdmin):
     #fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
     list_per_page = 20
-    inlines = [EjemplarInlineAdmin, ]
+    inlines = [ContactoInlineAdmin, EjemplarInlineAdmin, ]
     list_display = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico',)
     fieldsets = (
         (('Cuadras'), {'fields': ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones',)}),)
@@ -277,7 +286,7 @@ class EventoAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
 
-        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', 'pago_link',)
+        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', 'listado_link', 'pago_link',)
 
         return super(EventoAdmin, self).changelist_view(request, extra_context)
 
@@ -298,6 +307,13 @@ class EventoAdmin(admin.ModelAdmin):
         )
     edit_link.short_description = 'Editar'
     edit_link.allow_tags = True
+
+    def listado_link(self, obj):
+        return format_html('<a href="/amcm/get_listado_elegibles/?evento_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list"></i></button></a>',
+            obj.id,
+        )
+    listado_link.short_description = 'Listado'
+    listado_link.allow_tags = True
 
     def pago_link(self, obj):
         return format_html('<a href="/admin/amcm/pago/?evento_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
@@ -539,6 +555,7 @@ admin.site.register(Descuentos, DescuentoAdmin)
 admin.site.register(Sexo, SexoAdmin)
 admin.site.register(Nacionalidad, NacionalidadAdmin)
 admin.site.register(Cuadras, CuadraAdmin)
+
 admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
