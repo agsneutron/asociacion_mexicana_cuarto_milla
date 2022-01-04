@@ -186,20 +186,50 @@ class getListadoElegibles(ListView):
 
     def get(self, request, *args, **kwargs):
         evento_id = request.GET.get('evento_id')
-
+        cuotas_set = []
+        descuento = 0
         try:
             all_evento = Evento.objects.get(id=evento_id)
-            elegibles = {
-                'cuadra': [],
-                'ejemplar': []
-            }
+
             if all_evento.elegibles_evento != None:
-                elegibles = ListadoElegibles.objects.filter(id=all_evento.elegibles_evento.id)
+                elegibles = ListadoElegibles.objects.filter(id=all_evento.elegibles_evento)
             else:
-                elegibles = ListadoElegibles.objects.filter(elegible_id=all_evento.elegibles_evento)
+                elegibles = ListadoElegibles.objects.filter(elegible_id=all_evento.elegibles_subasta)
+
+                cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
+                for cuota in cuotas_evento:
+                    if cuota.tipoCuota.id == 2:
+                        descuento = cuota.monto - (cuota.monto * all_evento.descuento.porcentaje)
+                        print(descuento)
+                    if cuota.tipoCuota.id != 2 and cuota.tipoCuota.id != 6:
+                        cuotas_set.append(cuota.to_serializable_dict())
+
                 cuadras = []
+                i = 0
                 for obj in elegibles:
-                    cuadras.append(obj.to_serializable_dict())
+                    #datos de la cuadra
+                    cuadra = Cuadras.objects.get(id=obj.cuadra.id)
+
+                    #datos del ejemplar
+                    ejemplares = obj.ejemplar.all()
+                    cuadra_ejemplares = []
+                    for ejemplar in ejemplares:
+                        i = i+1
+                        data_ejemplar = {
+                            'consecutivo': i,
+                            'lote': ejemplar.lote,
+                            'nombre': ejemplar.nombre
+                        }
+                        cuadra_ejemplares.append(data_ejemplar)
+
+                    registro = {
+                        'cuadra': cuadra.to_serializable_dict,
+                        'ejemplar': cuadra_ejemplares,
+
+
+                    }
+
+                    cuadras.append(registro)
 
         except Evento.DoesNotExist:
             return HttpResponse(
@@ -208,7 +238,10 @@ class getListadoElegibles(ListView):
 
         params = {
             "cuadras": cuadras,
-            "evento": all_evento
+            "evento": all_evento.to_serializable_dict,
+            'cycle': range(0, i),
+            "cuotas": cuotas_set,
+            'descuento': descuento
         }
 
         # from django.template import loader

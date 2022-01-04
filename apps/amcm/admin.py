@@ -549,6 +549,16 @@ class ElegibleAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'fecha_registro',)
 
 
+# Admin para catalogo elegible
+class ListadoElegiblesAdmin(admin.ModelAdmin):
+    model = ListadoElegibles
+    actions = None
+    list_per_page = 20
+    list_display = ('elegible', 'cuadra',  )
+
+
+
+
 admin.site.register(Cuotas, CuotaAdmin)
 admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
@@ -571,3 +581,4 @@ admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)
 admin.site.register(CuentasContables, CuentasContablesAdmin)
 admin.site.register(FormaPago, FormaPagoAdmin)
 admin.site.register(Elegible, ElegibleAdmin)
+admin.site.register(ListadoElegibles, ListadoElegiblesAdmin)

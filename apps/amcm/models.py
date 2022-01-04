@@ -206,8 +206,8 @@ class CondicionesEvento(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['limite'] = self.limite
-        dict['tipoCondicion'] = self.tipoCondicion
+        dict['limite'] = self.limite.nombre
+        dict['tipoCondicion'] = self.tipoCondicion.nombre
         dict['valor'] = self.valor
         dict['especificacion'] = self.especificacion
         return dict
@@ -419,10 +419,16 @@ class Cuadras(models.Model):
         dict['nombre'] = str(self.nombre)
         dict['representante'] = str(self.representante)
         dict['telefono'] = str(self.telefono)
-        dict['celular'] = self.celular
+        dict['celular'] = str(self.celular).strip()
         dict['correoElectronico'] = self.correoElectronico
         dict['observaciones'] = str(self.observaciones)
 
+        # datos para el modelo de fechas
+        contactos = []
+        for obj in self.contacto_set.all():
+            det = obj.to_serializable_dict()
+            contactos.append(det)
+        dict['contactos'] = contactos
 
         return dict
 
@@ -450,7 +456,7 @@ class Ejemplares(models.Model):
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False,on_delete=models.CASCADE,)
 
     class Meta:
-        ordering = ['nombre']
+        #ordering = ['nombre']
         verbose_name = "Ejemplar"
         verbose_name_plural = "Ejemplares"
 
@@ -514,7 +520,7 @@ class Evento(models.Model):
         dict['observaciones'] = self.observaciones
         dict['tipoEvento'] = self.tipoEvento
         #dict['fechaEvento'] = self.fechasEvento
-        dict['descuento'] = self.descuento
+        dict['descuento'] = self.descuento.nombre
 
         # datos para el modelo de fechas
         fechasevento = []
@@ -544,6 +550,29 @@ class Evento(models.Model):
 
     def __unicode__(self):
         return self.nombre
+
+    def save(self, *args, **kwargs):
+
+
+        if self.elegibles_evento != None:
+            elegibles = ListadoElegibles.objects.filter(id=self.elegibles_evento)
+        else:
+            elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_subasta)
+            elegible_obj = Elegible.objects.get(id=self.elegibles_subasta.id)
+
+        for obj in elegibles:
+            # datos del ejemplar
+            ejemplares = obj.ejemplar.all()
+            for ejemplar in ejemplares:
+                eventoelegible = EventoElegibles()
+                eventoelegible.evento = self
+                eventoelegible.estaus = False
+                eventoelegible.cuadra = obj.cuadra
+                eventoelegible.ejemplar = ejemplar
+                eventoelegible.elegible = elegible_obj
+                eventoelegible.save()
+
+        super(Evento, self).save(*args, **kwargs)
 
 
 # Modelo de Registro de inscripción
@@ -800,8 +829,42 @@ class ListadoElegibles(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['cuadra'] = self.nombre
-        dict['ejemplar'] = self.fecha_registro
+        dict['cuadra'] = self.cuadra
+        dict['ejemplar'] = self.ejemplar
+        dict['elegible'] = self.elegible
+        return dict
+
+    def __str__(self):
+        return self.cuadra.nombre
+
+    def __unicode__(self):
+        return self.cuadra.nombre
+
+
+# modelo para listado de elegibles
+class EventoElegibles(models.Model):
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE, )
+    ejemplar = ChainedForeignKey(Ejemplares,
+                                      chained_field="cuadra",
+                                      chained_model_field="cuadra",
+                                      related_name='ejemplar_elegible',
+                                      null=True,
+                                      blank=True,
+                                      limit_choices_to={"estatus__nombre": 'ACTIVO'})
+    estaus = models.BooleanField(verbose_name='Retirado',default=False, null=False)
+    elegible = models.ForeignKey(Elegible, null=False, blank=False, on_delete= models.CASCADE, )
+    evento = models.ForeignKey(Evento, null=False, blank=False, on_delete= models.CASCADE, )
+
+    class Meta:
+        verbose_name = "Elegibles para Evento"
+        verbose_name_plural = "Elegibles para Evento"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['cuadra'] = self.cuadra
+        dict['ejemplar'] = self.ejemplar
+        dict['estatus'] = self.estaus
         dict['elegible'] = self.elegible
         return dict
 

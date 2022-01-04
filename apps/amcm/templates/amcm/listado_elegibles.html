@@ -31,76 +31,101 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Elegibles para el {{ evento }}</h3>
-                    </div>
-                    <!-- futuritys -->
-                    <div class="table-responsive pb-4">
-                        {{cuadras}}
-
-                        <table class="table table-flush" id="result_list">
-                            <thead class="thead-light">
+                        <h3 class="mb-0 text-center" >{{ evento.nombre }} <br/> {{ evento.descripcion }}</h3>
+                        <br/>
+                        <table width="100%">
                             <tr>
-                                <th width="30%">Evento</th>
-                                <th>Temporada</th>
-                                <th>Distancia</th>
-                                <th>Eliminatoria</th>
-                                <th>Final</th>
-                                <th>Cuotas</th>
-                                <th>...</th>
+                                <td width="50%">
+                                    <span class="text-left"> {% for condicion in evento.condiciones_evento %} {% if condicion.limite == 'PESO'  %} {{  condicion.limite }}: &nbsp; {{  condicion.valor }} &nbsp; {{  condicion.especificacion }} {% endif %}{% endfor %}</span>
+                                </td>
+                                <td  width="50%" style="text-align: end">
+                                   <span > DISTANCIA: {{  evento.yardas }} YARDAS </span>
+                                </td>
                             </tr>
-                            </thead>
+                            <tr><td colspan="2">&nbsp;</td></tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center">
+                                    <table width="80%" align="center">
+                                        {% for cuota in cuotas %}
+                                        <tr>
+                                            <td style="text-align: left" width="70%">
+                                                {{ cuota.tipoCuota}}
+                                                {% if cuota.tipoCuota.id == 2 %}
+                                                   ( ${{ cuota.monto }} ) CON EL {{ evento.descuento }} DE DESCUENTO
+                                                {% else %}
+                                                    : {{ cuota.fechaVencimiento|date:"l, d F Y" }}
+                                                {% endif %}
+                                            </td>
+                                            <td style="text-align: left" width="30%">
+                                                {% if cuota.tipoCuota.id == 2 %}
+                                                    $ {{ descuento }}
+                                                {% else %}
+                                                    $ {{ cuota.monto }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr><td colspan="2">&nbsp;</td></tr>
+                                        {% for fecha in evento.fechas_evento %}
+                                            <tr>
+                                                <td colspan="2" style="text-align: center">
+                                                    {{ fecha.tipoFecha}}:     {{ fecha.fecha|date:"l, d F Y"  }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                     <tr><td colspan="2">&nbsp;</td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
 
-                            <tbody>
-                            {% for obj in cuadra %}
+                    <div class="table-responsive pb-4">
+                        <table class="table table-flush" id="result_list" width="95%">
+                            <thead class="thead-light">
                                 <tr>
-                                    <td>{{ obj.nombre }}</td>
-                                    <td>{{ obj.temporada }}</td>
-                                    <td>{{ obj.yardas }} yardas</td>
-                                    <td>
-                                        <span class="badge badge-dot mr-4">
-                                          {% for inscripcion in obj.fechas_evento %}
-                                              {% if inscripcion.tipoFecha == "ELIMINATORIA" %}
-                                                  <i class="bg-warning"></i>
-                                                  <span class="status">
-                                                        {{ inscripcion.fecha|date:"d-m-Y" }}<br>
-                                                  </span>
-                                              {% endif %}
-                                          {% endfor %}
-                                        </span>
-                                    </td>
-                                    <td>
-                                       <span class="badge badge-dot mr-4">
-                                        <i class="bg-warning"></i>
-                                        <span class="status">{% for inscripcion in obj.fechas_evento %}
-                                            {% if inscripcion.tipoFecha == "FINAL" %} {{ inscripcion.fecha|date:"d-m-Y" }}
-                                            {% endif %}{% endfor %}
-                                        </span>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <a href="/amcm/get_reporte_cuota/?id={{ obj.id }}">
-                                            <button type="button" class="btn btn-outline-secondary btn-sm">
-                                                <i class="far fa-file-alt"></i>
-                                            </button>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="/amcm/get_reporte_cuota_acumulado/?id={{ obj.id }}"><i class="far fa-list-alt"></i>Acumulado</a>
-                                                <a class="dropdown-item" href="/amcm/get_reporte_cuota_acumulado_pdf/?id={{ obj.id }}"><i class="far fa-file-pdf"></i> Acumulado</a>
-                                                <a class="dropdown-item" href="/amcm/get_reporte_cuota_pdf/?id={{ obj.id }}"><i class="far fa-file-pdf"></i> Cuotas</a>
-                                                <a class="dropdown-item" href="/amcm/get_reporte_lista_pdf/?id={{ obj.id }}"><i class="far fa-file-pdf"></i> Listado</a>
-                                            </div>
-                                        </div>
-                                    </td>
+                                    <td width="2px">&nbsp; </td>
+                                    <td width="30px" colspan="2">&nbsp;</td>
+                                    {% for obj in cuotas %}
+                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ obj.tipoCuota.nombre }} <br/>
+                                             {{ obj.fechaVencimiento|date:"d-m-Y" }} <br/>
+                                             $ {{ obj.monto }}
+                                        </td>
+                                    {% endfor %}
+                                    <td width="5px">&nbsp;</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for obj in cuadras %}
+                                <tr>
+                                    <td width="2px">&nbsp; </td>
+                                    <td width="30px" colspan="2"><strong>{{ obj.cuadra.nombre }}</strong></td>
+                                    <td colspan="{{ cuotas|length }}">{{ obj.cuadra.representante }} &nbsp; {{ obj.cuadra.telefono }} {% if obj.cuadra.celular != "" %} &nbsp;/&nbsp; {{ obj.cuadra.celular }} {% endif %}  {% for contacto in obj.cuadra.contactos %} &nbsp; &nbsp;&nbsp; &nbsp; {{ contacto.nombre }}&nbsp; &nbsp; {{ contacto.telefono }} {% endfor %} &nbsp; &nbsp; {{ obj.cuadra.correoElectronico }}  </td>
+                                    <td width="5px">&nbsp;</td>
                                 </tr>
 
+                                {% for ejemplar in obj.ejemplar %}
+
+                                <tr>
+                                    <td width="2px">{{ ejemplar.consecutivo }}</td>
+                                    <td width="5px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">{{ ejemplar.lote }}</td>
+                                    <td width="25px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar.nombre }}</td>
+                                    {% for obj in cuotas %}
+                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">
+                                            {{ obj.tipoCuota.nombre }} <br/>
+                                             {{ obj.fechaVencimiento|date:"d-m-Y" }} <br/>
+                                             $ {{ obj.monto }}
+                                        </td>
+                                    {% endfor %}
+                                    <td width="5px"></td>
+                                </tr>
+
+                                {% endfor %}
+
                             {% endfor %}
+
+
                             </tbody>
                         </table>
                     </div>
