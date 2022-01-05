@@ -1,0 +1,188 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+
+  <div class="header pb-6">
+    <div class="container-fluid">
+      <div class="header-body">
+        <div class="row align-items-center py-4">
+          <div class="col-lg-6 col-7">
+            <h6 class="h2 d-inline-block mb-0">Reporte por Cuotas</h6>
+            <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+              <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                <li class="breadcrumb-item"><a href="/amcm/get_reporte">Reportes por Eventos</a></li>
+                <li class="breadcrumb-item active" aria-current="page"></li>
+              </ol>
+            </nav>
+          </div>
+          <div class="col-lg-6 col-5 text-right">
+            <a href="/amcm/get_reporte_cuota_pdf/?id={{ evento.id }}" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>
+{#            <a href="#" class="btn btn-sm btn-neutral">Filters</a>#}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Page content -->
+  <div class="container-fluid mt--6">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <!-- Card header -->
+          <div class="card-header border-0">
+            <h3 class="mb-0"></h3>
+          </div>
+          <!-- Light table -->
+          <div class="table-responsive">
+            <table   class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr align="center">
+                  <th scope="col" class="sort" data-sort="name" colspan="3"><h3>{{ evento.nombre }}</h3></th>
+
+                </tr>
+                <tr align="center">
+                  <th scope="col" class="sort" data-sort="name" colspan="3">{{ evento.descripcion }}</th>
+
+                </tr>
+                <tr align="right">
+                  <th scope="col" class="sort" data-sort="name" colspan="3"><h4>DISTANCIA: {{ evento.yardas }} YARDAS</h4></th>
+
+                </tr>
+
+
+                {% for cuota in evento.cuotas_evento %}
+              <tr>
+                  <th scope="col" class="sort" data-sort="name" width="20%">&nbsp;</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%"> ${{ cuota.monto }}</th>
+                </tr>
+                {% endfor %}
+                <tr align="right">
+                  <th scope="col" class="sort" data-sort="name" colspan="3">&nbsp;</th>
+
+                </tr>
+                {% for fecha in evento.fechas_evento %}
+                <tr>
+                  <th scope="col" class="sort" data-sort="name" width="20%">&nbsp;</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%">{{ fecha.tipoFecha }}</th>
+                  <th scope="col" class="sort" data-sort="name" width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</th>
+                </tr>
+              {% endfor %}
+
+              </thead>
+              <tbody class="list">
+
+                <tr>
+                    <td class="budget">
+                  </td>
+                  <td class="budget">
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <!-- Recibos por Cuadras -->
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header border-0">
+            <h3 class="mb-0"></h3>
+          </div>
+          <div class="table-responsive">
+
+              <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr align="center" >
+                    <th scope="col" class="sort" data-sort="name" width="50%">&nbsp;</th>
+                    {% for cuota in cuotas %}
+                    <th scope="col" class="sort" data-sort="name" style="border-style: solid;border-width: 1px; border-color: grey;">
+                        {{ cuota.tipoCuota }} <br/>
+                        {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>
+                       $ {{ cuota.monto }} <br/>
+                    </th>
+                    {% endfor %}
+                </tr>
+              </thead>
+              </table>
+
+          {% for obj in cuadras %}
+
+              <table class="table align-items-center table-flush">
+                  <thead class="thead-light">
+                    <tr>
+                        <th scope="col" class="sort" data-sort="name" width="5%">
+                           &nbsp;
+                        </th>
+                        <th scope="col" class="sort" data-sort="name" width="45%">{{ obj.cuadra.nombre }}</th>
+                        <th scope="col" class="sort" data-sort="name">
+                            {{ obj.cuadra.telefono }}
+                        </th>
+                        <th scope="col" class="sort" data-sort="name">
+                            {{ obj.cuadra.representante }}
+                        </th>
+                        <th scope="col" class="sort" data-sort="name">
+                            {{ obj.cuadra.correoElectronico }}
+                        </th>
+                    </tr>
+                  </thead>
+                 <tbody class="list">
+
+              {% for ejemplar_obj in obj.ejemplares %}
+                <tr>
+                  <th scope="col" width="5%">
+
+                      <div class="media align-items-center">
+                          <div class="media-body">
+                            <span class="name mb-0 text-sm">{{ ejemplar_obj.ejemplar.id }}</span>
+                          </div>
+                      </div>
+                  </th>
+                  <td class="budget" width="45%">
+                      {{ ejemplar_obj.ejemplar.nombre }}
+                  </td>
+
+
+                      {% for cuota_cuotas in ejemplar_obj.cuotas %}
+                        <td scope="col" class="budget" style="text-align: left">
+                        &nbsp;
+                          {% for recibo_obj in cuota_cuotas.recibo %}
+                              {{ recibo_obj.numero_recibo }}
+                          {% endfor %}
+                           </td>
+                      {% endfor %}
+                </tr>
+
+              {% endfor %}
+
+
+              </tbody>
+              </table>
+            {% endfor %}
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+        {% include "includes/footer.html" %}
+
+  </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}
