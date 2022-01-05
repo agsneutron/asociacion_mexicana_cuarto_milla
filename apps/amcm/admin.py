@@ -557,6 +557,13 @@ class ListadoElegiblesAdmin(admin.ModelAdmin):
     list_display = ('elegible', 'cuadra',  )
 
 
+#Admin para catalogo elegible
+class EventoElegiblesAdmin(admin.ModelAdmin):
+    model = EventoElegibles
+    actions = None
+    list_per_page = 20
+    list_display = ('evento', 'elegible', 'cuadra', 'ejemplar', 'estaus')
+
 
 
 admin.site.register(Cuotas, CuotaAdmin)
@@ -565,7 +572,6 @@ admin.site.register(Descuentos, DescuentoAdmin)
 admin.site.register(Sexo, SexoAdmin)
 admin.site.register(Nacionalidad, NacionalidadAdmin)
 admin.site.register(Cuadras, CuadraAdmin)
-
 admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
@@ -581,4 +587,5 @@ admin.site.register(ReasignaEjemplar, ReasignaEjemplarAdmin)
 admin.site.register(CuentasContables, CuentasContablesAdmin)
 admin.site.register(FormaPago, FormaPagoAdmin)
 admin.site.register(Elegible, ElegibleAdmin)
+admin.site.register(EventoElegibles, EventoElegiblesAdmin)
 admin.site.register(ListadoElegibles, ListadoElegiblesAdmin)

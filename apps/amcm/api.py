@@ -17,6 +17,7 @@ import six as StringIO
 from apps.amcm.models import *
 from apps.lib.utilities import Utilities
 from django.db.models import Sum
+from django.db.models import Count
 
 def html_to_pdf(content, output):
     """
@@ -192,9 +193,9 @@ class getListadoElegibles(ListView):
             all_evento = Evento.objects.get(id=evento_id)
 
             if all_evento.elegibles_evento != None:
-                elegibles = ListadoElegibles.objects.filter(id=all_evento.elegibles_evento)
+                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id))
             else:
-                elegibles = ListadoElegibles.objects.filter(elegible_id=all_evento.elegibles_subasta)
+                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(dcount=Count('ejemplar'))
 
                 cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
                 for cuota in cuotas_evento:
@@ -206,27 +207,84 @@ class getListadoElegibles(ListView):
 
                 cuadras = []
                 i = 0
+
                 for obj in elegibles:
                     #datos de la cuadra
-                    cuadra = Cuadras.objects.get(id=obj.cuadra.id)
+                    cuadra = Cuadras.objects.get(id=obj['cuadra'])
 
                     #datos del ejemplar
-                    ejemplares = obj.ejemplar.all()
+                    evento_ejemplares = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id) & Q(cuadra_id = obj['cuadra']))
                     cuadra_ejemplares = []
-                    for ejemplar in ejemplares:
+                    for evento_ejemplar in evento_ejemplares:
                         i = i+1
+
+                        #buscar si hay recibo de PU (2) o NOM EXT  (6)
+                        pagos_cuota = Recibo.objects.filter(
+                            Q(pago__cuota__tipoCuota_id__in =(2,4)) #& Q(pago__estatus_cuota="PAGADO")
+                            & Q(pago__cuadra=cuadra)
+                            & Q(pago__ejemplar=evento_ejemplar.ejemplar))
+                        registro_unico = {}
+                        recibo_unico = False
+                        if pagos_cuota:
+                            print(pagos_cuota)
+                            recibos = []
+                            recibo_unico = True
+                            for pago_cuota in pagos_cuota:
+                                registro_unico = {}
+                                recibos.append(pago_cuota.to_serializable_dict())
+
+                            registro_unico = {
+                                'cuota': pago_cuota.pago.cuota,
+                                'recibo': recibos
+                            }
+
+                        #buscar recibos del ejemplar para este evento
+                        ejemplar_recibos = []
+                        for obj_cuota in cuotas_evento:
+                            if obj_cuota.tipoCuota.id != 2 and obj_cuota.tipoCuota.id != 6:
+                                #cuando es recibo de cuota
+                                # pagos_cuota = Pago.objects.filter(Q(cuota = obj_cuota) & Q(estatus_cuota="PAGADO") & Q(cuadra = obj_cuadra) & Q(ejemplar = ejemplar_object)) #
+                                pagos_cuota = Recibo.objects.filter(
+                                    Q(pago__cuota=obj_cuota) & Q(pago__estatus_cuota="PAGADO") & Q(
+                                        pago__cuadra=cuadra) & Q(
+                                        pago__ejemplar=evento_ejemplar.ejemplar))
+
+                                if pagos_cuota:
+                                    recibos = []
+                                    for pago_cuota in pagos_cuota:
+                                        registro = {}
+                                        recibos.append(pago_cuota.to_serializable_dict())
+
+                                    registro = {
+                                        'cuota': pago_cuota.pago.cuota,
+                                        'recibo': recibos
+                                    }
+                                    ejemplar_recibos.append(registro)
+                                else:
+                                    if recibo_unico:
+                                        registro = registro_unico
+                                    else:
+                                        registro = {
+                                            # 'cuadra' : cuadra,
+                                            'cuota': obj_cuota.to_serializable_dict(),
+                                            'recibo': []
+                                        }
+
+                                    ejemplar_recibos.append(registro)
+
                         data_ejemplar = {
                             'consecutivo': i,
-                            'lote': ejemplar.lote,
-                            'nombre': ejemplar.nombre
+                            'lote': evento_ejemplar.ejemplar.lote,
+                            'nombre': evento_ejemplar.ejemplar.nombre,
+                            'eventoelegible': evento_ejemplar.id,
+                            'estatus': evento_ejemplar.estaus,
+                            'recibos': ejemplar_recibos
                         }
                         cuadra_ejemplares.append(data_ejemplar)
 
                     registro = {
                         'cuadra': cuadra.to_serializable_dict,
                         'ejemplar': cuadra_ejemplares,
-
-
                     }
 
                     cuadras.append(registro)

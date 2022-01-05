@@ -555,7 +555,7 @@ class Evento(models.Model):
 
 
         if self.elegibles_evento != None:
-            elegibles = ListadoElegibles.objects.filter(id=self.elegibles_evento)
+            elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_evento)
         else:
             elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_subasta)
             elegible_obj = Elegible.objects.get(id=self.elegibles_subasta.id)

@@ -31,7 +31,7 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header border-0">
-                        <h3 class="mb-0 text-center" >{{ evento.nombre }} <br/> {{ evento.descripcion }}</h3>
+                        <h3 class="mb-0 text-center" > {{ evento.nombre }} <br/> {{ evento.descripcion }}</h3>
                         <br/>
                         <table width="100%">
                             <tr>
@@ -46,7 +46,7 @@
                             <tr>
                                 <td colspan="2" style="text-align: center">
                                     <table width="80%" align="center">
-                                        {% for cuota in cuotas %}
+                                        {% for cuota in evento.cuotas_evento %}
                                         <tr>
                                             <td style="text-align: left" width="70%">
                                                 {{ cuota.tipoCuota}}
@@ -111,14 +111,25 @@
                                     <td width="2px">{{ ejemplar.consecutivo }}</td>
                                     <td width="5px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">{{ ejemplar.lote }}</td>
                                     <td width="25px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar.nombre }}</td>
-                                    {% for obj in cuotas %}
-                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">
-                                            {{ obj.tipoCuota.nombre }} <br/>
-                                             {{ obj.fechaVencimiento|date:"d-m-Y" }} <br/>
-                                             $ {{ obj.monto }}
+                                    {% for obj in ejemplar.recibos %}
+                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center">
+                                              {% for numero in obj.recibo %}
+                                                {{ numero.numero_recibo }}
+                                                  {% if  not forloop.last %}
+                                                      <br/>
+                                                  {% endif %}
+                                            {% endfor %}
+
+                                               {% if ejemplar.estatus  %}
+                                                   <br/> RETIRADO
+                                               {% endif %}
                                         </td>
                                     {% endfor %}
-                                    <td width="5px"></td>
+                                    <td width="5px">
+                                        {% if not ejemplar.estatus  %}
+                                            <a href="/admin/amcm/eventoelegibles/{{ ejemplar.eventoelegible }}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-window-close"></i></button></a>
+                                        {% endif %}
+                                    </td>
                                 </tr>
 
                                 {% endfor %}
