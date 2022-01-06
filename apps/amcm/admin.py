@@ -25,13 +25,13 @@ class CuotaAdmin(admin.ModelAdmin):
 
 # Administrador para el catálogo Cuotas.
 class EstatusEjemplarAdmin(admin.ModelAdmin):
-    model = TipoCuota
+    model = EstatusEjemplar
     #fields = ('nombre', 'descripcion',)
     actions = None
     list_per_page = 20
     list_display = ('nombre', 'descripcion',)
     fieldsets = (
-        (('Estatus dek Ejemplar'),
+        (('Estatus del Ejemplar'),
          {'fields': ('nombre', 'descripcion',)}),)
 
 
@@ -41,10 +41,10 @@ class TipoCuotaAdmin(admin.ModelAdmin):
     #fields = ('nombre', 'descripcion',)
     actions = None
     list_per_page = 20
-    list_display = ('nombre', 'descripcion',)
+    list_display = ('nombre', 'descripcion', 'moneda')
     fieldsets = (
         (('Tipo de Cuota'),
-         {'fields': ('nombre', 'descripcion',)}),)
+         {'fields': ('nombre', 'descripcion', 'moneda')}),)
 
 
 # administrador tipo evento
@@ -182,7 +182,7 @@ class CuadraAdmin(admin.ModelAdmin):
 
 class CuotasEventoInlineAdmin(admin.TabularInline):
     model = CuotaEvento
-    fields = ( 'tipoCuota', 'monto', 'fechaVencimiento', )
+    fields = ( 'tipoCuota', 'monto', 'fechaVencimiento', 'observacion', )
     actions = None
     extra = 0
     list_per_page = 20
@@ -262,7 +262,7 @@ class EventoAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
         (('Evento'),
-         {'fields': ('nombre', 'temporada', 'tipoEvento',  'descripcion', 'elegibles_evento', 'elegibles_subasta', 'yardas', 'bolsa', 'fondo', 'descuento', 'observaciones', )}),)
+         {'fields': ('nombre', 'temporada', 'tipoEvento',  'yardas', 'elegibles_evento', 'elegibles_subasta', 'descuento', 'bolsa', 'fondo', 'descripcion_evento', 'observaciones', )}),)
 
 
 
@@ -537,6 +537,9 @@ class ListadoElegiblesInlineAdmin(admin.TabularInline):
         field = formset.form.base_fields["cuadra"]
         field.widget.can_add_related = False
         field.widget.can_change_related = False
+        field = formset.form.base_fields["ejemplar"]
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
         return formset
 
 
@@ -575,6 +578,7 @@ admin.site.register(Cuadras, CuadraAdmin)
 admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
+admin.site.register(TipoMoneda)
 admin.site.register(CuotaEvento)
 admin.site.register(Pago, PagoAdmin)
 admin.site.register(Recibo, ReciboAdmin)

@@ -31,7 +31,8 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header border-0">
-                        <h3 class="mb-0 text-center" > {{ evento.nombre }} <br/> {{ evento.descripcion }}</h3>
+                        <h3 class="mb-0 text-center" > {{ evento.nombre }} </h3>
+                        <div class="text-center">{{ evento.descripcion_evento| linebreaks }}</div>
                         <br/>
                         <table width="100%">
                             <tr>
@@ -60,7 +61,7 @@
                                                 {% if cuota.tipoCuota.id == 2 %}
                                                     $ {{ descuento }}
                                                 {% else %}
-                                                    $ {{ cuota.monto }}
+                                                    $ {{ cuota.monto }} {{ cuota.observacion }}
                                                 {% endif %}
                                             </td>
                                         </tr>

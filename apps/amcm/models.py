@@ -13,6 +13,8 @@ from django.db.models.query_utils import Q
 # Catalogs Models
 
 #catalogo para descuentos
+from tinymce.models import HTMLField
+
 
 class Descuentos(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=True)
@@ -88,14 +90,15 @@ class EstatusEjemplar(models.Model):
 
 
 #catalogo para tipo de cuotas
-class TipoCuota(models.Model):
+class TipoMoneda(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=True)
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
 
+
     class Meta:
         ordering = ['nombre']
-        verbose_name = "Tipo de Cuota"
-        verbose_name_plural = "Tipos de Cuotas"
+        verbose_name = "Tipo de Moneda"
+        verbose_name_plural = "Tipos de Moneda"
 
     def __str__(self):
         return self.nombre
@@ -108,6 +111,32 @@ class TipoCuota(models.Model):
         dict['id'] = str(self.id)
         dict['nombre'] = str(self.nombre)
         dict['descripcion'] = str(self.descripcion)
+        return dict
+
+
+#catalogo para tipo de cuotas
+class TipoCuota(models.Model):
+    nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=True)
+    descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
+    moneda = models.ForeignKey(TipoMoneda, verbose_name="Tipo de Cuota", null=False, blank=False, on_delete=models.CASCADE,)
+
+    class Meta:
+        ordering = ['nombre']
+        verbose_name = "Tipo de Cuota"
+        verbose_name_plural = "Tipos de Cuotas"
+
+    def __str__(self):
+        return self.nombre + '-' + self.moneda.nombre
+
+    def __unicode__(self):
+        return self.nombre + '-' + self.moneda.nombre
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['nombre'] = str(self.nombre)
+        dict['descripcion'] = str(self.descripcion)
+        dict['moneda'] = str(self.moneda)
         return dict
 
 
@@ -225,6 +254,7 @@ class CuotaEvento(models.Model):
     tipoCuota = models.ForeignKey('TipoCuota', verbose_name="Tipo de Cuota", null=False, blank=False, on_delete=models.CASCADE,)
     fechaVencimiento = models.DateField(verbose_name="Fecha de Vencimiento", blank=False, null=False,)
     evento = models.ForeignKey('Evento', blank=False, null=False, on_delete=models.CASCADE,)
+    observacion = models.CharField(verbose_name="Observación", null=False, blank=True, max_length=500, )
 
     class Meta:
         verbose_name = "Cuota"
@@ -488,7 +518,7 @@ class Ejemplares(models.Model):
 class Evento(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False)
     yardas = models.IntegerField(verbose_name="Distancia (yardas)", null=False, blank=False)
-    descripcion = models.CharField(verbose_name="Descripción", max_length=500, null=False, blank=False)
+    descripcion_evento = models.TextField(verbose_name="Descripción", max_length=2500, null=False, blank=True)
 
     bolsa = models.FloatField(verbose_name="Bolsa", null=False, blank=False)
     fondo = models.FloatField(verbose_name="Fondo",  null=False, blank=False)
@@ -519,7 +549,7 @@ class Evento(models.Model):
         dict['temporada'] = str(self.temporada)
         dict['observaciones'] = self.observaciones
         dict['tipoEvento'] = self.tipoEvento
-        #dict['fechaEvento'] = self.fechasEvento
+        dict['descripcion'] = self.descripcion_evento
         dict['descuento'] = self.descuento.nombre
 
         # datos para el modelo de fechas
@@ -556,21 +586,24 @@ class Evento(models.Model):
 
         if self.elegibles_evento != None:
             elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_evento)
-        else:
+        elif self.elegibles_subasta != None :
             elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_subasta)
             elegible_obj = Elegible.objects.get(id=self.elegibles_subasta.id)
+        else:
+            elegibles = None
 
-        for obj in elegibles:
-            # datos del ejemplar
-            ejemplares = obj.ejemplar.all()
-            for ejemplar in ejemplares:
-                eventoelegible = EventoElegibles()
-                eventoelegible.evento = self
-                eventoelegible.estaus = False
-                eventoelegible.cuadra = obj.cuadra
-                eventoelegible.ejemplar = ejemplar
-                eventoelegible.elegible = elegible_obj
-                eventoelegible.save()
+        if elegibles:
+            for obj in elegibles:
+                # datos del ejemplar
+                ejemplares = obj.ejemplar.all()
+                for ejemplar in ejemplares:
+                    eventoelegible = EventoElegibles()
+                    eventoelegible.evento = self
+                    eventoelegible.estaus = False
+                    eventoelegible.cuadra = obj.cuadra
+                    eventoelegible.ejemplar = ejemplar
+                    eventoelegible.elegible = elegible_obj
+                    eventoelegible.save()
 
         super(Evento, self).save(*args, **kwargs)
 
