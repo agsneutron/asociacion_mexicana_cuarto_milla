@@ -116,7 +116,7 @@ class TipoMoneda(models.Model):
 
 #catalogo para tipo de cuotas
 class TipoCuota(models.Model):
-    nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=True)
+    nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=False)
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
     moneda = models.ForeignKey(TipoMoneda, verbose_name="Tipo de Cuota", null=False, blank=False, on_delete=models.CASCADE,)
 
@@ -222,8 +222,8 @@ class Cuotas(models.Model):
 #catalogo para cuotas de los eventos
 
 class CondicionesEvento(models.Model):
-    limite = models.ForeignKey('Limite', verbose_name='Tipo de Condición', null=False, blank=False, on_delete=models.CASCADE,)
-    tipoCondicion = models.ForeignKey('TipoCondicion', verbose_name="Límite", null=False, blank=False, on_delete=models.CASCADE,)
+    limite = models.ForeignKey('Limite', verbose_name='Tipo de Condición', null=True, blank=True, on_delete=models.CASCADE,)
+    tipoCondicion = models.ForeignKey('TipoCondicion', verbose_name="Límite", null=True, blank=True, on_delete=models.CASCADE,)
     valor = models.FloatField(verbose_name="Valor", null=False, blank=False, default=0)
     especificacion = models.CharField(verbose_name="Especificación de la Condición", null=False, blank=True, max_length=500, )
     evento = models.ForeignKey('Evento', verbose_name='Evento', null=False, blank=False, on_delete=models.CASCADE,)
@@ -235,17 +235,17 @@ class CondicionesEvento(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['limite'] = self.limite.nombre
-        dict['tipoCondicion'] = self.tipoCondicion.nombre
-        dict['valor'] = self.valor
+        #dict['limite'] = self.limite.nombre
+        #dict['tipoCondicion'] = self.tipoCondicion.nombre
+        #dict['valor'] = self.valor
         dict['especificacion'] = self.especificacion
         return dict
 
     def __str__(self):
-        return self.tipoCondicion.nombre
+        return self.especificacion
 
     def __unicode__(self):
-        return self.tipoCondicion.nombre
+        return self.especificacion
 
 
 #catalogo para cuotas de los eventos
@@ -471,7 +471,7 @@ class Cuadras(models.Model):
 
 #Catalogo de ejemplares
 class Ejemplares(models.Model):
-    lote = models.IntegerField(verbose_name="Lote", unique=True,blank=False,null=False)
+    lote = models.IntegerField(verbose_name="Lote", unique=False, blank=False,null=False)
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False)
     edad = models.FloatField(verbose_name="Edad", blank=False, null=False, default=0)
     peso = models.FloatField(verbose_name='Peso', blank=False, null=False, default=0)
@@ -486,7 +486,7 @@ class Ejemplares(models.Model):
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False,on_delete=models.CASCADE,)
 
     class Meta:
-        #ordering = ['nombre']
+        ordering = ['cuadra', 'lote', ]
         verbose_name = "Ejemplar"
         verbose_name_plural = "Ejemplares"
 
@@ -533,6 +533,7 @@ class Evento(models.Model):
     elegibles_evento = models.ForeignKey('self', verbose_name='Elegibles de Evento ', null=True, blank=True,on_delete=models.CASCADE,)
     elegibles_subasta = models.ForeignKey('Elegible', verbose_name='Elegibles de Subasta ', null=True, blank=True,
                                          on_delete=models.CASCADE, )
+    orden = models.IntegerField(verbose_name="Orden ID", null=False, blank=False)
 
     class Meta:
         ordering = ['nombre']
@@ -943,6 +944,7 @@ class EventoElegibles(models.Model):
     evento = models.ForeignKey(Evento, null=False, blank=False, on_delete= models.CASCADE, )
 
     class Meta:
+
         verbose_name = "Elegibles para Evento"
         verbose_name_plural = "Elegibles para Evento"
 

@@ -212,20 +212,20 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
 
 class CondicionesEventoInlineAdmin(admin.TabularInline):
     model = CondicionesEvento
-    fields = ('limite', 'tipoCondicion', 'valor', 'especificacion', )
+    fields = ('especificacion', )  # 'tipoCondicion', 'valor', 'limite',
     actions = None
     extra = 0
     list_per_page = 20
 
-    def get_formset(self, request, obj=None, **kwargs):
-        formset = super().get_formset(request, obj, **kwargs)
-        field = formset.form.base_fields["limite"]
-        field.widget.can_add_related = False
-        field.widget.can_change_related = False
-        field = formset.form.base_fields["tipoCondicion"]
-        field.widget.can_add_related = False
-        field.widget.can_change_related = False
-        return formset
+    # def get_formset(self, request, obj=None, **kwargs):
+    #     formset = super().get_formset(request, obj, **kwargs)
+    #     field = formset.form.base_fields["limite"]
+    #     field.widget.can_add_related = False
+    #     field.widget.can_change_related = False
+        #field = formset.form.base_fields["tipoCondicion"]
+        #field.widget.can_add_related = False
+        #field.widget.can_change_related = False
+        # return formset
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
@@ -537,7 +537,7 @@ class FormaPagoAdmin(admin.ModelAdmin):
         return form
 
 # Inlines para registro de Listado Elegibles
-class ListadoElegiblesInlineAdmin(admin.TabularInline):
+class ListadoElegiblesInlineAdmin(admin.StackedInline):
     model = ListadoElegibles
     actions = None
     extra = 0

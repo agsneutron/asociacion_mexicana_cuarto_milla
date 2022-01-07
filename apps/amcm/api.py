@@ -213,7 +213,7 @@ class getListadoElegibles(ListView):
                     cuadra = Cuadras.objects.get(id=obj['cuadra'])
 
                     #datos del ejemplar
-                    evento_ejemplares = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id) & Q(cuadra_id = obj['cuadra']))
+                    evento_ejemplares = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id) & Q(cuadra_id = obj['cuadra'])).order_by('ejemplar__lote')
                     cuadra_ejemplares = []
                     for evento_ejemplar in evento_ejemplares:
                         i = i+1
