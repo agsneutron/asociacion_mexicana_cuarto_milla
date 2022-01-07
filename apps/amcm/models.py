@@ -626,10 +626,10 @@ class PaquetesDescuento(models.Model):
                                      on_delete=models.CASCADE, related_name='evento_dos',)
     evento_tres = models.ForeignKey(Evento, verbose_name="Tercer Futurity", null=False, blank=False,
                                      on_delete=models.CASCADE, related_name='evento_tres',)
-    evento_cuatro = models.ForeignKey(Evento, verbose_name="Cuarto Futurity", null=True, blank=True,
+    evento_cuatro = models.ForeignKey(Evento, verbose_name="Cuarto Futurity", null=False, blank=False,
                                      on_delete=models.CASCADE, related_name='evento_cuatro',)
 
-    evento_cinco = models.ForeignKey(Evento, verbose_name="Quinto Futurity", null=False, blank=False,
+    evento_cinco = models.ForeignKey(Evento, verbose_name="Quinto Futurity", null=True, blank=True,
                                         on_delete=models.CASCADE, related_name='evento_cinco',)
 
     porcentaje_uno = models.FloatField(verbose_name='Porcentaje Primer Futurity', blank=False, null=False, default=25)
@@ -658,10 +658,10 @@ class PaquetesDescuento(models.Model):
         return dict
 
     def __str__(self):
-        return self.nombre
+        return self.get_paquete_display()
 
     def __unicode__(self):
-        return self.nombre
+        return self.get_paquete_display()
 
 # Modelo de Registro de inscripción
 class inscripcion(models.Model):
