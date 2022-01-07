@@ -597,11 +597,7 @@ class Evento(models.Model):
                 # datos del ejemplar
                 ejemplares = obj.ejemplar.all()
                 for ejemplar in ejemplares:
-                    try:
-                        eventoelegible = EventoElegibles.objects.get(cuadra=obj.cuadra, ejemplar=ejemplar, elegible=elegible_obj)
-                    except EventoElegibles.DoesNotExist:
-                        eventoelegible = EventoElegibles()
-
+                    eventoelegible = EventoElegibles()
                     eventoelegible.evento = self
                     eventoelegible.estaus = False
                     eventoelegible.cuadra = obj.cuadra
