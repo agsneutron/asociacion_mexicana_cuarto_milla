@@ -608,6 +608,60 @@ class Evento(models.Model):
         super(Evento, self).save(*args, **kwargs)
 
 
+class PaquetesDescuento(models.Model):
+    PAQUETE_A = 'A'
+    PAQUETE_B = 'B'
+    PAQUETE_C = 'C'
+    PAQUETE_CHOICES = (
+        (PAQUETE_A, 'PAQUETE A'),
+        (PAQUETE_B, 'PAQUETE B'),
+        (PAQUETE_C, 'PAQUETE C'),
+    )
+    paquete = models.CharField(max_length=10, choices=PAQUETE_CHOICES, default=PAQUETE_A,
+                               verbose_name="Paquete")
+
+    evento_uno = models.ForeignKey(Evento, verbose_name="Primer Futurity", null=False, blank=False, on_delete=models.CASCADE, related_name='evento_uno',)
+    evento_dos = models.ForeignKey(Evento, verbose_name="Segundo Futurity", null=False, blank=False,
+                                     on_delete=models.CASCADE, related_name='evento_dos',)
+    evento_tres = models.ForeignKey(Evento, verbose_name="Tercer Futurity", null=False, blank=False,
+                                     on_delete=models.CASCADE, related_name='evento_tres',)
+    evento_cuatro = models.ForeignKey(Evento, verbose_name="Cuarto Futurity", null=True, blank=True,
+                                     on_delete=models.CASCADE, related_name='evento_cuatro',)
+
+    evento_cinco = models.ForeignKey(Evento, verbose_name="Quinto Futurity", null=False, blank=False,
+                                        on_delete=models.CASCADE, related_name='evento_cinco',)
+
+    porcentaje_uno = models.FloatField(verbose_name='Porcentaje Primer Futurity', blank=False, null=False, default=25)
+    porcentaje_dos = models.FloatField(verbose_name='Porcentaje Segundo Futurity', blank=False, null=False, default=25)
+    porcentaje_tres = models.FloatField(verbose_name='Porcentaje Tercer Futurity', blank=False, null=False, default=25)
+    porcentaje_cuatro = models.FloatField(verbose_name='Porcentaje Cuarto Futurity', blank=False, null=False, default=50)
+    porcentaje_cinco = models.FloatField(verbose_name='Porcentaje Quinto Futurity', blank=False, null=False, default=50)
+    anio = models.IntegerField(verbose_name= "Año", null=False, blank=False,default=now().year)
+
+
+    class Meta:
+        ordering = ['paquete']
+        verbose_name = "Paquete Descuento"
+        verbose_name_plural = "Paquetes Descuentos"
+
+    def to_serializable_dict(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['paquete'] = str(self.paquete)
+        dict['evento_uno'] = str(self.evento_uno.nombre)
+        dict['evento_dos'] = str(self.evento_dos.nombre)
+        dict['evento_tres'] = str(self.evento_tres.nombre)
+        dict['evento_cuatro'] = str(self.evento_cuatro.nombre)
+        dict['eventov_cinco'] = str(self.eventov_cinco.nombre)
+
+        return dict
+
+    def __str__(self):
+        return self.nombre
+
+    def __unicode__(self):
+        return self.nombre
+
 # Modelo de Registro de inscripción
 class inscripcion(models.Model):
     evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)

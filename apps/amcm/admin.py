@@ -34,6 +34,18 @@ class EstatusEjemplarAdmin(admin.ModelAdmin):
         (('Estatus del Ejemplar'),
          {'fields': ('nombre', 'descripcion',)}),)
 
+# Administrador para el catálogo Paquetes de Descuento.
+class PaquetesDescuentoAdmin(admin.ModelAdmin):
+    model = PaquetesDescuento
+    #fields = ('nombre', 'descripcion',)
+    actions = None
+    list_per_page = 20
+    list_display = ('paquete',)
+    fieldsets = (
+        (('Paquetes de Descuento'),
+         {'fields': ('paquete', 'evento_uno','porcentaje_uno','evento_dos','porcentaje_dos','evento_tres',
+                     'porcentaje_tres','evento_cuatro','porcentaje_cuatro','evento_cinco','porcentaje_cinco','anio',)}),)
+
 
 # Administrador para el catálogo Cuotas.
 class TipoCuotaAdmin(admin.ModelAdmin):
@@ -574,6 +586,7 @@ admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
 admin.site.register(Sexo, SexoAdmin)
 admin.site.register(Nacionalidad, NacionalidadAdmin)
+admin.site.register(PaquetesDescuento,PaquetesDescuentoAdmin)
 admin.site.register(Cuadras, CuadraAdmin)
 admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
