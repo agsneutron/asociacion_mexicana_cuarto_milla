@@ -584,7 +584,6 @@ class Evento(models.Model):
 
     def save(self, *args, **kwargs):
 
-
         if self.elegibles_evento != None:
             elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_evento)
         elif self.elegibles_subasta != None :
@@ -594,11 +593,27 @@ class Evento(models.Model):
             elegibles = None
 
         if elegibles:
+            # for obj in elegibles:
+            #     # datos del ejemplar
+            #     ejemplares = obj.ejemplar.all()
+            #     for ejemplar in ejemplares:
+            #         eventoelegible = EventoElegibles()
+            #         eventoelegible.evento = self
+            #         eventoelegible.estaus = False
+            #         eventoelegible.cuadra = obj.cuadra
+            #         eventoelegible.ejemplar = ejemplar
+            #         eventoelegible.elegible = elegible_obj
+            #         eventoelegible.save()
             for obj in elegibles:
-                # datos del ejemplar
+            # datos del ejemplar
                 ejemplares = obj.ejemplar.all()
                 for ejemplar in ejemplares:
-                    eventoelegible = EventoElegibles()
+                    try:
+                        eventoelegible = EventoElegibles.objects.get(cuadra=obj.cuadra, ejemplar=ejemplar,
+                                                                     elegible=elegible_obj)
+                    except EventoElegibles.DoesNotExist:
+                        eventoelegible = EventoElegibles()
+
                     eventoelegible.evento = self
                     eventoelegible.estaus = False
                     eventoelegible.cuadra = obj.cuadra
