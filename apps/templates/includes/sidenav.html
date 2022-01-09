@@ -48,9 +48,28 @@
                         <div class="collapse" id="navbar-dashboards">
                             <ul class="nav nav-sm flex-column">
                                 <li class="nav-item">
+                                    <a href="/admin/amcm/cuentascontables/" class="nav-link {% if 'index' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> D </span>#}
+                                        <span class="sidenav-normal"> Cuentas Contables </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="/admin/amcm/descuentos/" class="nav-link {% if 'index' in segment %} active {% endif %}">
                                         {#                                        <span class="sidenav-mini-icon"> D </span>#}
                                         <span class="sidenav-normal"> Descuentos </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/amcm/formapago/" class="nav-link {% if 'index' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> D </span>#}
+                                        <span class="sidenav-normal"> Forma de Pago </span>
+                                    </a>
+                                </li>
+                            <li class="nav-item">
+                                    <a href="/admin/amcm/limite/"
+                                       class="nav-link {% if 'alternative' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> A </span>#}
+                                        <span class="sidenav-normal"> Tipo de Condición </span>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -65,6 +84,13 @@
                                        class="nav-link {% if 'alternative' in segment %} active {% endif %}">
                                         {#                                        <span class="sidenav-mini-icon"> A </span>#}
                                         <span class="sidenav-normal"> Tipo de Evento </span>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/admin/amcm/tipofecha/"
+                                       class="nav-link {% if 'alternative' in segment %} active {% endif %}">
+                                        {#                                        <span class="sidenav-mini-icon"> A </span>#}
+                                        <span class="sidenav-normal"> Tipo de Fecha </span>
                                     </a>
                                 </li>
 {#                                <li class="nav-item">#}
@@ -106,6 +132,13 @@
                             <span class="nav-link-text">Asistentes</span>
                         </a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if 'map' in segment %} active {% endif %}" href="/admin/amcm/elegible/">
+                            <i class="ni ni-circle-08 text-secondary"></i>
+                            <span class="nav-link-text">Elegibles</span>
+                        </a>
+                    </li>
                     {#                    <li class="nav-item">#}
                     {#                        <a class="nav-link {% if 'profile' in segment %} active {% endif %}" href="/profile.html">#}
                     {#                            <i class="fas fa-horse-head text-secondary"></i>#}
@@ -139,7 +172,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="amcm/reporte/">
+                        <a class="nav-link" href="/amcm/get_reporte/">
                             <i class="fas fa-chart-line text-secondary"></i>
                             <span class="nav-link-text">Reportes</span>
                         </a>

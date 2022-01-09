@@ -36,7 +36,8 @@ INSTALLED_APPS = [
     'smart_selects',
     'apps.home',  # Enable the inner home (home)
     'apps.amcm',
-    'apps.lib'
+    'apps.lib',
+    'tinymce',
 ]
 
 MIDDLEWARE = [

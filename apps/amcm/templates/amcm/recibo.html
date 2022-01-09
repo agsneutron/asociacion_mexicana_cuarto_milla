@@ -224,7 +224,7 @@
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">La cantidad de: {{ importe }} {{ importe_letra }}</p></td>
+                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">La cantidad de: $ {{ importe }} {{ importe_letra }}</p></td>
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
@@ -235,8 +235,20 @@
                     style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Por concepto de: {{ concepto }}</p></td>
         </tr>
         <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
+            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Evento: {{ evento }}</p></td>
+        </tr>
+        <tr style="border: 1px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"> {% if ejemplares != None %} Ejemplares: {% endif %}
+                    {% for obj in ejemplares %}
+                        {{ obj }}
+                        {% if not forloop.last %}
+                                , &nbsp;
+                            {% endif %}
+                    {% endfor %}
+                </p>
+            </td>
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
@@ -247,12 +259,20 @@
                     style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
         </tr>
         <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Valor recibido en: {{ recibido_en }}</p></td>
+            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Valor recibido en:
+                    {% if recibido_en %}
+                        {% for obj  in recibido_en  %}
+                            {{ obj.nombre }} &nbsp;&nbsp;
+                            {{ obj.referencia }} &nbsp;&nbsp;
+                            $ {{ obj.importe }} &nbsp;&nbsp;
+                            {% if not forloop.last %}
+                                -- &nbsp;
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </p>
+            </td>
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
@@ -289,16 +309,13 @@
             </td>
             <td style="width: 20%">
                 <table>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
+                    {% for item in cuentas %}
+                        <tr style="border: 1px solid #000; height: 25px">
+                            <td style="width: 50%; text-align: center"><span style="font-size: 15px">{{ item.codigo }}</span> &nbsp;
+                                {{item.importe}}
+                            </td>
+                        </tr>
+                    {% endfor %}
 
                 </table>
             </td>
@@ -374,7 +391,7 @@
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">La cantidad de: {{ importe }} {{ importe_letra }}</p></td>
+                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">La cantidad de: $ {{ importe }} {{ importe_letra }}</p></td>
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
@@ -385,8 +402,20 @@
                     style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Por concepto de: {{ concepto }}</p></td>
         </tr>
         <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
+            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Evento: {{ evento }}</p></td>
+        </tr>
+        <tr style="border: 1px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Ejemplares:
+                    {% for obj in ejemplares %}
+                        {{ obj }}
+                        {% if not forloop.last %}
+                                , &nbsp;
+                            {% endif %}
+                    {% endfor %}
+                </p>
+            </td>
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
@@ -397,12 +426,20 @@
                     style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
         </tr>
         <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px"></p></td>
-        </tr>
-        <tr style="border: 1px solid #000">
-            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
-                    style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Valor recibido en: {{ recibido_en }}</p></td>
+            <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 13px">Valor recibido en:
+                      {% if recibido_en %}
+                        {% for obj  in recibido_en  %}
+                            {{ obj.nombre }} &nbsp;&nbsp;
+                            {{ obj.referencia }} &nbsp;&nbsp;
+                            $ {{ obj.importe }} &nbsp;&nbsp;
+                            {% if not forloop.last %}
+                                -- &nbsp;
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </p>
+            </td>
         </tr>
         <tr style="border: 1px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 17px;width: 90%"><p
@@ -439,16 +476,14 @@
             </td>
             <td style="width: 20%">
                 <table>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
-                    <tr style="border: 1px solid #000; height: 25px">
-                        <td style="width: 50%; text-align: center"><span style="font-size: 15px">00</span> &nbsp;
-                            $12,000
-                        </td>
-                    </tr>
+                    {% for item in cuentas %}
+                        <tr style="border: 1px solid #000; height: 25px">
+                            <td style="width: 50%; text-align: center"><span style="font-size: 15px">{{ item.codigo }}</span> &nbsp;
+                                {{item.importe}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
 
                 </table>
             </td>

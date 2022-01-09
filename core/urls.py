@@ -13,5 +13,6 @@ urlpatterns = [
     path("", include("apps.authentication.urls")), # Auth routes - login / register
     path("", include("apps.home.urls")),         # UI Kits Html files
     path("amcm/", include("apps.amcm.urls")),         # UI Kits Html files
+    path(r'^tinymce/', include('tinymce.urls')),
 
 ]

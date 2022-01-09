@@ -23,8 +23,12 @@ $( document ).ready(function() {
      $('input[type=number]').addClass('form-control');
     $('.vIntegerField').removeClass('vIntegerField');
     $('.vTextField').removeClass('vTextField');
-$('.field-observaciones').addClass('col-12');
-$('.field-observaciones').removeClass('col-md-4 ');
+    $('.field-observaciones').addClass('col-12');
+    $('.field-observaciones').removeClass('col-md-4 ');
+     document.getElementById ("id_observaciones").rows = 3;
+    $('.field-descripcion_evento').addClass('col-12');
+    $('.field-descripcion_evento').removeClass('col-md-4 ');
+    document.getElementById ("id_descripcion_evento").rows = 4;
 $('.add-row-gsn>a').addClass('btn btn-default');
 $('.add-row-gsn>td>a').addClass('btn btn-default');
 
