@@ -295,7 +295,7 @@ class EventoAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
 
-        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'edit_link', 'listado_link', 'cuotas_link', 'pago_link',)
+        self.list_display = ('nombre', 'yardas', 'bolsa',  'edit_link', 'listado_link', 'cuotas_link', 'pago_link',)
 
         return super(EventoAdmin, self).changelist_view(request, extra_context)
 

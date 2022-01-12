@@ -57,6 +57,7 @@
                                 </td>
                             </tr>
                             <tr><td colspan="2">&nbsp;</td></tr>
+                            {% if reporte_cuotas %}
                             <tr>
                                 <td colspan="2" style="text-align: center">
                                     <table width="80%" align="center">
@@ -79,6 +80,7 @@
                                     </table>
                                 </td>
                             </tr>
+                        {% endif %}
                             <tr><td colspan="2"> </td> </tr>
                             <tr>
                                 <td colspan="2" style="text-align: center">
@@ -117,85 +119,88 @@
                         </table>
                     </div>
 
-                    <div class="table-responsive pb-4" align="center">
-                       <table width="70%" align="center">
-                           <tr>
-                               <td>
+                        <div class="table-responsive pb-4" align="center">
+                        {% if reporte_cuotas %}
+                           <table width="70%" align="center">
+                               <tr>
+                                   <td>
 
-                                    <h4>A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA PRIMERA CUOTA:</h4>
+                                        <h4>A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA PRIMERA CUOTA:</h4>
 
-                                   <div class="row">
+                                       <div class="row">
 
-                                           {% for obj in reporte_cuotas %}
-                                               {% for obj_cuadra in obj.cuadra_ejemplar %}
-                                                   <div class="col-6" style="margin-bottom: 20px;">
-                                                   <table >
-                                                       <tr>
-                                                           <td width="10%">&nbsp;</td>
-                                                           <td width="90%"> <strong>{{ obj_cuadra.cuadra }}</strong></td>
-                                                       </tr>
-                                                       <tr>
-                                                           <td width="10%">{{ obj_cuadra.contador }}</td>
-                                                           <td  width="90%">{{ obj_cuadra.ejemplar_lote }} &nbsp; &nbsp; {{ obj_cuadra.ejemplar_nombre }}</td>
-                                                       </tr>
-                                                   </table>
-                                                   </div>
+                                               {% for obj in reporte_cuotas %}
+                                                   {% for obj_cuadra in obj.cuadra_ejemplar %}
+                                                       <div class="col-6" style="margin-bottom: 20px;">
+                                                       <table >
+                                                           <tr>
+                                                               <td width="10%">&nbsp;</td>
+                                                               <td width="90%"> <strong>{{ obj_cuadra.cuadra }}</strong></td>
+                                                           </tr>
+                                                           <tr>
+                                                               <td width="10%">{{ obj_cuadra.contador }}</td>
+                                                               <td  width="90%">{{ obj_cuadra.ejemplar_lote }} &nbsp; &nbsp; {{ obj_cuadra.ejemplar_nombre }}</td>
+                                                           </tr>
+                                                       </table>
+                                                       </div>
 
+
+                                                   {% endfor %}
 
                                                {% endfor %}
 
-                                           {% endfor %}
+                                       </div>
 
-                                   </div>
+                                    </td>
+                               </tr>
+                           </table>
 
-                                </td>
-                           </tr>
-                       </table>
+                        {% endif %}
 
-
-{#                            {% for obj in cuadras %}#}
-{#                                <tr>#}
-{#                                    <td width="2px">&nbsp; </td>#}
-{#                                    <td width="30px" colspan="2"><strong>{{ obj.cuadra.nombre }}</strong></td>#}
-{#                                    <td colspan="{{ cuotas|length }}">{{ obj.cuadra.representante }} &nbsp; {{ obj.cuadra.telefono }} {% if obj.cuadra.celular != "" %} &nbsp;/&nbsp; {{ obj.cuadra.celular }} {% endif %}  {% for contacto in obj.cuadra.contactos %} &nbsp; &nbsp;&nbsp; &nbsp; {{ contacto.nombre }}&nbsp; &nbsp; {{ contacto.telefono }} {% endfor %} &nbsp; &nbsp; {{ obj.cuadra.correoElectronico }}  </td>#}
-{#                                    <td width="5px">&nbsp;</td>#}
-{#                                </tr>#}
-{##}
-{#                                {% for ejemplar in obj.ejemplar %}#}
-{##}
-{#                                <tr>#}
-{#                                    <td width="2px">{{ ejemplar.consecutivo }}</td>#}
-{#                                    <td width="5px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">{{ ejemplar.lote }}</td>#}
-{#                                    <td width="25px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar.nombre }}</td>#}
-{#                                    {% for obj in ejemplar.recibos %}#}
-{#                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center">#}
-{#                                              {% for numero in obj.recibo %}#}
-{#                                                {{ numero.numero_recibo }}#}
-{#                                                  {% if  not forloop.last %}#}
-{#                                                      <br/>#}
-{#                                                  {% endif %}#}
-{#                                            {% endfor %}#}
-{##}
-{#                                               {% if ejemplar.estatus  %}#}
-{#                                                   <br/> RETIRADO#}
-{#                                               {% endif %}#}
-{#                                        </td>#}
-{#                                    {% endfor %}#}
-{#                                    <td width="5px">#}
-{#                                        {% if not ejemplar.estatus  %}#}
-{#                                            <a href="/admin/amcm/eventoelegibles/{{ ejemplar.eventoelegible }}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-window-close"></i></button></a>#}
-{#                                        {% endif %}#}
-{#                                    </td>#}
-{#                                </tr>#}
-{##}
-{#                                {% endfor %}#}
-{##}
-{#                            {% endfor %}#}
-
+    {#                            {% for obj in cuadras %}#}
+    {#                                <tr>#}
+    {#                                    <td width="2px">&nbsp; </td>#}
+    {#                                    <td width="30px" colspan="2"><strong>{{ obj.cuadra.nombre }}</strong></td>#}
+    {#                                    <td colspan="{{ cuotas|length }}">{{ obj.cuadra.representante }} &nbsp; {{ obj.cuadra.telefono }} {% if obj.cuadra.celular != "" %} &nbsp;/&nbsp; {{ obj.cuadra.celular }} {% endif %}  {% for contacto in obj.cuadra.contactos %} &nbsp; &nbsp;&nbsp; &nbsp; {{ contacto.nombre }}&nbsp; &nbsp; {{ contacto.telefono }} {% endfor %} &nbsp; &nbsp; {{ obj.cuadra.correoElectronico }}  </td>#}
+    {#                                    <td width="5px">&nbsp;</td>#}
+    {#                                </tr>#}
+    {##}
+    {#                                {% for ejemplar in obj.ejemplar %}#}
+    {##}
+    {#                                <tr>#}
+    {#                                    <td width="2px">{{ ejemplar.consecutivo }}</td>#}
+    {#                                    <td width="5px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">{{ ejemplar.lote }}</td>#}
+    {#                                    <td width="25px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar.nombre }}</td>#}
+    {#                                    {% for obj in ejemplar.recibos %}#}
+    {#                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center">#}
+    {#                                              {% for numero in obj.recibo %}#}
+    {#                                                {{ numero.numero_recibo }}#}
+    {#                                                  {% if  not forloop.last %}#}
+    {#                                                      <br/>#}
+    {#                                                  {% endif %}#}
+    {#                                            {% endfor %}#}
+    {##}
+    {#                                               {% if ejemplar.estatus  %}#}
+    {#                                                   <br/> RETIRADO#}
+    {#                                               {% endif %}#}
+    {#                                        </td>#}
+    {#                                    {% endfor %}#}
+    {#                                    <td width="5px">#}
+    {#                                        {% if not ejemplar.estatus  %}#}
+    {#                                            <a href="/admin/amcm/eventoelegibles/{{ ejemplar.eventoelegible }}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-window-close"></i></button></a>#}
+    {#                                        {% endif %}#}
+    {#                                    </td>#}
+    {#                                </tr>#}
+    {##}
+    {#                                {% endfor %}#}
+    {##}
+    {#                            {% endfor %}#}
 
 
-                    </div>
-                </div>
+
+                        </div>
+                        </div>
+
             </div>
         </div>
 
