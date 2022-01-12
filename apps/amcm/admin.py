@@ -75,7 +75,7 @@ class DescuentoAdmin(admin.ModelAdmin):
 class CuentasContablesAdmin(admin.ModelAdmin):
     model = CuentasContables
     actions = None
-    list_per_page = 20
+    #list_per_page = 20
     list_display = ('codigo', 'nombre', 'estatus',)
     fieldsets = (
         (('Cuentas Contables'),
@@ -173,7 +173,7 @@ class CuadraAdmin(admin.ModelAdmin):
     model = Cuadras
     #fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    list_per_page = 20
+    #list_per_page = 20
     inlines = [ContactoInlineAdmin, EjemplarInlineAdmin, ]
     list_display = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico',)
     fieldsets = (
@@ -196,6 +196,15 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
     # fieldsets = (
     #     (('Ejemplares'),
     #      {'fields': ('nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre',)}),)
+
+class CuotaEventoAdmin(admin.ModelAdmin):
+    model = CondicionesEvento
+    fields = ('evento', 'fechaVencimiento', 'tipoCuota', 'monto')
+    list_display = ('evento', 'fechaVencimiento', 'tipoCuota', 'monto')
+    list_filter = ('evento', 'tipoCuota')
+    actions = None
+
+
 
 
 class CondicionesEventoInlineAdmin(admin.TabularInline):
@@ -257,7 +266,7 @@ class EventoAdmin(admin.ModelAdmin):
     model = Evento
     # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    list_per_page = 20
+    #list_per_page = 20
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin, CuentasEventoInlineAdmin]
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
@@ -286,7 +295,7 @@ class EventoAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
 
-        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link', 'listado_link', 'pago_link',)
+        self.list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'edit_link', 'listado_link', 'cuotas_link', 'pago_link',)
 
         return super(EventoAdmin, self).changelist_view(request, extra_context)
 
@@ -314,6 +323,13 @@ class EventoAdmin(admin.ModelAdmin):
         )
     listado_link.short_description = 'Listado'
     listado_link.allow_tags = True
+
+    def cuotas_link(self, obj):
+        return format_html('<a href="/amcm/get_evento_cuotas/?evento_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-file-invoice-dollar"></i></button></a>',
+            obj.id,
+        )
+    cuotas_link.short_description = 'Cuotas'
+    cuotas_link.allow_tags = True
 
     def pago_link(self, obj):
         return format_html('<a href="/admin/amcm/pago/?evento_id={}"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
@@ -406,6 +422,7 @@ class PagoAdmin(admin.ModelAdmin):
     form = PagoForm
     inlines = [ReferenciaFormaPagoInlineAdmin, CuentasPagoInlineAdmin, ]
     actions = None
+    list_filter = []
     list_per_page = 20
     list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
@@ -450,6 +467,15 @@ class PagoAdmin(admin.ModelAdmin):
 
     recibo_link.short_description = 'Recibos'
     recibo_link.allow_tags = True
+
+    def get_queryset(self, request):
+        evento_id = request.GET.get('evento_id')
+        qs = super(PagoAdmin, self).get_queryset(request)
+        if request.GET.get('evento_id') != None:
+            print('se filtra por evento')
+            qs = qs.filter(evento_id= evento_id)
+        return qs
+
 
     def save_model(self, request, obj, form, change):
         print("ok")
@@ -524,6 +550,7 @@ class FormaPagoAdmin(admin.ModelAdmin):
         field.widget.can_change_related = False
         return form
 
+
 # Inlines para registro de Listado Elegibles
 class ListadoElegiblesInlineAdmin(admin.StackedInline):
     model = ListadoElegibles
@@ -556,7 +583,7 @@ class ElegibleAdmin(admin.ModelAdmin):
 class ListadoElegiblesAdmin(admin.ModelAdmin):
     model = ListadoElegibles
     actions = None
-    list_per_page = 20
+    #list_per_page = 20
     list_display = ('elegible', 'cuadra',  )
 
 
@@ -579,7 +606,7 @@ admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
 admin.site.register(TipoFecha)
 admin.site.register(TipoMoneda)
-admin.site.register(CuotaEvento)
+admin.site.register(CuotaEvento, CuotaEventoAdmin)
 admin.site.register(Pago, PagoAdmin)
 admin.site.register(Recibo, ReciboAdmin)
 admin.site.register(Limite)

@@ -309,6 +309,142 @@ class getListadoElegibles(ListView):
         return render(request, 'amcm/listado_elegibles.html', params)
 
 
+class getEventoCuotas(ListView):
+
+    def get(self, request, *args, **kwargs):
+        evento_id = request.GET.get('evento_id')
+        cuota_id = request.GET.get('cuota_id')
+        cuotas_set = []
+        reporte_cuotas = []
+        reporte = []
+        total = 0
+        descuento = 0
+        cuota_obj = CuotaEvento.objects.filter(Q(evento_id=evento_id) & Q(id=cuota_id))
+        i = 0
+        total_cuota = 0
+        try:
+            all_evento = Evento.objects.get(id=evento_id)
+            cuota_obj = CuotaEvento.objects.filter(Q(evento_id=evento_id) & Q(id=cuota_id))
+            for cuota in cuota_obj:
+                cuota_obj = cuota
+
+            cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
+            for cuota in cuotas_evento:
+                if cuota.tipoCuota.id == 2:
+                    descuento = cuota.monto - (cuota.monto * all_evento.descuento.porcentaje)
+                    print(descuento)
+                if cuota.tipoCuota.id != 2 and cuota.tipoCuota.id != 6:
+                    cuotas_set.append(cuota.to_serializable_dict())
+
+                if cuota_obj:
+                    if cuota.fechaVencimiento <= cuota_obj.fechaVencimiento:
+                        reporte_cuotas.append(cuota)
+
+            if reporte_cuotas:
+                ejemplares_pago = []
+                cuadra_ejemplares = []
+                for reporte_cuota in reporte_cuotas:
+                    total_cuota = 0
+                    pagos = Recibo.objects.filter(pago__evento=reporte_cuota.evento_id, pago__cuota_id=reporte_cuota.id, pago__estatus_cuota="PAGADO").order_by('pago__cuadra', 'pago__cuadra__ejemplares')
+                    if pagos:
+                        ejemplares_pago = []
+                        cuadra_ejemplares = []
+                        for x in pagos:
+                            ejemplar_pago_set = x.pago.ejemplar.all()
+                            ejemplares_pago.append(ejemplar_pago_set[0])
+
+                        if ejemplares_pago:
+                            for ejemplar_object in ejemplares_pago:
+                                i = i+1
+                                total_cuota = total_cuota+1
+                                data = {
+                                    'cuadra': ejemplar_object.cuadra, #x.pago.cuadra,
+                                    'contador': i,
+                                    "ejemplar_lote": ejemplar_object.lote,
+                                    "ejemplar_nombre": ejemplar_object.nombre
+                                }
+
+                                cuadra_ejemplares.append(data)
+
+                    # recibo_cuota = Recibo.objects.filter(
+                    #              Q(pago__cuota_id=reporte_cuota.id) & Q(pago__estatus_cuota="PAGADO") & Q(pago__evento=reporte_cuota.evento_id)).order_by('pago__cuadra', 'pago__cuadra__ejemplares')
+                    #
+                    # for pago_obj in recibo_cuota:
+                    #     #pagos_cuota.append(pago_obj)
+                    #     for x in pago_obj:
+                    #         ejemplar_pago_set = x.pago.ejemplar.all()
+                    #
+                    #         for ejemplar_pago in ejemplar_pago_set:
+                    #
+                    #             data = {
+                    #                 'cuadra': pago_obj.pago.cuadra,
+                    #                 "ejemplar": ejemplar_pago
+                    #             }
+                    #
+                    #         pagos_cuota.append(data)
+
+                        if cuadra_ejemplares:
+                            response = {
+                                'monto_cuota': reporte_cuota.monto * total_cuota,
+                                'total_cuota': total_cuota,
+                                'cuota': reporte_cuota,
+                                'cuadra_ejemplar': cuadra_ejemplares
+                            }
+                            total = total + (reporte_cuota.monto * total_cuota)
+                            reporte.append(response)
+
+
+                # if cuotas_evento is not None:
+                #     cuota_obj = cuotas_evento.filter()
+                #     if cuota_obj:
+                #         pagos_cuota = Recibo.objects.filter(
+                #             Q(pago__cuota_id=cuota_id) & Q(pago__estatus_cuota="PAGADO") & Q(pago__evento=all_evento)
+                #         )
+                #
+                #
+                # i = 0
+                #
+                #
+                #
+                #
+                #         data_ejemplar = {
+                #             'consecutivo': i,
+                #             'lote': evento_ejemplar.ejemplar.lote,
+                #             'nombre': evento_ejemplar.ejemplar.nombre,
+                #             'eventoelegible': evento_ejemplar.id,
+                #             'estatus': evento_ejemplar.estaus,
+                #             'recibos': ejemplar_recibos
+                #         }
+                #         cuadra_ejemplares.append(data_ejemplar)
+                #
+                #     registro = {
+                #         'cuadra': cuadra.to_serializable_dict,
+                #         'ejemplar': cuadra_ejemplares,
+                #     }
+                #
+                #     cuadras.append(registro)
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existe lista de elegibles"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "reporte_cuotas": reporte,
+            "evento": all_evento.to_serializable_dict,
+            'cycle': range(0, i),
+            "cuotas": cuotas_set,
+            'descuento': descuento,
+            "total": total
+        }
+
+        # from django.template import loader
+        # template = loader.get_template('ficha.html')
+        # return HttpResponse(template.render(params, request))
+
+        return render(request, 'amcm/evento_cuotas.html', params)
+
+
 class getReporteEventos(ListView):
 
     def get(self, request, *args, **kwargs):

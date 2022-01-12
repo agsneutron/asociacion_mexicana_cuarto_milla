@@ -443,6 +443,7 @@ class Cuadras(models.Model):
         verbose_name = "Cuadra"
         verbose_name_plural = "Cuadras"
 
+
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
@@ -520,7 +521,7 @@ class Evento(models.Model):
     yardas = models.IntegerField(verbose_name="Distancia (yardas)", null=False, blank=False)
     descripcion_evento = models.TextField(verbose_name="Descripción", max_length=2500, null=False, blank=True)
 
-    bolsa = models.FloatField(verbose_name="Bolsa", null=False, blank=False)
+    bolsa = models.FloatField(verbose_name="Aportación AMCM", null=False, blank=False)
     fondo = models.FloatField(verbose_name="Fondo",  null=False, blank=False)
     temporada = models.IntegerField(verbose_name="Temporada",  null=False, blank=False)
     observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=True)

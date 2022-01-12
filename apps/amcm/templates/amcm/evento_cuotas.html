@@ -1,0 +1,209 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Listado {% endblock title %}
+
+{% block content %}
+
+    <div class="header pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 d-inline-block mb-0">Cuotas del Evento </h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href="/admin/amcm/evento/">Eventos</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+
+                        <h3 class="mb-0 text-center" > {{ evento.nombre }} </h3>
+                        <div class="text-center">{{ evento.descripcion_evento| linebreaks }}</div>
+                        <br/>
+                        <table class="table table-flush" id="result_list" align="center">
+
+                                <tr>
+                                    {% for obj in cuotas %}
+                                        <td align="center">
+                                            <a role="button" class="btn btn-primary btn-sm" href="/amcm/get_evento_cuotas/?evento_id={{ evento.id }}&cuota_id={{ obj.id }}">{{ obj.tipoCuota.nombre }}</a> <br/>
+                                        </td>
+                                    {% endfor %}
+
+                                </tr>
+
+                        </table>
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <span class="text-left"> {% for condicion in evento.condiciones_evento %} {% if condicion.limite == 'PESO'  %} {{  condicion.limite }}: &nbsp; {{  condicion.valor }} &nbsp; {{  condicion.especificacion }} {% endif %}{% endfor %}</span>
+                                </td>
+                                <td  width="50%" style="text-align: end">
+                                   <span > DISTANCIA: {{  evento.yardas }} YARDAS </span>
+                                </td>
+                            </tr>
+                            <tr><td colspan="2">&nbsp;</td></tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center">
+                                    <table width="80%" align="center">
+                                        {% for obj in reporte_cuotas %}
+
+                                        <tr>
+                                            <td style="text-align: left" width="70%">
+                                                {{ obj.cuota }}  POR {{ obj.total_cuota }} EJEMPLARES =
+                                            </td>
+                                            <td style="text-align: right" width="30%">
+                                               $ {{ obj.monto_cuota }}
+                                            </td>
+                                        </tr>
+
+                                        {% endfor %}
+                                        <tr>
+                                            <td style="text-align: right"  width="70%">&nbsp;TOTAL &nbsp;&nbsp;</td>
+                                            <td style="text-align: right; border-top: grey; border-top-width: 1px; border-top-style: solid" width="30%"><strong>$ {{ total }}</strong> </td></tr>
+                                        <tr><td colspan="2">&nbsp;</td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td colspan="2"> </td> </tr>
+                            <tr>
+                                <td colspan="2" style="text-align: center">
+                                    <table width="80%" align="center" >
+                                        {% for cuota in evento.cuotas_evento %}
+                                        <tr style="border: grey; border-style: solid; border-width: 1px;">
+                                            <td style="text-align: left" width="70%">
+                                                {{ cuota.tipoCuota}}
+                                                {% if cuota.tipoCuota.id == 2 %}
+                                                   ( ${{ cuota.monto }} ) CON EL {{ evento.descuento }} DE DESCUENTO
+                                                {% else %}
+                                                    : {{ cuota.fechaVencimiento|date:"l, d F Y" }}
+                                                {% endif %}
+                                            </td>
+                                            <td style="text-align: right" width="30%">
+                                                {% if cuota.tipoCuota.id == 2 %}
+                                                    $ {{ descuento }}
+                                                {% else %}
+                                                    $ {{ cuota.monto }} {{ cuota.observacion }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr><td colspan="2">&nbsp;</td></tr>
+                                        {% for fecha in evento.fechas_evento %}
+                                            <tr>
+                                                <td colspan="2" style="text-align: center">
+                                                    {{ fecha.tipoFecha}}:     {{ fecha.fecha|date:"l, d F Y"  }}
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                     <tr><td colspan="2">&nbsp;</td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="table-responsive pb-4" align="center">
+                       <table width="70%" align="center">
+                           <tr>
+                               <td>
+
+                                    <h4>A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA PRIMERA CUOTA:</h4>
+
+                                   <div class="row">
+
+                                           {% for obj in reporte_cuotas %}
+                                               {% for obj_cuadra in obj.cuadra_ejemplar %}
+                                                   <div class="col-6" style="margin-bottom: 20px;">
+                                                   <table >
+                                                       <tr>
+                                                           <td width="10%">&nbsp;</td>
+                                                           <td width="90%"> <strong>{{ obj_cuadra.cuadra }}</strong></td>
+                                                       </tr>
+                                                       <tr>
+                                                           <td width="10%">{{ obj_cuadra.contador }}</td>
+                                                           <td  width="90%">{{ obj_cuadra.ejemplar_lote }} &nbsp; &nbsp; {{ obj_cuadra.ejemplar_nombre }}</td>
+                                                       </tr>
+                                                   </table>
+                                                   </div>
+
+
+                                               {% endfor %}
+
+                                           {% endfor %}
+
+                                   </div>
+
+                                </td>
+                           </tr>
+                       </table>
+
+
+{#                            {% for obj in cuadras %}#}
+{#                                <tr>#}
+{#                                    <td width="2px">&nbsp; </td>#}
+{#                                    <td width="30px" colspan="2"><strong>{{ obj.cuadra.nombre }}</strong></td>#}
+{#                                    <td colspan="{{ cuotas|length }}">{{ obj.cuadra.representante }} &nbsp; {{ obj.cuadra.telefono }} {% if obj.cuadra.celular != "" %} &nbsp;/&nbsp; {{ obj.cuadra.celular }} {% endif %}  {% for contacto in obj.cuadra.contactos %} &nbsp; &nbsp;&nbsp; &nbsp; {{ contacto.nombre }}&nbsp; &nbsp; {{ contacto.telefono }} {% endfor %} &nbsp; &nbsp; {{ obj.cuadra.correoElectronico }}  </td>#}
+{#                                    <td width="5px">&nbsp;</td>#}
+{#                                </tr>#}
+{##}
+{#                                {% for ejemplar in obj.ejemplar %}#}
+{##}
+{#                                <tr>#}
+{#                                    <td width="2px">{{ ejemplar.consecutivo }}</td>#}
+{#                                    <td width="5px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">{{ ejemplar.lote }}</td>#}
+{#                                    <td width="25px" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar.nombre }}</td>#}
+{#                                    {% for obj in ejemplar.recibos %}#}
+{#                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center">#}
+{#                                              {% for numero in obj.recibo %}#}
+{#                                                {{ numero.numero_recibo }}#}
+{#                                                  {% if  not forloop.last %}#}
+{#                                                      <br/>#}
+{#                                                  {% endif %}#}
+{#                                            {% endfor %}#}
+{##}
+{#                                               {% if ejemplar.estatus  %}#}
+{#                                                   <br/> RETIRADO#}
+{#                                               {% endif %}#}
+{#                                        </td>#}
+{#                                    {% endfor %}#}
+{#                                    <td width="5px">#}
+{#                                        {% if not ejemplar.estatus  %}#}
+{#                                            <a href="/admin/amcm/eventoelegibles/{{ ejemplar.eventoelegible }}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-window-close"></i></button></a>#}
+{#                                        {% endif %}#}
+{#                                    </td>#}
+{#                                </tr>#}
+{##}
+{#                                {% endfor %}#}
+{##}
+{#                            {% endfor %}#}
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}
