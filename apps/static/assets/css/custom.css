@@ -53,6 +53,18 @@ td>p{
     margin-bottom: 12px;
 }
 
+.column-edit_link, .column-listado_link, .column-pago_link, .field-edit_link, .field-listado_link, .field-pago_link, .column-recibo_link, .field-recibo_link{
+        padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+tr th a {
+    white-space: normal !important;
+}
+tr th.field-pago a{
+    white-space: inherit !important;
+}
+
+
 /*.datetimeshortcuts{*/
 /*        position: absolute;*/
 /*    right: 28px;*/

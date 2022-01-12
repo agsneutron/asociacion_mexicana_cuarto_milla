@@ -37,20 +37,20 @@
                         <table class="table table-flush" id="result_list">
                             <thead class="thead-light">
                             <tr>
-                                <th width="30%">Evento</th>
+                                <th>Evento</th>
                                 <th>Temporada</th>
                                 <th>Distancia</th>
                                 <th>Eliminatoria</th>
                                 <th>Final</th>
-                                <th>Cuotas</th>
-                                <th>...</th>
+                                <th class="px-1">Cuotas</th>
+                                <th class="px-1">...</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             {% for obj in futurity %}
                                 <tr>
-                                    <td>{{ obj.nombre }}</td>
+                                    <td class="text-wrap">{{ obj.nombre }}</td>
                                     <td>{{ obj.temporada }}</td>
                                     <td>{{ obj.yardas }} yardas</td>
                                     <td>
@@ -74,14 +74,14 @@
                                         </span>
                                         </span>
                                     </td>
-                                    <td>
+                                    <td class="px-1">
                                         <a href="/amcm/get_reporte_cuota/?id={{ obj.id }}">
                                             <button type="button" class="btn btn-outline-secondary btn-sm">
                                                 <i class="far fa-file-alt"></i>
                                             </button>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="px-1">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -218,20 +218,20 @@
                         <table class="table table-flush" id="result_list_two">
                             <thead class="thead-light">
                             <tr>
-                                <th width="40%">Evento</th>
+                                <th>Evento</th>
                                 <th>Temporada</th>
                                 <th>Distancia</th>
                                 <th>Eliminatoria</th>
                                 <th>Final</th>
-                                <th>Cuotas</th>
-                                <th>...</th>
+                                <th class="px-1">Cuotas</th>
+                                <th class="px-1">...</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             {% for obj in derby %}
                                 <tr>
-                                    <td>{{ obj.nombre }}</td>
+                                    <td class="text-wrap">{{ obj.nombre }}</td>
                                     <td>{{ obj.temporada }}</td>
                                     <td> {{ obj.yardas }} yardas</td>
                                     <td>
@@ -250,14 +250,14 @@
                           {% endif %}{% endfor %}</span>
                     </span>
                                     </td>
-                                    <td>
+                                    <td class="px-1">
                                          <a href="/amcm/get_reporte_cuota/?id={{ obj.id }}">
                                             <button type="button" class="btn btn-outline-secondary btn-sm">
                                                 <i class="far fa-file-alt"></i>
                                             </button>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="px-1">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -365,20 +365,20 @@
                         <table class="table table-flush" id="result_list_Three">
                             <thead class="thead-light">
                             <tr>
-                                <th width="40%">Evento</th>
+                                <th>Evento</th>
                                 <th>Temporada</th>
                                 <th>Distancia</th>
                                 <th>Eliminatoria</th>
                                 <th>Final</th>
-                                <th>Cuotas</th>
-                                <th>...</th>
+                                <th class="px-1">Cuotas</th>
+                                <th class="px-1">...</th>
                             </tr>
                             </thead>
 
                             <tbody>
                             {% for obj in clasico %}
                                 <tr>
-                                    <td>{{ obj.nombre }}</td>
+                                    <td class="text-wrap">{{ obj.nombre }}</td>
                                     <td>{{ obj.temporada }}</td>
                                     <td> {{ obj.yardas }} yardas</td>
                                     <td>
@@ -397,14 +397,14 @@
                           {% endif %}{% endfor %}</span>
                     </span>
                                     </td>
-                                    <td>
+                                    <td class="px-1">
                                          <a href="/amcm/get_reporte_cuota/?id={{ obj.id }}">
                                             <button type="button" class="btn btn-outline-secondary btn-sm">
                                                 <i class="far fa-file-alt"></i>
                                             </button>
                                         </a>
                                     </td>
-                                    <td>
+                                    <td class="px-1">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

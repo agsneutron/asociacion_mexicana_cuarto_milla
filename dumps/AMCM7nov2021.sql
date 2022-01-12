@@ -36,7 +36,7 @@ CREATE TABLE `amcm_condicionesevento` (
   CONSTRAINT `amcm_condicioneseven_tipoCondicion_id_3a88c15c_fk_amcm_tipo` FOREIGN KEY (`tipoCondicion_id`) REFERENCES `amcm_tipocondicion` (`id`),
   CONSTRAINT `amcm_condicionesevento_evento_id_2bac95a8_fk_amcm_evento_id` FOREIGN KEY (`evento_id`) REFERENCES `amcm_evento` (`id`),
   CONSTRAINT `amcm_condicionesevento_limite_id_867aca5f_fk_amcm_limite_id` FOREIGN KEY (`limite_id`) REFERENCES `amcm_limite` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `amcm_credito` (
   PRIMARY KEY (`id`),
   KEY `amcm_credito_pago_id_8558ffc0_fk_amcm_pago_id` (`pago_id`),
   CONSTRAINT `amcm_credito_pago_id_8558ffc0_fk_amcm_pago_id` FOREIGN KEY (`pago_id`) REFERENCES `amcm_pago` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -94,7 +94,7 @@ CREATE TABLE `amcm_cuadras` (
   `correoElectronico` varchar(100) NOT NULL,
   `observaciones` longtext NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +125,7 @@ CREATE TABLE `amcm_cuotaevento` (
   KEY `amcm_cuotaevento_evento_id_9823ca39_fk_amcm_evento_id` (`evento_id`),
   CONSTRAINT `amcm_cuotaevento_evento_id_9823ca39_fk_amcm_evento_id` FOREIGN KEY (`evento_id`) REFERENCES `amcm_evento` (`id`),
   CONSTRAINT `amcm_cuotaevento_tipoCuota_id_49d5a35c_fk_amcm_tipocuota_id` FOREIGN KEY (`tipoCuota_id`) REFERENCES `amcm_tipocuota` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -155,7 +155,7 @@ CREATE TABLE `amcm_cuotas` (
   UNIQUE KEY `nombre` (`nombre`),
   KEY `amcm_cuotas_tipoCuota_id_9bb6e747_fk_amcm_tipocuota_id` (`tipoCuota_id`),
   CONSTRAINT `amcm_cuotas_tipoCuota_id_9bb6e747_fk_amcm_tipocuota_id` FOREIGN KEY (`tipoCuota_id`) REFERENCES `amcm_tipocuota` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,7 +182,7 @@ CREATE TABLE `amcm_descuentos` (
   `porcentaje` double NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +224,7 @@ CREATE TABLE `amcm_ejemplares` (
   CONSTRAINT `amcm_ejemplares_estatus_id_3c84719a_fk_amcm_estatusejemplar_id` FOREIGN KEY (`estatus_id`) REFERENCES `amcm_estatusejemplar` (`id`),
   CONSTRAINT `amcm_ejemplares_nacionalidad_id_d75dff57_fk_amcm_nacionalidad_id` FOREIGN KEY (`nacionalidad_id`) REFERENCES `amcm_nacionalidad` (`id`),
   CONSTRAINT `amcm_ejemplares_sexo_id_14e99806_fk_amcm_sexo_id` FOREIGN KEY (`sexo_id`) REFERENCES `amcm_sexo` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,7 +250,7 @@ CREATE TABLE `amcm_estatusejemplar` (
   `descripcion` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,7 +286,7 @@ CREATE TABLE `amcm_evento` (
   KEY `amcm_evento_descuento_id_535ec5f6_fk_amcm_descuentos_id` (`descuento_id`),
   CONSTRAINT `amcm_evento_descuento_id_535ec5f6_fk_amcm_descuentos_id` FOREIGN KEY (`descuento_id`) REFERENCES `amcm_descuentos` (`id`),
   CONSTRAINT `amcm_evento_tipoEvento_id_c9032485_fk_amcm_tipoevento_id` FOREIGN KEY (`tipoEvento_id`) REFERENCES `amcm_tipoevento` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -316,7 +316,7 @@ CREATE TABLE `amcm_fechasevento` (
   KEY `amcm_fechasevento_tipoFecha_id_10cc4303_fk_amcm_tipofecha_id` (`tipoFecha_id`),
   CONSTRAINT `amcm_fechasevento_evento_id_e73d4672_fk_amcm_evento_id` FOREIGN KEY (`evento_id`) REFERENCES `amcm_evento` (`id`),
   CONSTRAINT `amcm_fechasevento_tipoFecha_id_10cc4303_fk_amcm_tipofecha_id` FOREIGN KEY (`tipoFecha_id`) REFERENCES `amcm_tipofecha` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -350,7 +350,7 @@ CREATE TABLE `amcm_inscripcion` (
   CONSTRAINT `amcm_inscripcion_cuadra_id_4cabff65_fk_amcm_cuadras_id` FOREIGN KEY (`cuadra_id`) REFERENCES `amcm_cuadras` (`id`),
   CONSTRAINT `amcm_inscripcion_ejemplar_id_38b67426_fk_amcm_ejemplares_id` FOREIGN KEY (`ejemplar_id`) REFERENCES `amcm_ejemplares` (`id`),
   CONSTRAINT `amcm_inscripcion_evento_id_97ceb3b8_fk_amcm_evento_id` FOREIGN KEY (`evento_id`) REFERENCES `amcm_evento` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,7 +375,7 @@ CREATE TABLE `amcm_limite` (
   `descripcion` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -402,7 +402,7 @@ CREATE TABLE `amcm_nacionalidad` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`),
   UNIQUE KEY `abreviatura` (`abreviatura`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -440,7 +440,7 @@ CREATE TABLE `amcm_pago` (
   CONSTRAINT `amcm_pago_cuadra_id_8de6409f_fk_amcm_cuadras_id` FOREIGN KEY (`cuadra_id`) REFERENCES `amcm_cuadras` (`id`),
   CONSTRAINT `amcm_pago_cuota_id_b6ffb760_fk_amcm_cuotaevento_id` FOREIGN KEY (`cuota_id`) REFERENCES `amcm_cuotaevento` (`id`),
   CONSTRAINT `amcm_pago_evento_id_4fa0dac9_fk_amcm_evento_id` FOREIGN KEY (`evento_id`) REFERENCES `amcm_evento` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -469,7 +469,7 @@ CREATE TABLE `amcm_pago_ejemplar` (
   KEY `amcm_pago_ejemplar_ejemplares_id_16ca10d7_fk_amcm_ejemplares_id` (`ejemplares_id`),
   CONSTRAINT `amcm_pago_ejemplar_ejemplares_id_16ca10d7_fk_amcm_ejemplares_id` FOREIGN KEY (`ejemplares_id`) REFERENCES `amcm_ejemplares` (`id`),
   CONSTRAINT `amcm_pago_ejemplar_pago_id_0a273d27_fk_amcm_pago_id` FOREIGN KEY (`pago_id`) REFERENCES `amcm_pago` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -498,7 +498,7 @@ CREATE TABLE `amcm_reasignaejemplar` (
   KEY `amcm_reasignaejemplar_ejemplar_id_658317a4_fk_amcm_ejemplares_id` (`ejemplar_id`),
   CONSTRAINT `amcm_reasignaejemplar_cuadra_id_66cc2161_fk_amcm_cuadras_id` FOREIGN KEY (`cuadra_id`) REFERENCES `amcm_cuadras` (`id`),
   CONSTRAINT `amcm_reasignaejemplar_ejemplar_id_658317a4_fk_amcm_ejemplares_id` FOREIGN KEY (`ejemplar_id`) REFERENCES `amcm_ejemplares` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -527,7 +527,7 @@ CREATE TABLE `amcm_recibo` (
   UNIQUE KEY `numero_recibo` (`numero_recibo`),
   KEY `amcm_recibo_pago_id_36559874_fk_amcm_pago_id` (`pago_id`),
   CONSTRAINT `amcm_recibo_pago_id_36559874_fk_amcm_pago_id` FOREIGN KEY (`pago_id`) REFERENCES `amcm_pago` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -552,7 +552,7 @@ CREATE TABLE `amcm_sexo` (
   `nombre` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -578,7 +578,7 @@ CREATE TABLE `amcm_tipocondicion` (
   `descripcion` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -604,7 +604,7 @@ CREATE TABLE `amcm_tipocuota` (
   `descripcion` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -630,7 +630,7 @@ CREATE TABLE `amcm_tipoevento` (
   `descripcion` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -655,7 +655,7 @@ CREATE TABLE `amcm_tipofecha` (
   `nombre` varchar(500) NOT NULL,
   `descripcion` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
