@@ -8,7 +8,6 @@ from django.views.generic import ListView
 from apps.amcm.models import Evento
 import operator
 from django.db.models import Q
-
 from django.core.exceptions import PermissionDenied
 from functools import reduce
 
@@ -66,3 +65,4 @@ class EventoListView(ListView):
         if not request.user.has_perm('erp.view_list_project'):
             raise PermissionDenied
         return super(EventoListView, self).dispatch(request, args, kwargs)
+
