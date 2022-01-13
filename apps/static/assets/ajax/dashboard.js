@@ -122,6 +122,25 @@ function iniciaDashboard(data) {
 
         //.append("<tr><td>data.cuadras_ejemplares[i].cuadra</td><td>data.cuadras_ejemplares[i].ejemplares</td></tr>");
     }
+
+    //nominados eventos
+    myTable = document.getElementById('result_list_rr').getElementsByTagName('tbody')[0];
+
+    for (var i = 0; i < data.recibos.length; i++) {
+        let row = myTable.insertRow();
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        let cell3 = row.insertCell(2);
+
+        cell1.classList.add("text-wrap");
+        cell3.classList.add("text-wrap");
+
+        cell1.innerHTML = data.recibos[i].evento;
+        cell2.innerHTML = data.recibos[i].cuota;
+        cell3.innerHTML = data.recibos[i].total;
+
+        //.append("<tr><td>data.cuadras_ejemplares[i].cuadra</td><td>data.cuadras_ejemplares[i].ejemplares</td></tr>");
+    }
 }
 
 function eventosTemporada(data, filtro){
