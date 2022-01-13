@@ -1,6 +1,7 @@
 # coding=utf-8
 import io
 import json
+from django.db.models import Sum
 
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -18,6 +19,7 @@ from apps.amcm.models import *
 from apps.lib.utilities import Utilities
 from django.db.models import Sum
 from django.db.models import Count
+import datetime
 
 def html_to_pdf(content, output):
     """
@@ -878,3 +880,122 @@ class getReporteLista(ListView):
         }
 
         return Render.renderCuota('amcm/reporte_futurity-garanones-rg2.html', params)
+
+
+class getDashboard(ListView):
+
+    def get(self, request, *args, **kwargs):
+
+        total_cuadras_ejemplares = []
+        eventos_temporada = []
+        nominados_set = []
+        try:
+            today = datetime.datetime.now()
+
+            #conteo general de ejemplares, cuadras, eventos
+            eventos = Evento.objects.filter(Q(temporada=str(today.year))).count()
+            ejemplares = Ejemplares.objects.count()
+            cuadras = Cuadras.objects.count()
+            pagos = Pago.objects.filter(Q(fechaPago__year=str(today.year))).aggregate(total=Sum('cuotaPagada'))
+
+            #relacion de cuadras y ejemplares
+            cuadras_ejemplares = Ejemplares.objects.values('cuadra__nombre').annotate(total=Count('cuadra__nombre')).order_by()
+            for obj in cuadras_ejemplares:
+                data = {
+                    'cuadra': obj['cuadra__nombre'],
+                    'ejemplares': obj['total']
+                }
+                total_cuadras_ejemplares.append(data)
+
+            #eventos de la temporada
+            #eventos_obj = Evento.objects.filter(Q(temporada=str(today.year)))
+
+            eventos_obj = CuotaEvento.objects.filter(Q(evento__temporada=str(today.year)) & Q(tipoCuota_id__in=(1,11,15))).order_by('fechaVencimiento')
+            for obj in eventos_obj:
+                cuotas_set = []
+                fechas_set = []
+                condicion_set = []
+                cuotas_obj = CuotaEvento.objects.filter(Q(evento_id=obj.evento_id) & Q(tipoCuota_id__in=(1,3,11,12,13,15))).order_by('fechaVencimiento')
+                for cuota in cuotas_obj:
+                    cuota_data = {
+                    "cuotaFecha": str(cuota.fechaVencimiento.strftime("%d-%m-%Y")),
+                    "cuotaMonto": cuota.monto
+                    }
+                    cuotas_set.append(cuota_data)
+
+                fechas_obj = FechasEvento.objects.filter(Q(evento_id=obj.evento_id) & Q(tipoFecha_id__in=(1,3))).order_by('tipoFecha_id')
+                for fecha in fechas_obj:
+                    fecha_data = {
+                    "tipoFecha": fecha.tipoFecha.nombre,
+                    "fecha": str(fecha.fecha.strftime("%d-%m-%Y"))
+                    }
+                    fechas_set.append(fecha_data)
+
+                condicion_obj = CondicionesEvento.objects.filter(Q(evento_id=obj.evento_id))
+                for condicion in condicion_obj:
+                    condicion_data = {
+                        'condicion': condicion.especificacion
+                    }
+                    condicion_set.append(condicion_data)
+
+                data = {
+                    'nombre': obj.evento.nombre,
+                    'cuotas': cuotas_set,
+                    'fechas': fechas_set,
+                    'condicion': condicion_set,
+                    'distancia': obj.evento.yardas,
+                    'tipo': obj.evento.tipoEvento.nombre,
+                }
+                eventos_temporada.append(data)
+
+            #nominados vs inscritos
+            nominados_obj = EventoElegibles.objects.values('evento__nombre', 'elegible__nombre').annotate(total=Count('evento__nombre')).order_by()
+            for nominados in nominados_obj:
+                nominados_data = {
+                    'evento': nominados['evento__nombre'],
+                    'ejemplares': nominados['total'],
+                    'elegible': nominados['elegible__nombre'],
+                }
+                nominados_set.append(nominados_data)
+
+                # recibos
+                recibos_set = []
+                recibos_obj = Recibo.objects.values('pago__evento__nombre', 'pago__cuota__tipoCuota__nombre','pago__cuotaPagada')\
+                    .annotate(total=Count('pago__evento__nombre')).order_by() #.aggregate(total_monto=Sum('pago__cuotaPagada'))\
+
+                for recibo in recibos_obj:
+                    recibos_data = {
+                        'evento': recibo['pago__evento__nombre'],
+                        'total': recibo['total'],
+                        #'monto': recibo['total_monto'],
+                        'cuota': recibo['pago__cuota__tipoCuota__nombre'],
+                    }
+                    recibos_set.append(recibos_data)
+
+        except Evento.DoesNotExist:
+            params = {
+                "eventos": 0,
+                "ejemplares": 0,
+                "cuadras": 0,
+                "pagos": 0,
+                "cuadras_ejemplares": [],
+                "eventos_temporada": [],
+                'nominados': [],
+                "message": "error"
+            }
+            return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+
+        params = {
+            "eventos": eventos,
+            "ejemplares": ejemplares,
+            "cuadras": cuadras,
+            "pagos": pagos['total'],
+            "cuadras_ejemplares": total_cuadras_ejemplares,
+            "eventos_temporada": eventos_temporada,
+            'nominados': nominados_set,
+            'recibos':recibos_set,
+            "message": "success"
+        }
+
+        return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+

@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path, re_path
 from apps.amcm import api
 from django.conf.urls import url
+from apps.amcm import views
 
 
 urlpatterns = [
@@ -18,4 +19,6 @@ urlpatterns = [
     url(r'^get_reporte_lista_pdf/', login_required(api.getReporteLista.as_view())),
     url(r'^get_listado_elegibles/', login_required(api.getListadoElegibles.as_view())),
     url(r'^get_evento_cuotas/', login_required(api.getEventoCuotas.as_view())),
+    url(r'^get_dashboard/', login_required(api.getDashboard.as_view())),
+    #url(r'^register_by_token', views.register_by_access_token),
 ]
