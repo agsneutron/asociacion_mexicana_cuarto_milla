@@ -34,6 +34,18 @@ class EstatusEjemplarAdmin(admin.ModelAdmin):
         (('Estatus del Ejemplar'),
          {'fields': ('nombre', 'descripcion',)}),)
 
+# Administrador para el catálogo Paquetes de Descuento.
+class PaquetesDescuentoAdmin(admin.ModelAdmin):
+    model = PaquetesDescuento
+    #fields = ('nombre', 'descripcion',)
+    actions = None
+    list_per_page = 20
+    list_display = ('paquete',)
+    fieldsets = (
+        (('Paquetes de Descuento'),
+         {'fields': ('paquete', 'evento_uno','porcentaje_uno','evento_dos','porcentaje_dos','evento_tres',
+                     'porcentaje_tres','evento_cuatro','porcentaje_cuatro','evento_cinco','porcentaje_cinco','anio',)}),)
+
 
 # Administrador para el catálogo Cuotas.
 class TipoCuotaAdmin(admin.ModelAdmin):
@@ -400,6 +412,16 @@ class CuentasPagoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = 5
 
+def DefCuentasPagoAdmin(param):
+    class CuentasPagoAdmin(admin.TabularInline):
+        model = CuentasPago
+        form = DefCuentasPagoForm(param)
+        extra = 0
+        can_delete = True
+
+
+
+    return CuentasPagoAdmin
 
 # Inlines para registro de Forma de PAgo
 class ReferenciaFormaPagoInlineAdmin(admin.TabularInline):
@@ -420,16 +442,35 @@ class ReferenciaFormaPagoInlineAdmin(admin.TabularInline):
 #Admin para modelo de pago, se agregan los inlines de forma de pago y cuentas contables de pago
 class PagoAdmin(admin.ModelAdmin):
     form = PagoForm
-    inlines = [ReferenciaFormaPagoInlineAdmin, CuentasPagoInlineAdmin, ]
+    param=0
+    inlines = [ReferenciaFormaPagoInlineAdmin, DefCuentasPagoAdmin(param=param), ] #CuentasPagoInlineAdmin
     actions = None
     list_filter = []
     list_per_page = 20
     list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
+    def get_inline_instances(self, request, obj=None):
+        return [ReferenciaFormaPagoInlineAdmin(self.model, self.admin_site),
+            DefCuentasPagoAdmin(self)(self.model, self.admin_site),
+        ]
 
     def get_form(self, request, obj=None, **kwargs):
+        if obj is not None:
+            evento_id = obj.evento.id
+        else:
+            print(request.GET.get('_changelist_filters'))
+            params = request.GET.get('_changelist_filters')
+            if params:
+                params = params.split('=')
+                evento_id = params[1]
+            else:
+                evento_id = 0
+        self.param = evento_id
+
         form = super(PagoAdmin, self).get_form(request, obj, **kwargs)
+
+
         field = form.base_fields['evento']
         field.widget.can_add_related = False
         field.widget.can_change_related = False
@@ -601,6 +642,7 @@ admin.site.register(TipoCuota, TipoCuotaAdmin)
 admin.site.register(Descuentos, DescuentoAdmin)
 admin.site.register(Sexo, SexoAdmin)
 admin.site.register(Nacionalidad, NacionalidadAdmin)
+admin.site.register(PaquetesDescuento,PaquetesDescuentoAdmin)
 admin.site.register(Cuadras, CuadraAdmin)
 admin.site.register(Ejemplares, EjemplarAdmin)
 admin.site.register(Evento, EventoAdmin)
