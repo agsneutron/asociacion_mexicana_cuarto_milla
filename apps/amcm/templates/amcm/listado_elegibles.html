@@ -92,17 +92,21 @@
                         <table class="table table-flush" id="table-collapse" width="100%">
                             <thead class="thead-light">
                             <tr>
-                                <th width="30%">&nbsp;</th>
+                                <th >&nbsp;</th>
+                                <th >&nbsp;</th>
+                                <th >CUADRA</th>
+                                <th ></th>
+                                <th >DATOS DE CONTACTO</th>
+                                <th >&nbsp;</th>
+{#                                {% for obj in cuotas %}#}
+{#                                    <th#}
+{#                                        style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;width: 10% !important;"> {{ obj.tipoCuota.nombre }}#}
+{#                                        <br/>#}
+{#                                        {{ obj.fechaVencimiento|date:"d-m-Y" }} <br/>#}
+{#                                        $ {{ obj.monto }}#}
+{#                                    </th>#}
+{#                                {% endfor %}#}
 
-                                {% for obj in cuotas %}
-                                    <th
-                                        style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;width: 10% !important;"> {{ obj.tipoCuota.nombre }}
-                                        <br/>
-                                        {{ obj.fechaVencimiento|date:"d-m-Y" }} <br/>
-                                        $ {{ obj.monto }}
-                                    </th>
-                                {% endfor %}
-                                <th width="30%"></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -210,10 +214,10 @@
 						"sProcessing": "Procesando...",
 						"sLengthMenu": "Mostrar _MENU_ registros",
 						"sZeroRecords": "No se encontraron resultados",
-						"sEmptyTable": "NingÃºn dato disponible en esta tabla",
+						"sEmptyTable": "Ningún dato disponible en esta tabla",
 						"sInfo": "",
 						"sInfoEmpty": "",
-						"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+						"sInfoFiltered": "[Filtrado de un total de _MAX_ registros]",
 						"sInfoPostFix": "",
 						"sSearch": "Buscar:",
 						"sUrl": "",
