@@ -60,7 +60,7 @@ function getDataDashboard() {
         url: api,
         type: 'get',
         success: function(data) {
-            console.log(data);
+           //console.log(data);
             if (data.message = "success"){
                 dataJson = data;
                 iniciaDashboard(dataJson);
@@ -163,12 +163,16 @@ function tabla_eventosTemporada(data, filtro){
         }
 
 
-        if (data_Set[i].fechas.length > 1) {
-            cell4 = data_Set[i].fechas[0].tipoFecha + "<br/>" + data_Set[i].fechas[0].fecha;
-            cell5 = data_Set[i].fechas[1].tipoFecha + "<br/>" + data_Set[i].fechas[1].fecha;
-        } else {
+        if (data_Set[i].fechas.length > 2) {
+            //data_Set[i].fechas[0].tipoFecha + "<br/>" + data_Set[i].fechas[0].fecha;
+            cell4 = data_Set[i].fechas[0].fecha + "<br/>" + data_Set[i].fechas[1].fecha;
+            cell5 = data_Set[i].fechas[2].fecha;
+        } else if (data_Set[i].fechas.length === 2) {
+            cell4 = data_Set[i].fechas[0].fecha;
+            cell5 = data_Set[i].fechas[1].fecha;
+        } else if (data_Set[i].fechas.length < 2) {
             cell4 = "&nbsp;";
-            cell5 = data_Set[i].fechas[0].tipoFecha + "<br/>" + data_Set[i].fechas[0].fecha;
+            cell5 = data_Set[i].fechas[0].fecha;
         }
         condicion = ""
         for (var j = 0; j < data_Set[i].condicion.length; j++) {
@@ -178,11 +182,11 @@ function tabla_eventosTemporada(data, filtro){
         cell6 = data_Set[i].distancia;
 
         var arrResults = [cell1,cell2,cell3,cell4,cell5,cell6];
-        console.log(arrResults);
+        //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
-    console.log(data_for_table.length);
+    //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
          tableResultEvento.rows.add(data_for_table).draw();
     }
@@ -220,11 +224,11 @@ function tabla_cuadraEjemplares(data){
     var data_for_table = [];
     for( var i = 0; i<data.cuadras_ejemplares.length; i++){
         var arrResults = [data.cuadras_ejemplares[i].cuadra, data.cuadras_ejemplares[i].ejemplares];
-        console.log(arrResults);
+        //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
-    console.log(data_for_table.length);
+    //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
          tableResult.rows.add(data_for_table).draw();
     }
@@ -257,11 +261,11 @@ function  tabla_nominadosEvento(data){
     var data_for_table = [];
     for( var i = 0; i<data.nominados.length; i++){
         var arrResults = [data.nominados[i].evento,data.nominados[i].ejemplares, data.nominados[i].elegible];
-        console.log(arrResults);
+        //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
-    console.log(data_for_table.length);
+    //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
          tableResult.rows.add(data_for_table).draw();
     }
@@ -293,11 +297,11 @@ function table_recibos(data){
     var data_for_table = [];
     for( var i = 0; i<data.recibos.length; i++){
         var arrResults = [data.recibos[i].evento,data.recibos[i].cuota, data.recibos[i].total];
-        console.log(arrResults);
+        //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
-    console.log(data_for_table.length);
+    //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
          tableResult.rows.add(data_for_table).draw();
     }
