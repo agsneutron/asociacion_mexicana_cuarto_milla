@@ -9,6 +9,7 @@ from apps.amcm import views
 from apps.amcm.forms import *
 from django.conf.urls import url
 from django.utils.html import format_html
+import sys
 
 
 # Administrador para el catálogo Cuotas.
@@ -597,7 +598,6 @@ class ListadoElegiblesInlineAdmin(admin.StackedInline):
     model = ListadoElegibles
     actions = None
     extra = 0
-    list_per_page = 20
     list_display = ('cuadra', 'ejemplar',)
 
     def get_formset(self, request, obj=None, **kwargs):
@@ -624,6 +624,7 @@ class ElegibleAdmin(admin.ModelAdmin):
 class ListadoElegiblesAdmin(admin.ModelAdmin):
     model = ListadoElegibles
     actions = None
+    list_per_page = sys.maxsize
     #list_per_page = 20
     list_display = ('elegible', 'cuadra',  )
 
@@ -632,7 +633,8 @@ class ListadoElegiblesAdmin(admin.ModelAdmin):
 class EventoElegiblesAdmin(admin.ModelAdmin):
     model = EventoElegibles
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
+    #list_per_page = 100000
     list_display = ('evento', 'elegible', 'cuadra', 'ejemplar', 'estaus')
 
 

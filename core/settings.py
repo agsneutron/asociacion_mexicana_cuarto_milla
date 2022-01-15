@@ -142,6 +142,6 @@ STATIC_FILES_FINDERS = [
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240 # higher than the count of fields
 #############################################################
 #############################################################

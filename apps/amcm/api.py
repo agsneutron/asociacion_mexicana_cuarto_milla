@@ -195,9 +195,9 @@ class getListadoElegibles(ListView):
             all_evento = Evento.objects.get(id=evento_id)
 
             if all_evento.elegibles_evento != None:
-                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id))
+                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id)).order_by('cuadra__nombre')
             else:
-                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(dcount=Count('ejemplar'))
+                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(dcount=Count('ejemplar')).order_by('cuadra__nombre')
 
                 cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
                 for cuota in cuotas_evento:
