@@ -43,6 +43,7 @@
          // $('#id_cuadra').attr('multiple', 'multiple');
         //  document.getElementById("id_observaciones").rows = 3;
         // document.getElementById("id_descripcion_evento").rows = 4;
+
     });
 </script>
 <script>
@@ -51,47 +52,4 @@
     });
 </script>
 
-<script>
-
-    $(document).ready( function () {
-    $('#result_list_et').DataTable({
-
-                        destroy: true,
-        processing: true,
-        select: true,
-        paging: true,
-        lengthChange: true,
-        "lengthMenu": [[13, 25, 50, -1], [13, 25, 50, "All"]],
-        searching: true,
-        "order": [],
-        info: false,
-        responsive: true,
-        autoWidth: false,
-        language: {
-					paginate: {
-						previous: "<i class='fas fa-angle-left'>",
-						next: "<i class='fas fa-angle-right'>"
-					},
-						"sProcessing": "Procesando...",
-						"sLengthMenu": "Mostrar _MENU_ registros",
-						"sZeroRecords": "No se encontraron resultados",
-						"sEmptyTable": "NingÃºn dato disponible en esta tabla",
-						"sInfo": "",
-						"sInfoEmpty": "",
-						"sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-						"sInfoPostFix": "",
-						"sSearch": "Buscar:",
-						"sUrl": "",
-						"sInfoThousands": ",",
-						"sLoadingRecords": "Cargando...",
-						"oPaginate": {
-							"sFirst": "Primero",
-							"sLast": "Ãšltimo",
-							"sNext": "Siguiente",
-							"sPrevious": "Anterior"
-						}
-					},
-    });
-} );
-    </script>
 

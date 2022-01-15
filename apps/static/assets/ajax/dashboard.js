@@ -8,10 +8,10 @@ var dataJson;
 var tableResultEvento = $('#result_list_et').DataTable();
 
 $j.ajax({
-    error: function(xhr, type, errorThrown){
-        if (!xhr.getAllResponseHeaders()){
+    error: function (xhr, type, errorThrown) {
+        if (!xhr.getAllResponseHeaders()) {
             xhr.abort();
-            if (isPageBeingRefreshed ){
+            if (isPageBeingRefreshed) {
                 return;
             }
         }
@@ -36,41 +36,40 @@ function main_consulta() {
 
     getDataDashboard();
 
-    $( "#clasico" ).click(function() {
-          eventosTemporadaFiltro("Clásico");
+    $("#clasico").click(function () {
+        eventosTemporadaFiltro("Clásico");
     });
 
-    $( "#derby" ).click(function() {
-          eventosTemporadaFiltro("Derby");
+    $("#derby").click(function () {
+        eventosTemporadaFiltro("Derby");
     });
 
-    $( "#futurity" ).click(function() {
-          eventosTemporadaFiltro("Futurity");
+    $("#futurity").click(function () {
+        eventosTemporadaFiltro("Futurity");
     });
 
 
 }
 
 
-
 function getDataDashboard() {
 
-     var api = "/amcm/get_dashboard/";
-     $.ajax({
+    var api = "/amcm/get_dashboard/";
+    $.ajax({
         url: api,
         type: 'get',
-        success: function(data) {
-           //console.log(data);
-            if (data.message = "success"){
+        success: function (data) {
+            //console.log(data);
+            if (data.message = "success") {
                 dataJson = data;
                 iniciaDashboard(dataJson);
-            }else{
-                 var message = 'Ocurrió un error al realizar la consulta de los datos:\n' + data.estatus;
+            } else {
+                var message = 'Ocurrió un error al realizar la consulta de los datos:\n' + data.estatus;
                 $('#alertModal').find('.modal-body p').text(message);
-                $('#alertModal').modal('show')  ;
+                $('#alertModal').modal('show');
             }
         },
-        error: function(data) {
+        error: function (data) {
             var message = 'Ocurrió un error al realizar la consulta de los datos:\n' + data.estatus;
             $('#alertModal').find('.modal-body p').text(message);
             $('#alertModal').modal('show')                //$j("#ajaxProgress").hide();
@@ -87,7 +86,7 @@ function iniciaDashboard(data) {
     document.getElementById('total_pagos').innerText = "$ " + data.pagos;
 
     //eventos temporada
-    tabla_eventosTemporada(dataJson,"");
+    tabla_eventosTemporada(dataJson, "");
 
     //cuadra ejemplares
     tabla_cuadraEjemplares(dataJson);
@@ -101,27 +100,32 @@ function iniciaDashboard(data) {
 
 
 //carga tabla eventos por temporada
-function tabla_eventosTemporada(data, filtro){
+function tabla_eventosTemporada(data, filtro) {
 
     var filtered = [];
     var data_Set;
-    if (filtro !== ""){
+    if (filtro !== "") {
         for (var i = 0; i < data.eventos_temporada.length; i++) {
-          if (data.eventos_temporada[i].tipo === filtro) {
+            if (data.eventos_temporada[i].tipo === filtro) {
                 filtered.push(data.eventos_temporada[i]);
-          }
+            }
         }
         data_Set = filtered;
 
-    }
-    else{
-         data_Set = data.eventos_temporada;
+    } else {
+        data_Set = data.eventos_temporada;
     }
 
     tableResultEvento = $('#result_list_et').DataTable({
-        responsive: true,
         bInfo: false,
+        "bPaginate": true,
+         responsive: true,
+        pageLength: 5,
         "language": {
+            paginate: {
+                previous: "<i class='fas fa-angle-left'>",
+                next: "<i class='fas fa-angle-right'>"
+            },
             searchPlaceholder: 'Filtrar resultados ...',
             emptyTable: "Realiza una búsqueda para visualizar datos.",
             infoEmpty: "Sin datos disponibles.",
@@ -141,7 +145,7 @@ function tabla_eventosTemporada(data, filtro){
 
     //armar el array para formar el dataset de la tabla
     var data_for_table = [];
-    for( var i = 0; i<data_Set.length; i++){
+    for (var i = 0; i < data_Set.length; i++) {
 
         let cell1 = "";
         let cell2 = "";
@@ -181,29 +185,35 @@ function tabla_eventosTemporada(data, filtro){
 
         cell6 = data_Set[i].distancia;
 
-        var arrResults = [cell1,cell2,cell3,cell4,cell5,cell6];
+        var arrResults = [cell1, cell2, cell3, cell4, cell5, cell6];
         //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
     //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
-         tableResultEvento.rows.add(data_for_table).draw();
+        tableResultEvento.rows.add(data_for_table).draw();
     }
 
 }
 
 //filtrar por tipo de evento la tabla de eventos
-function eventosTemporadaFiltro(filtro){
-    tableResultEvento.search( filtro ).draw();
+function eventosTemporadaFiltro(filtro) {
+    tableResultEvento.search(filtro).draw();
 }
 
-function tabla_cuadraEjemplares(data){
+function tabla_cuadraEjemplares(data) {
 
     tableResult = $('#result_list_ce').DataTable({
         responsive: true,
         bInfo: false,
+        bLengthChange: false,
+
         "language": {
+             paginate: {
+            previous: "<i class='fas fa-angle-left'>",
+            next: "<i class='fas fa-angle-right'>"
+        },
             searchPlaceholder: 'Filtrar resultados ...',
             emptyTable: "Realiza una búsqueda para visualizar datos.",
             infoEmpty: "Sin datos disponibles.",
@@ -215,14 +225,18 @@ function tabla_cuadraEjemplares(data){
                     0: "De click en un registro psra seleccionarlo",
                     1: "1 Registro seleccionado "
                 }
-            }
+            },
+
         },
         select: true,
         processing: true,
+        drawCallback: function () {
+        $('#result_list_ce_paginate ul').addClass('pagination-sm');
+      }
     });
 
     var data_for_table = [];
-    for( var i = 0; i<data.cuadras_ejemplares.length; i++){
+    for (var i = 0; i < data.cuadras_ejemplares.length; i++) {
         var arrResults = [data.cuadras_ejemplares[i].cuadra, data.cuadras_ejemplares[i].ejemplares];
         //console.log(arrResults);
         data_for_table.push(arrResults);
@@ -230,16 +244,21 @@ function tabla_cuadraEjemplares(data){
 
     //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
-         tableResult.rows.add(data_for_table).draw();
+        tableResult.rows.add(data_for_table).draw();
     }
 }
 
-function  tabla_nominadosEvento(data){
+function tabla_nominadosEvento(data) {
     //nominados eventos
-     tableResult = $('#result_list_en').DataTable({
+    tableResult = $('#result_list_en').DataTable({
         responsive: true,
         bInfo: false,
+
         "language": {
+             paginate: {
+            previous: "<i class='fas fa-angle-left'>",
+            next: "<i class='fas fa-angle-right'>"
+        },
             searchPlaceholder: 'Filtrar resultados ...',
             emptyTable: "Realiza una búsqueda para visualizar datos.",
             infoEmpty: "Sin datos disponibles.",
@@ -259,23 +278,28 @@ function  tabla_nominadosEvento(data){
 
 
     var data_for_table = [];
-    for( var i = 0; i<data.nominados.length; i++){
-        var arrResults = [data.nominados[i].evento,data.nominados[i].ejemplares, data.nominados[i].elegible];
+    for (var i = 0; i < data.nominados.length; i++) {
+        var arrResults = [data.nominados[i].evento, data.nominados[i].ejemplares, data.nominados[i].elegible];
         //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
     //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
-         tableResult.rows.add(data_for_table).draw();
+        tableResult.rows.add(data_for_table).draw();
     }
 }
 
-function table_recibos(data){
+function table_recibos(data) {
     tableResult = $('#result_list_rr').DataTable({
         responsive: true,
         bInfo: false,
+
         "language": {
+             paginate: {
+            previous: "<i class='fas fa-angle-left'>",
+            next: "<i class='fas fa-angle-right'>"
+        },
             searchPlaceholder: 'Filtrar resultados ...',
             emptyTable: "Realiza una búsqueda para visualizar datos.",
             infoEmpty: "Sin datos disponibles.",
@@ -295,15 +319,15 @@ function table_recibos(data){
 
 
     var data_for_table = [];
-    for( var i = 0; i<data.recibos.length; i++){
-        var arrResults = [data.recibos[i].evento,data.recibos[i].cuota, data.recibos[i].total];
+    for (var i = 0; i < data.recibos.length; i++) {
+        var arrResults = [data.recibos[i].evento, data.recibos[i].cuota, data.recibos[i].total];
         //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
     //console.log(data_for_table.length);
     if (data_for_table.length > 0) {
-         tableResult.rows.add(data_for_table).draw();
+        tableResult.rows.add(data_for_table).draw();
     }
 
 
