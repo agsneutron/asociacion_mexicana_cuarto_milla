@@ -64,7 +64,18 @@ tr th.field-pago a{
     white-space: inherit !important;
 }
 
-
+#result_list_et tbody tr>td:first-child{
+      white-space: normal !important;
+}
+#result_list_en tbody tr>td:first-child{
+      white-space: normal !important;
+}
+.table-sm th, .table-sm td {
+    padding: 0.3rem;
+    padding-left: 0.3rem !important;
+    padding-right: 0.3rem !important;
+    font-size: 11px !important;
+}
 /*.datetimeshortcuts{*/
 /*        position: absolute;*/
 /*    right: 28px;*/
