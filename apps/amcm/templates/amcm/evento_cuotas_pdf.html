@@ -218,7 +218,7 @@
     <table style="width: 100%;" align="center">
         <tbody>
          {% for cuota in evento.cuotas_evento %}
-        <tr style="border-top: 1px solid #000; border-right:1px solid #000; border-left: 1px solid #000; border-bottom: 1px solid #000; margin-left: 5px; margin-top: 15px; margin-bottom:5px; padding-top: 12px; padding-bottom: 2px;" valign="center" >
+        <tr style="border-top: 1px solid #000; border-right:1px solid #000; border-left: 1px solid #000; border-bottom: 1px solid #000; margin-left: 5px; margin-top: 15px; margin-bottom:5px; padding-top: 12px; padding-bottom: 2px;" valign="middle" >
             <td style="width: 70%;text-align: left;">
 
                 <p style="font-size: 12px; text-align: left;"> {{ cuota.tipoCuota}}
@@ -256,44 +256,77 @@
     {% endfor %}
     <p style="font-size: 12px; text-align: left;">A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA {{ titulo.tipoCuota.descripcion }}:</p>
 
-     <div class="table-responsive pb-12" align="center">
-{#        <table width="100%" align="center">#}
+{#     <div class="table-responsive pb-12" align="center">#}
+        <table width="100%" align="center">
 {#            <tr>#}
 {#                <td>#}
-                <div class="row">
+{#                <div class="row" style="display: -webkit-box; display: -webkit-flex; display: flex;">#}
                 {# bloque por cada registro, titulo + varios subregistros#}
                 {% regroup ejemplares_cuota by cuadra as cuadras_list %}
                 {% for cuadra in cuadras_list %}
-                    <div class="col-4" style="margin-bottom: 20px;">
-                        <table>
-                            <tr>
-                                <td colspan="3" style="width: 100%">
-                                    <p style="font-size: 13px;text-align: center"><strong>{{ cuadra.grouper }}</strong></p>
-                                </td>
-                            </tr>
-                            {% for ejemplar in cuadra.list %}
+
+                    {% if not forloop.counter|divisibleby:2 %}
+{#                    <div class="col-4" style="margin-bottom: 20px; display: -webkit-box; display: -webkit-flex; display: flex;">#}
+                       <tr>
+                        <td>
+                            <table>
                                 <tr>
-                                    <td style="width: 100%">
-                                        <p style="font-size: 12px;text-align: center">{{ ejemplar.contador }}</p>
-                                    </td>
-                                    <td style="width: 100%">
-                                        <p style="font-size: 12px;text-align: center">{{ ejemplar.ejemplar_lote }}</p>
-                                    </td>
-                                    <td style="width: 100%">
-                                        <p style="font-size: 12px;text-align: center">{{ ejemplar.ejemplar_nombre }}</p>
+                                    <td style="width: 10%">&nbsp;</td>
+                                    <td colspan="2">
+                                        <p style="font-size: 13px;text-align: left"><strong>{{ cuadra.grouper }}</strong></p>
                                     </td>
                                 </tr>
-                            {% endfor %}
-                        </table>
-                    </div>
+                                {% for ejemplar in cuadra.list %}
+                                    <tr>
+                                        <td style="width: 10%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.contador }}</p>
+                                        </td>
+                                        <td style="width: 10%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_lote }}</p>
+                                        </td>
+                                        <td style="width: 80%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+
+{#                    </div>#}
+                    {% else %}
+                        <td>
+                            <table>
+                                <tr>
+                                    <td style="width: 10%">&nbsp;</td>
+                                    <td colspan="2">
+                                        <p style="font-size: 13px;text-align: left"><strong>{{ cuadra.grouper }}</strong></p>
+                                    </td>
+                                </tr>
+                                {% for ejemplar in cuadra.list %}
+                                    <tr>
+                                        <td style="width: 10%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.contador }}</p>
+                                        </td>
+                                        <td style="width: 10%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_lote }}</p>
+                                        </td>
+                                        <td style="width: 80%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                       </tr>
+                    {% endif %}
                     {#  bloque por cada registro, titulo + varios subregistros#}
 
                 {% endfor %}
-                </div>
+{#                </div>#}
 {#                </td>#}
 {#            </tr>#}
-{#        </table>#}
-     </div>
+        </table>
+{#     </div>#}
 
     <p style="font-size: 11px; font-weight: bold; text-align: center; margin-bottom: 1px;">Av. del Conscripto Nº 311 Col. Lomas de
                     Sotelo,Zona de caballerizas Int. del Hipódromo de las Américas Delegación
