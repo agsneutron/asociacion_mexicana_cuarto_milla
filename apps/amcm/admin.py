@@ -9,6 +9,7 @@ from apps.amcm import views
 from apps.amcm.forms import *
 from django.conf.urls import url
 from django.utils.html import format_html
+import sys
 
 
 # Administrador para el catálogo Cuotas.
@@ -16,7 +17,7 @@ class CuotaAdmin(admin.ModelAdmin):
     model = Cuotas
     #fields = ('nombre', 'descripcion', 'monto', 'tipoCuota')
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'descripcion', 'monto', 'tipoCuota',)
     fieldsets = (
         (('Cuotas'),
@@ -28,7 +29,7 @@ class EstatusEjemplarAdmin(admin.ModelAdmin):
     model = EstatusEjemplar
     #fields = ('nombre', 'descripcion',)
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'descripcion',)
     fieldsets = (
         (('Estatus del Ejemplar'),
@@ -39,7 +40,7 @@ class PaquetesDescuentoAdmin(admin.ModelAdmin):
     model = PaquetesDescuento
     #fields = ('nombre', 'descripcion',)
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('paquete',)
     fieldsets = (
         (('Paquetes de Descuento'),
@@ -52,7 +53,7 @@ class TipoCuotaAdmin(admin.ModelAdmin):
     model = TipoCuota
     #fields = ('nombre', 'descripcion',)
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'descripcion', 'moneda')
     fieldsets = (
         (('Tipo de Cuota'),
@@ -64,7 +65,7 @@ class TipoEventoAdmin(admin.ModelAdmin):
     model = TipoEvento
     #fields = ('nombre', 'descripcion',)
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'descripcion',)
     fieldsets = (
         (('Tipo de Evento'),
@@ -76,7 +77,7 @@ class DescuentoAdmin(admin.ModelAdmin):
     model = Descuentos
     #fields = ('nombre', 'descripcion', 'porcentaje')
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'descripcion', 'porcentaje',)
     fieldsets = (
         (('Descuentos'),
@@ -87,7 +88,7 @@ class DescuentoAdmin(admin.ModelAdmin):
 class CuentasContablesAdmin(admin.ModelAdmin):
     model = CuentasContables
     actions = None
-    #list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('codigo', 'nombre', 'estatus',)
     fieldsets = (
         (('Cuentas Contables'),
@@ -99,7 +100,7 @@ class SexoAdmin(admin.ModelAdmin):
     model = Sexo
     #fields = ('nombre',)
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre',)
     fieldsets = (
         (('Sexo'),
@@ -111,7 +112,7 @@ class NacionalidadAdmin(admin.ModelAdmin):
     model = Nacionalidad
     # fields = ('nombre', 'abreviatura')
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'abreviatura',)
     fieldsets = (
         (('Nacionalidad'),
@@ -123,7 +124,7 @@ class EjemplarAdmin(admin.ModelAdmin):
     model = Ejemplares
     #fields = ('nombre',)
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('cuadra', 'lote', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'estatus')
     fieldsets = (
         (('Ejemplares'),
@@ -152,7 +153,7 @@ class ContactoInlineAdmin(admin.TabularInline):
     fields = ('nombre', 'telefono')
     actions = None
     extra = 0
-    list_per_page = 20
+    list_per_page = sys.maxsize
 
 
 #inlines para asignar ejemplares a cuadras
@@ -161,7 +162,7 @@ class EjemplarInlineAdmin(admin.StackedInline):
     fields = ('lote', 'nombre', 'edad', 'peso', 'sexo', 'nacionalidad', 'color', 'padre', 'madre','estatus', )
     actions = None
     extra = 1
-    list_per_page = 20
+    list_per_page = sys.maxsize
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
@@ -185,7 +186,7 @@ class CuadraAdmin(admin.ModelAdmin):
     model = Cuadras
     #fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    #list_per_page = 20
+    list_per_page = sys.maxsize
     inlines = [ContactoInlineAdmin, EjemplarInlineAdmin, ]
     list_display = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico',)
     fieldsets = (
@@ -197,7 +198,7 @@ class CuotasEventoInlineAdmin(admin.TabularInline):
     fields = ( 'tipoCuota', 'monto', 'fechaVencimiento', 'observacion', )
     actions = None
     extra = 0
-    list_per_page = 20
+    list_per_page = sys.maxsize
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
@@ -224,7 +225,7 @@ class CondicionesEventoInlineAdmin(admin.TabularInline):
     fields = ('especificacion', )  # 'tipoCondicion', 'valor', 'limite',
     actions = None
     extra = 0
-    list_per_page = 20
+    list_per_page = sys.maxsize
 
     # def get_formset(self, request, obj=None, **kwargs):
     #     formset = super().get_formset(request, obj, **kwargs)
@@ -245,7 +246,7 @@ class FechasEventoInlineAdmin(admin.TabularInline):
     fields = ('tipoFecha', 'fecha', 'evento' )
     actions = None
     extra = 0
-    list_per_page = 20
+    list_per_page = sys.maxsize
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
@@ -264,7 +265,7 @@ class CuentasEventoInlineAdmin(admin.TabularInline):
     fields = ('cuenta', )
     actions = None
     extra = 0
-    list_per_page = 20
+    list_per_page = sys.maxsize
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)
@@ -278,7 +279,7 @@ class EventoAdmin(admin.ModelAdmin):
     model = Evento
     # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    #list_per_page = 20
+    list_per_page = sys.maxsize
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin, CuentasEventoInlineAdmin]
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
     fieldsets = (
@@ -398,7 +399,7 @@ class EventoAdmin(admin.ModelAdmin):
 class InscripcionAdmin(admin.ModelAdmin):
     model = inscripcion
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('evento', 'cuadra',  'ejemplar',)
     fieldsets = (
         (('Inscripción'),
@@ -410,7 +411,7 @@ class CuentasPagoInlineAdmin(admin.TabularInline):
     model = CuentasPago
     actions = None
     extra = 0
-    list_per_page = 5
+    list_per_page = sys.maxsize
 
 def DefCuentasPagoAdmin(param):
     class CuentasPagoAdmin(admin.TabularInline):
@@ -428,7 +429,7 @@ class ReferenciaFormaPagoInlineAdmin(admin.TabularInline):
     model = ReferenciaFormaPago
     actions = None
     extra = 0
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('formapago', 'referencia',)
 
     def get_formset(self, request, obj=None, **kwargs):
@@ -446,7 +447,7 @@ class PagoAdmin(admin.ModelAdmin):
     inlines = [ReferenciaFormaPagoInlineAdmin, DefCuentasPagoAdmin(param=param), ] #CuentasPagoInlineAdmin
     actions = None
     list_filter = []
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
@@ -527,7 +528,7 @@ class ReciboAdmin(admin.ModelAdmin):
     model = Recibo
     form = ReciboForm
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
     fields = ('pago', 'numero_recibo', 'observaciones', 'fecha_registro',)
 
@@ -573,7 +574,7 @@ class ReciboAdmin(admin.ModelAdmin):
 class ReasignaEjemplarAdmin(admin.ModelAdmin):
     model = ReasignaEjemplar
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('ejemplar', 'cuadra',)
 
 
@@ -581,7 +582,7 @@ class ReasignaEjemplarAdmin(admin.ModelAdmin):
 class FormaPagoAdmin(admin.ModelAdmin):
     model = FormaPago
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'descripcion',)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -597,7 +598,6 @@ class ListadoElegiblesInlineAdmin(admin.StackedInline):
     model = ListadoElegibles
     actions = None
     extra = 0
-    list_per_page = 20
     list_display = ('cuadra', 'ejemplar',)
 
     def get_formset(self, request, obj=None, **kwargs):
@@ -616,7 +616,7 @@ class ElegibleAdmin(admin.ModelAdmin):
     model = Elegible
     inlines = [ListadoElegiblesInlineAdmin, ]
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('nombre', 'fecha_registro',)
 
 
@@ -624,7 +624,7 @@ class ElegibleAdmin(admin.ModelAdmin):
 class ListadoElegiblesAdmin(admin.ModelAdmin):
     model = ListadoElegibles
     actions = None
-    #list_per_page = 20
+    list_per_page = sys.maxsize
     list_display = ('elegible', 'cuadra',  )
 
 
@@ -632,7 +632,8 @@ class ListadoElegiblesAdmin(admin.ModelAdmin):
 class EventoElegiblesAdmin(admin.ModelAdmin):
     model = EventoElegibles
     actions = None
-    list_per_page = 20
+    list_per_page = sys.maxsize
+    #list_per_page = 100000
     list_display = ('evento', 'elegible', 'cuadra', 'ejemplar', 'estaus')
 
 

@@ -195,9 +195,9 @@ class getListadoElegibles(ListView):
             all_evento = Evento.objects.get(id=evento_id)
 
             if all_evento.elegibles_evento != None:
-                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id))
+                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id)).order_by('cuadra__nombre')
             else:
-                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(dcount=Count('ejemplar'))
+                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(dcount=Count('ejemplar')).order_by('cuadra__nombre')
 
                 cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
                 for cuota in cuotas_evento:
@@ -225,6 +225,7 @@ class getListadoElegibles(ListView):
                             Q(pago__cuota__tipoCuota_id__in =(2,4)) #& Q(pago__estatus_cuota="PAGADO")
                             & Q(pago__cuadra=cuadra)
                             & Q(pago__ejemplar=evento_ejemplar.ejemplar))
+
                         registro_unico = {}
                         recibo_unico = False
                         if pagos_cuota:
@@ -313,14 +314,16 @@ class getListadoElegibles(ListView):
 
 class getEventoCuotas(ListView):
 
-    def get(self, request, *args, **kwargs):
-        evento_id = request.GET.get('evento_id')
-        cuota_id = request.GET.get('cuota_id')
+    @staticmethod
+    def get_datosReporte(evento_id, cuota_id):
+        #obtener el set de datos para
         cuotas_set = []
         reporte_cuotas = []
         reporte = []
         total = 0
         descuento = 0
+        cuotas_all = []
+        cuotas_all.append(cuota_id)
         cuota_obj = CuotaEvento.objects.filter(Q(evento_id=evento_id) & Q(id=cuota_id))
         i = 0
         total_cuota = 0
@@ -330,9 +333,11 @@ class getEventoCuotas(ListView):
             for cuota in cuota_obj:
                 cuota_obj = cuota
 
+            # obtener las cuotas anteriores a la cuota seleccionada
             cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
             for cuota in cuotas_evento:
                 if cuota.tipoCuota.id == 2:
+                    cuotas_all.append(cuota.id)
                     descuento = cuota.monto - (cuota.monto * all_evento.descuento.porcentaje)
                     print(descuento)
                 if cuota.tipoCuota.id != 2 and cuota.tipoCuota.id != 6:
@@ -342,48 +347,44 @@ class getEventoCuotas(ListView):
                     if cuota.fechaVencimiento <= cuota_obj.fechaVencimiento:
                         reporte_cuotas.append(cuota)
 
+            # obtener los montos totales de las cuotas anteriores a la seleccionada y la seleccionada
             if reporte_cuotas:
-                ejemplares_pago = []
-                cuadra_ejemplares = []
+
                 for reporte_cuota in reporte_cuotas:
                     total_cuota = 0
-                    pagos = Recibo.objects.filter(pago__evento=reporte_cuota.evento_id, pago__cuota_id=reporte_cuota.id, pago__estatus_cuota="PAGADO").order_by('pago__cuadra', 'pago__cuadra__ejemplares')
+                    ejemplares_pago = []
+                    cuadra_ejemplares = []
+                    pagos = Recibo.objects.filter(pago__evento=reporte_cuota.evento_id, pago__cuota_id=reporte_cuota.id,
+                                                  pago__estatus_cuota="PAGADO").order_by('pago__cuadra').distinct()
                     if pagos:
-                        ejemplares_pago = []
-                        cuadra_ejemplares = []
                         for x in pagos:
                             ejemplar_pago_set = x.pago.ejemplar.all()
-                            ejemplares_pago.append(ejemplar_pago_set[0])
+                            for ejemplar_obj in ejemplar_pago_set:
+                                ejemplares_pago.append(ejemplar_obj)
 
-                        if ejemplares_pago:
-                            for ejemplar_object in ejemplares_pago:
-                                i = i+1
-                                total_cuota = total_cuota+1
+                                i = i + 1
+                                total_cuota = total_cuota + 1
                                 data = {
-                                    'cuadra': ejemplar_object.cuadra, #x.pago.cuadra,
+                                    'cuadra': ejemplar_obj.cuadra,  # x.pago.cuadra,
                                     'contador': i,
-                                    "ejemplar_lote": ejemplar_object.lote,
-                                    "ejemplar_nombre": ejemplar_object.nombre
+                                    "ejemplar_lote": ejemplar_obj.lote,
+                                    "ejemplar_nombre": ejemplar_obj.nombre
                                 }
 
                                 cuadra_ejemplares.append(data)
 
-                    # recibo_cuota = Recibo.objects.filter(
-                    #              Q(pago__cuota_id=reporte_cuota.id) & Q(pago__estatus_cuota="PAGADO") & Q(pago__evento=reporte_cuota.evento_id)).order_by('pago__cuadra', 'pago__cuadra__ejemplares')
-                    #
-                    # for pago_obj in recibo_cuota:
-                    #     #pagos_cuota.append(pago_obj)
-                    #     for x in pago_obj:
-                    #         ejemplar_pago_set = x.pago.ejemplar.all()
-                    #
-                    #         for ejemplar_pago in ejemplar_pago_set:
-                    #
-                    #             data = {
-                    #                 'cuadra': pago_obj.pago.cuadra,
-                    #                 "ejemplar": ejemplar_pago
-                    #             }
-                    #
-                    #         pagos_cuota.append(data)
+                        # if ejemplares_pago:
+                        #     for ejemplar_object in ejemplares_pago:
+                        #         i = i+1
+                        #         total_cuota = total_cuota+1
+                        #         data = {
+                        #             'cuadra': ejemplar_object.cuadra, #x.pago.cuadra,
+                        #             'contador': i,
+                        #             "ejemplar_lote": ejemplar_object.lote,
+                        #             "ejemplar_nombre": ejemplar_object.nombre
+                        #         }
+                        #
+                        #         cuadra_ejemplares.append(data)
 
                         if cuadra_ejemplares:
                             response = {
@@ -394,7 +395,53 @@ class getEventoCuotas(ListView):
                             }
                             total = total + (reporte_cuota.monto * total_cuota)
                             reporte.append(response)
+                    else:
+                        response = {
+                            'monto_cuota': 0,
+                            'total_cuota': 0,
+                            'cuota': reporte_cuota,
+                            'cuadra_ejemplar': []
+                        }
+                        total = total + (reporte_cuota.monto * total_cuota)
+                        reporte.append(response)
 
+            # reporte lista de ejemplares de la cuota seleccionada
+            i = 0
+            # ejemplares = Ejemplares.objects.all()
+            # ejemplares.query('SELECT `amcm_ejemplares`.`id`, `amcm_ejemplares`.`lote`, `amcm_ejemplares`.`nombre`, `amcm_ejemplares`.`edad`, `amcm_ejemplares`.`peso`, `amcm_ejemplares`.`sexo_id`, `amcm_ejemplares`.`nacionalidad_id`, `amcm_ejemplares`.`color`, `amcm_ejemplares`.`padre`, `amcm_ejemplares`.`madre`, `amcm_ejemplares`.`estatus_id`, `amcm_ejemplares`.`observaciones`, `amcm_ejemplares`.`cuadra_id`,`amcm_pago`.`id`, `amcm_pago`.`evento_id` FROM `amcm_ejemplares` INNER JOIN `amcm_cuadras` ON (`amcm_ejemplares`.`cuadra_id` = `amcm_cuadras`.`id`) INNER JOIN `amcm_pago` ON (`amcm_cuadras`.`id` = `amcm_pago`.`cuadra_id`  ) ORDER BY `amcm_cuadras`.`nombre` ASC, `amcm_ejemplares`.`lote` ASC')
+            # for caballo in ejemplares:
+            #    print(caballo)
+            ejemplares_pago = []
+            cuadra_ejemplares_reporte = []
+            pagos = Recibo.objects.filter(pago__evento=evento_id, pago__cuota_id__in=cuotas_all,
+                                          pago__estatus_cuota="PAGADO").order_by('pago__cuadra').distinct()
+            if pagos:
+                for ejemplar_obj in pagos:  # ejemplar_pago_set:
+                    # ejemplares_pago.append(ejemplar_obj)
+                    ejemplar_pago_set = ejemplar_obj.pago.ejemplar.all()
+                    for x in ejemplar_pago_set:
+                        i = i + 1
+                        data = {
+                            'cuadra': x.cuadra,  # x.pago.cuadra,
+                            'contador': i,
+                            "ejemplar_lote": x.lote,
+                            "ejemplar_nombre": x.nombre
+                        }
+                        cuadra_ejemplares_reporte.append(data)
+
+                # if ejemplares_pago:
+                #     for ejemplar_object in ejemplares_pago:
+                #
+                #         i = i + 1
+                #         data = {
+                #             'cuadra': ejemplar_object.cuadra,  # x.pago.cuadra,
+                #             'contador': i,
+                #             "ejemplar_lote": ejemplar_object.lote,
+                #             "ejemplar_nombre": ejemplar_object.nombre
+                #         }
+                #
+                #         cuadra_ejemplares_reporte.append(data)
+                #
 
                 # if cuotas_evento is not None:
                 #     cuota_obj = cuotas_evento.filter()
@@ -437,14 +484,31 @@ class getEventoCuotas(ListView):
             'cycle': range(0, i),
             "cuotas": cuotas_set,
             'descuento': descuento,
-            "total": total
+            "total": total,
+            'titulo': cuota_obj,
+            "ejemplares_cuota": cuadra_ejemplares_reporte
         }
+        print(params)
 
-        # from django.template import loader
-        # template = loader.get_template('ficha.html')
-        # return HttpResponse(template.render(params, request))
+        return params
+
+    def get(self, request, *args, **kwargs):
+        evento_id = request.GET.get('evento_id')
+        cuota_id = request.GET.get('cuota_id')
+
+        params = self.get_datosReporte(evento_id, cuota_id)
 
         return render(request, 'amcm/evento_cuotas.html', params)
+
+class getEventoCuotasPDF(ListView):
+
+    def get(self, request, *args, **kwargs):
+        evento_id = request.GET.get('evento_id')
+        cuota_id = request.GET.get('cuota_id')
+
+        params = getEventoCuotas.get_datosReporte(evento_id, cuota_id)
+
+        return Render.render('amcm/evento_cuotas_pdf.html', params)
 
 
 class getReporteEventos(ListView):
@@ -504,8 +568,16 @@ class getReporteCuotas(ListView):
             #evento.append(all_evento.to_serializable_dict())
             #obtener las cuotas asociadas al evento
             cuotas_evento = CuotaEvento.objects.filter(evento_id=obj.id).order_by('fechaVencimiento')
+            #for cuota in cuotas_evento:
+            #    cuotas_set.append(cuota.to_serializable_dict())
+
             for cuota in cuotas_evento:
-                cuotas_set.append(cuota.to_serializable_dict())
+                if cuota.tipoCuota.id == 2:
+                    descuento = cuota.monto - (cuota.monto * obj.descuento.porcentaje)
+                    print(descuento)
+                if cuota.tipoCuota.id != 2 and cuota.tipoCuota.id != 6:
+                    cuotas_set.append(cuota.to_serializable_dict())
+
 
             # los pagos asociados al evento
             all_pagos = Pago.objects.filter(Q(evento=obj.id))
@@ -562,8 +634,8 @@ class getReporteCuotas(ListView):
 
 
                 cuadras_data = {
-                    'cuadra' : cuadra.to_serializable_dict(),
-                    'ejemplares' : cuadra_ejemplares
+                    'cuadra': cuadra.to_serializable_dict(),
+                    'ejemplares': cuadra_ejemplares
                 }
                 cuadras_set.append(cuadras_data)
 
