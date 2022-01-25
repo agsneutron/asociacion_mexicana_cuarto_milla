@@ -34,19 +34,19 @@
 
                         <h3 class="mb-0 text-center" > {{ evento.nombre }} </h3>
                         <div class="text-center">{{ evento.descripcion_evento| linebreaks }}</div>
-                        <br/>
-                        <table class="table table-flush" id="result_list" align="center">
-
-                                <tr>
-                                    {% for obj in cuotas %}
-                                        <td align="center">
-                                            <a role="button" class="btn btn-primary btn-sm" href="/amcm/get_evento_cuotas/?evento_id={{ evento.id }}&cuota_id={{ obj.id }}">{{ obj.tipoCuota.nombre }}</a> <br/>
-                                        </td>
-                                    {% endfor %}
-
-                                </tr>
-
-                        </table>
+{#                        <br/>#}
+{#                        <table class="table table-flush" id="result_list" align="center">#}
+{##}
+{#                                <tr>#}
+{#                                    {% for obj in cuotas %}#}
+{#                                        <td align="center">#}
+{#                                            <a role="button" class="btn btn-primary btn-sm" href="/amcm/get_evento_cuotas/?evento_id={{ evento.id }}&cuota_id={{ obj.id }}">{{ obj.tipoCuota.nombre }}</a> <br/>#}
+{#                                        </td>#}
+{#                                    {% endfor %}#}
+{##}
+{#                                </tr>#}
+{##}
+{#                        </table>#}
                         <table width="100%">
                             <tr>
                                 <td width="50%">
@@ -65,18 +65,23 @@
 
                                         <tr>
                                             <td style="text-align: left" width="70%">
-                                                {{ obj.cuota }}  POR {{ obj.total_cuota }} EJEMPLARES =
+                                                {{ obj.cuota }}  POR <strong>{{ obj.total_cuota }}</strong> EJEMPLARES =
                                             </td>
                                             <td style="text-align: right" width="30%">
                                                $ {{ obj.monto_cuota }}
                                             </td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
                                         </tr>
 
                                         {% endfor %}
                                         <tr>
                                             <td style="text-align: right"  width="70%">&nbsp;TOTAL &nbsp;&nbsp;</td>
-                                            <td style="text-align: right; border-top: grey; border-top-width: 1px; border-top-style: solid" width="30%"><strong>$ {{ total }}</strong> </td></tr>
-                                        <tr><td colspan="2">&nbsp;</td></tr>
+                                            <td style="text-align: right; border-top: grey; border-top-width: 1px; border-top-style: solid" width="30%"><strong>$ {{ total }}</strong> </td>
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
+                                        </tr>
+                                        <tr><td colspan="4">&nbsp;</td></tr>
                                     </table>
                                 </td>
                             </tr>
@@ -102,6 +107,24 @@
                                                     $ {{ cuota.monto }} {{ cuota.observacion }}
                                                 {% endif %}
                                             </td>
+                                            <td style="text-align: right; border-width: 0px;" width="10%">
+                                                {% if cuota.tipoCuota.id != 2 and cuota.tipoCuota.id != 6  %}
+                                                    <a class="btn btn-xs" href="/amcm/get_evento_cuotas/?evento_id={{ evento.id }}&cuota_id={{ cuota.id }}">
+                                                        <i class="fa fa-list-alt color-default"></i></a>
+
+                                                {% else %}
+                                                    &nbsp;
+                                                {% endif %}
+                                            </td>
+                                            <td style="text-align: right; border-width: 0px;" width="10%">
+                                                {% if cuota.tipoCuota.id != 2 and cuota.tipoCuota.id != 6  %}
+                                                    <a class="btn btn-xs" href="/amcm/get_evento_cuotas_pdf/?evento_id={{ evento.id }}&cuota_id={{ cuota.id }}">
+                                                        <i class="fa fa-file-pdf color-default"></i></a>
+
+                                                {% else %}
+                                                    &nbsp;
+                                                {% endif %}
+                                            </td>
                                         </tr>
                                         {% endfor %}
                                         <tr><td colspan="2">&nbsp;</td></tr>
@@ -124,32 +147,50 @@
                            <table width="70%" align="center">
                                <tr>
                                    <td>
-                                        {{ reporte_cuotas }}
+                                        <div class="row">
                                         <h4>A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA {{ titulo.tipoCuota.descripcion }}:</h4>
+                                               {% regroup ejemplares_cuota by cuadra as cuadras_list %}
 
-                                       <div class="row">
+                                                    {% for cuadra in cuadras_list %}
+                                                        <div class="col-6" style="margin-bottom: 20px;">
+                                                            <table>
+                                                               <tr>
+                                                                   <td width="10%">&nbsp;</td>
+                                                                   <td width="90%"> <strong>{{ cuadra.grouper }}</strong></td>
+                                                               </tr>
 
-                                               {% for obj in reporte_cuotas %}
-                                                   {% for obj_cuadra in obj.cuadra_ejemplar %}
-                                                       <div class="col-6" style="margin-bottom: 20px;">
-                                                       <table >
-                                                           <tr>
-                                                               <td width="10%">&nbsp;</td>
-                                                               <td width="90%"> <strong>{{ obj_cuadra.cuadra }}</strong></td>
-                                                           </tr>
-                                                           <tr>
-                                                               <td width="10%">{{ obj_cuadra.contador }}</td>
-                                                               <td  width="90%">{{ obj_cuadra.ejemplar_lote }} &nbsp; &nbsp; {{ obj_cuadra.ejemplar_nombre }}</td>
-                                                           </tr>
-                                                       </table>
-                                                       </div>
+                                                                {% for ejemplar in cuadra.list %}
+                                                                 <tr>
+                                                                   <td width="10%">{{ ejemplar.contador }}</td>
+                                                                   <td  width="90%">{{ ejemplar.ejemplar_lote }} &nbsp; &nbsp; {{ ejemplar.ejemplar_nombre }}</td>
+                                                                 </tr>
 
+                                                                {% endfor %}
+                                                            </table>
+                                                        </div>
+                                                    {% endfor %}
 
-                                                   {% endfor %}
+{#                                               {% for obj in reporte_cuotas %}#}
+{#                                                   {% for obj_cuadra in obj.cuadra_ejemplar %}#}
+{#                                                       <div class="col-6" style="margin-bottom: 20px;">#}
+{#                                                       <table >#}
+{#                                                           <tr>#}
+{#                                                               <td width="10%">&nbsp;</td>#}
+{#                                                               <td width="90%"> <strong>{{ obj_cuadra.cuadra }}</strong></td>#}
+{#                                                           </tr>#}
+{#                                                           <tr>#}
+{#                                                               <td width="10%">{{ obj_cuadra.contador }}</td>#}
+{#                                                               <td  width="90%">{{ obj_cuadra.ejemplar_lote }} &nbsp; &nbsp; {{ obj_cuadra.ejemplar_nombre }}</td>#}
+{#                                                           </tr>#}
+{#                                                       </table>#}
+{#                                                       </div>#}
+{##}
+{##}
+{#                                                   {% endfor %}#}
+{##}
+{#                                               {% endfor %}#}
 
-                                               {% endfor %}
-
-                                       </div>
+{#                                       </div>#}
 
                                     </td>
                                </tr>
