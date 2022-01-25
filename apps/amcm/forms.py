@@ -37,15 +37,19 @@ class PagoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         if kwargs is not None:
-
-            if kwargs['initial'] != {}:
-                params = kwargs['initial']['_changelist_filters']
-                params = params.split('=')
-                evento_id = params[1]
-                evento = Evento.objects.filter(id=evento_id)
-            else:
+            try:
+                if kwargs['initial'] != {}:
+                    params = kwargs['initial']['_changelist_filters']
+                    params = params.split('=')
+                    evento_id = params[1]
+                    evento = Evento.objects.filter(id=evento_id)
+                    kwargs = {'initial': {'evento': evento_id}}
+                else:
+                    evento_id = 0
+                    kwargs = {'initial': {'evento': evento_id}}
+            except:
                 evento_id = 0
-        kwargs = {'initial': {'evento': evento_id}}
+
         self.request = kwargs.pop('request', None)
         super(PagoForm, self).__init__(*args, **kwargs)
         #self.fields['evento'].queryset = evento
