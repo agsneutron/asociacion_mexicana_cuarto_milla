@@ -187,17 +187,20 @@ class GenerarReciboPDF(ListView):
 
 class getListadoElegibles(ListView):
 
-    def get(self, request, *args, **kwargs):
-        evento_id = request.GET.get('evento_id')
+    @staticmethod
+    def get_datosReporte(evento_id):
         cuotas_set = []
         descuento = 0
         try:
             all_evento = Evento.objects.get(id=evento_id)
 
             if all_evento.elegibles_evento != None:
-                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id)).order_by('cuadra__nombre')
+                elegibles = EventoElegibles.objects.filter(
+                    Q(elegible_id=all_evento.elegibles_evento) & Q(evento_id=evento_id)).order_by('cuadra__nombre')
             else:
-                elegibles = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(dcount=Count('ejemplar')).order_by('cuadra__nombre')
+                elegibles = EventoElegibles.objects.filter(
+                    Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id)).values('cuadra').annotate(
+                    dcount=Count('ejemplar')).order_by('cuadra__nombre')
 
                 cuotas_evento = CuotaEvento.objects.filter(evento_id=evento_id).order_by('fechaVencimiento')
                 for cuota in cuotas_evento:
@@ -211,18 +214,20 @@ class getListadoElegibles(ListView):
                 i = 0
 
                 for obj in elegibles:
-                    #datos de la cuadra
+                    # datos de la cuadra
                     cuadra = Cuadras.objects.get(id=obj['cuadra'])
 
-                    #datos del ejemplar
-                    evento_ejemplares = EventoElegibles.objects.filter(Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id) & Q(cuadra_id = obj['cuadra'])).order_by('ejemplar__lote')
+                    # datos del ejemplar
+                    evento_ejemplares = EventoElegibles.objects.filter(
+                        Q(elegible_id=all_evento.elegibles_subasta) & Q(evento_id=evento_id) & Q(
+                            cuadra_id=obj['cuadra'])).order_by('ejemplar__lote')
                     cuadra_ejemplares = []
                     for evento_ejemplar in evento_ejemplares:
-                        i = i+1
+                        i = i + 1
 
-                        #buscar si hay recibo de PU (2) o NOM EXT  (6)
+                        # buscar si hay recibo de PU (2) o NOM EXT  (6)
                         pagos_cuota = Recibo.objects.filter(
-                            Q(pago__cuota__tipoCuota_id__in =(2,4)) #& Q(pago__estatus_cuota="PAGADO")
+                            Q(pago__cuota__tipoCuota_id__in=(2, 4))  # & Q(pago__estatus_cuota="PAGADO")
                             & Q(pago__cuadra=cuadra)
                             & Q(pago__ejemplar=evento_ejemplar.ejemplar))
 
@@ -241,11 +246,11 @@ class getListadoElegibles(ListView):
                                 'recibo': recibos
                             }
 
-                        #buscar recibos del ejemplar para este evento
+                        # buscar recibos del ejemplar para este evento
                         ejemplar_recibos = []
                         for obj_cuota in cuotas_evento:
                             if obj_cuota.tipoCuota.id != 2 and obj_cuota.tipoCuota.id != 6:
-                                #cuando es recibo de cuota
+                                # cuando es recibo de cuota
                                 # pagos_cuota = Pago.objects.filter(Q(cuota = obj_cuota) & Q(estatus_cuota="PAGADO") & Q(cuadra = obj_cuadra) & Q(ejemplar = ejemplar_object)) #
                                 pagos_cuota = Recibo.objects.filter(
                                     Q(pago__cuota=obj_cuota) & Q(pago__estatus_cuota="PAGADO") & Q(
@@ -305,12 +310,27 @@ class getListadoElegibles(ListView):
             'descuento': descuento
         }
 
+        return params
+
+    def get(self, request, *args, **kwargs):
+        evento_id = request.GET.get('evento_id')
+
+        params = self.get_datosReporte(evento_id)
+
         # from django.template import loader
         # template = loader.get_template('ficha.html')
         # return HttpResponse(template.render(params, request))
 
         return render(request, 'amcm/listado_elegibles.html', params)
 
+class getListadoElegiblesPDF(ListView):
+
+    def get(self, request, *args, **kwargs):
+        evento_id = request.GET.get('evento_id')
+
+        params = getListadoElegibles.get_datosReporte(evento_id)
+
+        return Render.render('amcm/listado_elegibles_pdf.html', params)
 
 class getEventoCuotas(ListView):
 
