@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>
+        AMCM
+    </title>
+    <style>
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0px;
+        }
+
+        .striped:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            /*  background-color: #04AA6D;
+            color: white; */
+        }
+
+        @page {
+            size: letter portrait;
+            @frame content_frame{
+                /* Content Frame */
+                left: 50pt;
+                width: 500pt;
+                top: 40pt;
+                height: 682pt;
+                right: 10pt;
+            }
+            @frame header_frame{
+                /* header Frame */
+                -pdf-frame-content: header_content;
+                left: 80pt;
+                width: 500pt;
+                right: 30pt;
+                height: 148pt;
+            }
+            @frame footer_frame {
+                /* footer Frame */
+                -pdf-frame-content:footer_content;
+                left: 80pt; width: 500pt; top: 705pt; height: 100pt;
+            }
+        }
+
+                @media screen and (min-width: 576px) {
+
+            .container,
+            .container-sm {
+                max-width: 540px;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+
+            .container,
+            .container-md,
+            .container-sm {
+                max-width: 720px;
+            }
+        }
+
+        @media screen and (min-width: 992px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm {
+                max-width: 960px;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl {
+                max-width: 1140px;
+            }
+        }
+
+        @media screen and (min-width: 1400px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl,
+            .container-xxl {
+                max-width: 1320px;
+            }
+        }
+
+        .container,
+        .container-fluid,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl,
+        .container-xxl {
+            width: 100%;
+            padding-right: var(--bs-gutter-x, .75rem);
+            padding-left: var(--bs-gutter-x, .75rem);
+            margin-right: auto;
+            margin-left: auto;
+        }
+        .table thead th {
+    vertical-align: bottom;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.table-bordered td, .table-bordered th {
+    border: 1px solid #070707;
+    text-align: center;
+}
+@media print {
+    .striped:nth-child(even) td {
+       background-color: #f2f2f2 !important;
+        -webkit-print-color-adjust: exact;
+   }
+}
+
+    </style>
+</head>
+
+<body>
+
+<div id="header_content">
+-
+</div>
+<div id="footer_content">
+-
+</div>
+
+
+<div id="content_frame" style="width: 100%; display: flex;">
+    <table style="width: 100%;">
+        {#    encabezado#}
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: center">
+                <p style="font-size: 17px;"><strong>{{ evento.nombre }}</strong></p>
+            </td>
+
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: center">
+                 <p style="font-size: 15px">{{ evento.descripcion| linebreaks }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: left">
+                <p style="font-size: 13px;line-height: 10px; text-align: right">DISTANCIA: {{ evento.yardas }} YARDAS</p>
+            </td>
+
+
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: left">
+                <p style="font-size: 13px;line-height: 10px; text-align: right">&nbsp;</p>
+            </td>
+
+
+        </tr>
+        <tr>
+            <td colspan="3" style="width: 100%;text-align: left">
+                <p style="font-size: 13px;line-height: 10px; text-align: right">&nbsp;</p>
+            </td>
+        </tr>
+            {#        cuotas y fechas del evento#}
+         {% for cuota in evento.cuotas_evento %}
+              <tr style="font-size: 13px;line-height: 13px;">
+                  <td width="20%">&nbsp;</td>
+                  <td width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
+                  <td width="40%"> $ {{ cuota.monto }}</td>
+                </tr>
+                {% endfor %}
+                <tr align="right">
+                  <td scope="col" class="sort" data-sort="name" colspan="3">&nbsp;</td>
+
+                </tr>
+                {% for fecha in evento.fechas_evento %}
+                <tr style="font-size: 13px;line-height: 13px;">
+                  <td width="20%">&nbsp;</td>
+                  <td width="40%">{{ fecha.tipoFecha }}</td>
+                  <td width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</td>
+                </tr>
+              {% endfor %}
+
+    </table>
+    <br/>
+    <br/>
+        {#    cuotas #}
+    <table repeat="1">
+        <thead>
+            <tr>
+                <th>&nbsp; </th>
+                <th>&nbsp; </th>
+                <th>&nbsp; </th>
+                <th>
+                    <table>
+                        <tr>
+                            {% for obj in cuotas %}
+                                <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;width: 10% !important;">
+                                    {{ obj.tipoCuota.nombre }}
+                                     <br/>
+                                    {{ obj.fechaVencimiento|date:"d-m-Y" }} <br/>
+                                    $ {{ obj.monto }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    </table>
+                </th>
+            </tr>
+        </thead>
+        {#    cuadras y ejemplares#}
+        <tbody>
+         {% for obj in cuadras %}
+
+                <tr>
+                    <td width="10%">&nbsp;</td>
+                    <td width="20%" colspan="2"><strong>{{ obj.cuadra.nombre }}</strong></td>
+
+                    <td>
+                            {{ obj.cuadra.representante }}
+                            &nbsp; {{ obj.cuadra.telefono }}
+                            {% if obj.cuadra.celular != "" %}
+                                &nbsp;  &nbsp;{{ obj.cuadra.celular }}
+                            {% endif %}
+                            {% for contacto in obj.cuadra.contactos %}
+                                &nbsp;&nbsp;&nbsp;&nbsp; {{ contacto.nombre }}
+                                &nbsp; &nbsp; {{ contacto.telefono }}
+                            {% endfor %}
+                            &nbsp; &nbsp; {{ obj.cuadra.correoElectronico }}
+                    </td>
+                </tr>
+
+
+                {% for ejemplar_obj in obj.ejemplar %}
+                    <tr style="border-width: 1px; border-style: solid; border-color: #0a0c0d; text-align: center; padding-top: 2px; padding-bottom: 2px;">
+                        <td width="10%">{{ ejemplar_obj.consecutivo }}</td>
+                        <td width="10%" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;">{{ ejemplar_obj.lote }}</td>
+                        <td width="20%" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar_obj.nombre }}</td>
+                        <td>
+                            <table width="100%">
+                                <tr>
+                                   {% for obj_recibo in ejemplar_obj.recibos %}
+                                        <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center;width: 10%">
+                                            {% for numero in obj_recibo.recibo %}
+                                                {{ numero.numero_recibo }}
+                                                {% if  not forloop.last %}
+                                                    <br/>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if ejemplar.estatus %}
+                                                <br/> RETIRADO
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            </table>
+                        </td>
+
+                    </tr>
+{#                  {% if forloop.counter == 30 %}#}
+{#                     <pdf:nextpage />#}
+{#                    {% endif %}#}
+                {% endfor %}
+
+
+
+         {% endfor %}
+         </tbody>
+    </table>
+
+
+
+</div>
+
+
+</body>
+
+</html>

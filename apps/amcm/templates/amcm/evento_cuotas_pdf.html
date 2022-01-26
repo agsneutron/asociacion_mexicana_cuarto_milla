@@ -164,13 +164,19 @@
 
 </div>
 <div style="" id="content_frame">
-    <p style="font-size: 18px; text-align: center">{{ evento.nombre }}</p>
-
-    <p style="font-size: 12px; text-align: center">{{ evento.descripcion_evento| linebreaks }}
-    </p>
-
-
     <table style="width: 100%;">
+        <tr>
+            <td colspan="2" style="width: 100%;text-align: center">
+               <p style="font-size: 18px; text-align: center; font-weight: bold;">{{ evento.nombre }}</p>
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="width: 100%;text-align: center">
+               <p style="font-size: 12px; text-align: center;" align="center">{{ evento.descripcion_evento| linebreaks }}</p>
+
+            </td>
+        </tr>
         <tr>
             <td style="width: 50%;text-align: left">
                 <p style="font-size: 12px; text-align: left">PESO: 54.5 KILOS - 120 LIBRAS</p>
@@ -249,11 +255,13 @@
         </tbody>
     </table>
     <br>
-    {% for fecha in evento.fechas_evento %}
     <p style="font-size: 12px; text-align: center; font-weight: bold">
+    {% for fecha in evento.fechas_evento %}
+
         {{ fecha.tipoFecha}}:     {{ fecha.fecha|date:"l, d F Y"  }}
-    </p>
+        <br/>
     {% endfor %}
+</p>
     <p style="font-size: 12px; text-align: left;">A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA {{ titulo.tipoCuota.descripcion }}:</p>
 
 {#     <div class="table-responsive pb-12" align="center">#}
