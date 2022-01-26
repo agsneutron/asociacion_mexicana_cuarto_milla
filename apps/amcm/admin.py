@@ -45,7 +45,7 @@ class PaquetesDescuentoAdmin(admin.ModelAdmin):
     fieldsets = (
         (('Paquetes de Descuento'),
          {'fields': ('paquete', 'evento_uno','porcentaje_uno','evento_dos','porcentaje_dos','evento_tres',
-                     'porcentaje_tres','evento_cuatro','porcentaje_cuatro','evento_cinco','porcentaje_cinco','anio',)}),)
+                     'porcentaje_tres','evento_cuatro','porcentaje_cuatro','evento_cinco','porcentaje_cinco','anio','importe','ahorro')}),)
 
 
 # Administrador para el catálogo Cuotas.
@@ -449,7 +449,7 @@ class PagoAdmin(admin.ModelAdmin):
     list_filter = []
     list_per_page = sys.maxsize
     list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
-    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
+    fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
     def get_inline_instances(self, request, obj=None):
         return [ReferenciaFormaPagoInlineAdmin(self.model, self.admin_site),

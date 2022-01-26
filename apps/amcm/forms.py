@@ -105,7 +105,11 @@ class PagoForm(forms.ModelForm):
                 total_pago += pago.cuotaPagada
                 print(ejemplar)
 
-        monto_cuota = (self.instance.cuota.monto * ejemplares_total)
+        if self.instance.paquete:
+            monto_cuota = self.instance.paquete.importe
+        else:
+            monto_cuota = (self.instance.cuota.monto * ejemplares_total)
+
         monto_recibido = self.instance.cuotaPagada + total_pago
         if (monto_cuota - monto_recibido > 0):
             self.instance.estatus_cuota = 'PENDIENTE'
