@@ -457,7 +457,7 @@ class PagoAdmin(admin.ModelAdmin):
         ]
 
     def get_form(self, request, obj=None, **kwargs):
-        if obj is not None:
+        if obj.evento is not None:
             evento_id = obj.evento.id
         else:
             print(request.GET.get('_changelist_filters'))

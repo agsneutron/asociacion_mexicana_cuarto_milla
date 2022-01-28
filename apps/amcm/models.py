@@ -1071,10 +1071,20 @@ class Recibo(models.Model):
         return dict
 
     def __str__(self):
-        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        respuesta=''
+        if self.pago.evento:
+            respuesta = str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        else:
+            respuesta = str(self.pago.paquete.get_paquete_display()) + ' ' + str(self.numero_recibo)
+        return respuesta
 
     def __unicode__(self):
-        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        respuesta = ''
+        if self.pago.evento:
+            respuesta = str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        else:
+            respuesta = str(self.pago.paquete.get_paquete_display()) + ' ' + str(self.numero_recibo)
+        return respuesta
 
 
 # modelo reasignacion de cuadra

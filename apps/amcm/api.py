@@ -164,7 +164,12 @@ class GenerarReciboPDF(ListView):
             }
             arrReferenciaFormaPago.append(referencia_json)
 
-        saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+        if recibo.pago.cuota:
+            saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+            concepto=recibo.pago.evento.nombre
+        else:
+            saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+            concepto = recibo.pago.paquete.get_paquete_display()
 
         params = {
             'no_recibo': recibo.numero_recibo,
@@ -178,7 +183,7 @@ class GenerarReciboPDF(ListView):
             'recibido_en': arrReferenciaFormaPago,
             'saldo': 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo),
             'cuentas': arrCuentas,
-            'evento': recibo.pago.evento.nombre,
+            'evento': concepto,
             'ejemplares': ejemplares,
             }
 
@@ -1090,4 +1095,53 @@ class getDashboard(ListView):
         }
 
         return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class getParentesis(ListView):
+    def json_to_dumps(self,json_object):
+        return json.dumps(json_object, indent=4, separators=(',', ': '), sort_keys=False, ensure_ascii=False)
+
+    def post(self, request, *args, **kwargs):
+        datos = json.loads(request.body)
+        cadena = datos["cadena"]
+        contador=0
+        for i in cadena:
+            if i=='(':
+                contador+=1
+            else:
+                contador-=1
+
+        if contador==0:
+            message='True'
+        else:
+            message ='False'
+
+        params = {
+
+            "message": message
+        }
+
+        return HttpResponse(self.json_to_dumps(params), 'application/json; charset=utf-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class wordsReversed(ListView):
+    def json_to_dumps(self,json_object):
+        return json.dumps(json_object, indent=4, separators=(',', ': '), sort_keys=False, ensure_ascii=False)
+
+    def post(self, request, *args, **kwargs):
+        datos = json.loads(request.body)
+        cadena = datos["cadena"].split(' ')
+        reverseWord=''
+        for word in cadena:
+            if len(word)>=5:
+                reverseWord += word[::-1] + ' '
+            else:
+                reverseWord+=word + ' '
+
+        params = {
+
+            "message": reverseWord.rstrip()
+        }
+
+        return HttpResponse(self.json_to_dumps(params), 'application/json; charset=utf-8')
 

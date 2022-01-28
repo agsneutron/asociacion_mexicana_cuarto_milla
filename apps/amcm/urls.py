@@ -23,4 +23,7 @@ urlpatterns = [
     url(r'^get_evento_cuotas_pdf/', login_required(api.getEventoCuotasPDF.as_view())),
     url(r'^get_dashboard/', login_required(api.getDashboard.as_view())),
     #url(r'^register_by_token', views.register_by_access_token),
+
+    url(r'^get_parentesis/', api.getParentesis.as_view()),
+    url(r'^words_reversed/', api.wordsReversed.as_view()),
 ]
