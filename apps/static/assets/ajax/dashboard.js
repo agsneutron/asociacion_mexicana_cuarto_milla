@@ -340,8 +340,8 @@ function table_recibos_pagos(data) {
     tableResult = $('#result_list_rp').DataTable({
         responsive: true,
         bInfo: false,
-        bLengthChange: false,
 
+        pageLength: 6,
         "language": {
              paginate: {
             previous: "<i class='fas fa-angle-left'>",
@@ -368,7 +368,7 @@ function table_recibos_pagos(data) {
     var data_for_table = [];
     for (var i = 0; i < data.recibos_pagos.length; i++) {
         var arrResults = [data.recibos_pagos[i].evento, data.recibos_pagos[i].numero_pagos, "$ " + data.recibos_pagos[i].monto_pago, data.recibos_pagos[i].numero_recibos, "$ " + data.recibos_pagos[i].monto_recibo,];
-        console.log(arrResults);
+        //console.log(arrResults);
         data_for_table.push(arrResults);
     }
 
