@@ -198,8 +198,8 @@
          {% for cuota in evento.cuotas_evento %}
               <tr style="font-size: 13px;line-height: 19px;">
                   <td width="10%">&nbsp;</td>
-                  <td width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
-                  <td width="40%"> $ {{ cuota.monto }}</td>
+                  <td width="60%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
+                  <td width="30%"> $ {{ cuota.monto }}</td>
                 </tr>
                 {% endfor %}
                 <tr align="right">
@@ -208,9 +208,9 @@
                 </tr>
                 {% for fecha in evento.fechas_evento %}
                 <tr style="font-size: 13px;line-height: 19px;">
-                  <td width="10%">&nbsp;</td>
-                  <td width="40%">{{ fecha.tipoFecha }}</td>
-                  <td width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</td>
+
+                  <td width="100%" colspan="3" style="text-align: center">{{ fecha.tipoFecha }} :{{ fecha.fecha|date:"l, d  F  Y" }}</td>
+
                 </tr>
               {% endfor %}
 
@@ -240,13 +240,13 @@
                          <th scope="col">
                          &nbsp;
                           </th>
-                          <th scope="col" width="30%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
+                          <th scope="col" width="45%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
                             <strong>CUOTA</strong>
                           </th>
-                          <th scope="col" width="30%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
-                              <strong>NUMERO DE EJEMPLARES</strong>
+                          <th scope="col" width="20%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
+                              <strong># EJEMPLARES</strong>
                           </th>
-                          <th scope="col" width="30%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
+                          <th scope="col" width="25%" style=" border-color: grey; border-width: 1px; border-style: solid; text-align: center; padding-top: 4px;">
                               <strong>MONTO ACUMULADO</strong>
                           </th>
                          <th scope="col">

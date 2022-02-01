@@ -57,8 +57,8 @@
                 {% for cuota in evento.cuotas_evento %}
               <tr>
                   <th scope="col" class="sort" data-sort="name" width="20%">&nbsp;</th>
-                  <th scope="col" class="sort" data-sort="name" width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</th>
-                  <th scope="col" class="sort" data-sort="name" width="40%"> ${{ cuota.monto }}</th>
+                  <th scope="col" class="sort" data-sort="name" width="50%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</th>
+                  <th scope="col" class="sort" data-sort="name" width="30%"> ${{ cuota.monto }}</th>
                 </tr>
                 {% endfor %}
                 <tr align="right">
@@ -67,9 +67,9 @@
                 </tr>
                 {% for fecha in evento.fechas_evento %}
                 <tr>
-                  <th scope="col" class="sort" data-sort="name" width="20%">&nbsp;</th>
-                  <th scope="col" class="sort" data-sort="name" width="40%">{{ fecha.tipoFecha }}</th>
-                  <th scope="col" class="sort" data-sort="name" width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</th>
+
+                  <th scope="col" class="sort" data-sort="name" width="100%" colspan="3" align="center" style="text-align: center;">{{ fecha.tipoFecha }} : {{ fecha.fecha|date:"l, d  F  Y" }}</th>
+
                 </tr>
               {% endfor %}
 
