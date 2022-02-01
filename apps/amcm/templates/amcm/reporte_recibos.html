@@ -1,0 +1,89 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+
+    <div class="header pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 d-inline-block mb-0">Reporte de Recibos</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                        <a href="/amcm/get_reporte_recibos_pdf/" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+                        <h3 class="mb-0">Recibos</h3>
+                    </div>
+
+                    <div class="table-responsive pb-4">
+                        <table class="table table-flush" id="result_list">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Numero de Recibo</th>
+                                <th>Cantidad</th>
+                                <th>Cuenta Contable</th>
+                                <th>Concepto</th>
+{#                                <th>Final</th>#}
+{#                                <th class="px-1">Cuotas</th>#}
+{#                                <th class="px-1">...</th>#}
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for obj in recibos %}
+                                <tr>
+                                    <td class="text-wrap">{{ obj.numero }}</td>
+                                    <td>$ {{ obj.pago.cuotaPagada }}</td>
+                                    <td>
+                                        {% for cuenta in obj.pago.cuentasPago %}
+                                            {% if cuenta %}
+                                                 <span class="badge badge-dot mr-4">
+                                                <i class="bg-warning"></i>
+                                                <span class="status">
+                                                        {{ cuenta.cuenta}} - $ {{ cuenta.importe}} <br>
+                                                </span>
+                                            {% endif %}
+                                            {% if not forloop.last %}
+                                                <br/>
+                                            {% endif %}
+                                          {% endfor %}
+                                    </td>
+                                    <td>{{ obj.pago.cuota }} - {{ obj.pago.conceptoPago }} </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+     {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}
+

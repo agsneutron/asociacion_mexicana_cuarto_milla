@@ -96,6 +96,9 @@ function iniciaDashboard(data) {
 
     //total recibospor cuota
     table_recibos(data);
+
+    //tabla recibos pagos
+    table_recibos_pagos(data);
 }
 
 
@@ -322,6 +325,50 @@ function table_recibos(data) {
     for (var i = 0; i < data.recibos.length; i++) {
         var arrResults = [data.recibos[i].evento, data.recibos[i].cuota, data.recibos[i].total];
         //console.log(arrResults);
+        data_for_table.push(arrResults);
+    }
+
+    //console.log(data_for_table.length);
+    if (data_for_table.length > 0) {
+        tableResult.rows.add(data_for_table).draw();
+    }
+
+
+}
+
+function table_recibos_pagos(data) {
+    tableResult = $('#result_list_rp').DataTable({
+        responsive: true,
+        bInfo: false,
+        bLengthChange: false,
+
+        "language": {
+             paginate: {
+            previous: "<i class='fas fa-angle-left'>",
+            next: "<i class='fas fa-angle-right'>"
+        },
+            searchPlaceholder: 'Filtrar resultados ...',
+            emptyTable: "Realiza una búsqueda para visualizar datos.",
+            infoEmpty: "Sin datos disponibles.",
+            processing: "Espere un momento, buscando coincidencias.",
+            lengthMenu: "Mostrar _MENU_ registros",
+            select: {
+                rows: {
+                    _: "Registros %d seleccionados",
+                    0: "De click en un registro psra seleccionarlo",
+                    1: "1 Registro seleccionado "
+                }
+            }
+        },
+        select: true,
+        processing: true,
+    });
+
+
+    var data_for_table = [];
+    for (var i = 0; i < data.recibos_pagos.length; i++) {
+        var arrResults = [data.recibos_pagos[i].evento, data.recibos_pagos[i].numero_pagos, "$ " + data.recibos_pagos[i].monto_pago, data.recibos_pagos[i].numero_recibos, "$ " + data.recibos_pagos[i].monto_recibo,];
+        console.log(arrResults);
         data_for_table.push(arrResults);
     }
 

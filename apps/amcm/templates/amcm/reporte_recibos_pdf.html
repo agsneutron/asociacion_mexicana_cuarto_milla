@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>
+        AMCM
+    </title>
+    <style>
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 5px;
+        }
+
+        .striped:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            /*  background-color: #04AA6D;
+            color: white; */
+        }
+
+        @page {
+            size: letter portrait;
+            margin: 0.5cm;
+
+            @frame header_frame { /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 80pt;
+            width: 500pt;
+            right: 30pt;
+            height: 148pt;
+        }
+        @frame content_frame {
+            /* Content Frame */
+        left: 80pt; width: 500pt; top: 40pt; height: 852pt; right: 10pt;
+        }
+        @frame footer_frame {
+            /* Another static Frame */
+        -pdf-frame-content:footer_content;
+        left: 80pt; width: 500pt; top: 542pt; height: 100pt;
+        }
+        }
+
+        @media screen and (min-width: 576px) {
+
+            .container,
+            .container-sm {
+                max-width: 540px;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+
+            .container,
+            .container-md,
+            .container-sm {
+                max-width: 720px;
+            }
+        }
+
+        @media screen and (min-width: 992px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm {
+                max-width: 960px;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl {
+                max-width: 1140px;
+            }
+        }
+
+        @media screen and (min-width: 1400px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl,
+            .container-xxl {
+                max-width: 1320px;
+            }
+        }
+
+        .container,
+        .container-fluid,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl,
+        .container-xxl {
+            width: 100%;
+            padding-right: var(--bs-gutter-x, .75rem);
+            padding-left: var(--bs-gutter-x, .75rem);
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #070707;
+            text-align: center;
+        }
+
+        @media print {
+            .striped:nth-child(even) td {
+                background-color: #f2f2f2 !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        .flex-container {
+            -webkit-display: -webkit-box;
+            -webkit-display: -webkit-flex;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-flex-wrap: wrap;
+        }
+
+        .flex-item {
+            border: 1px solid #4a4a4a;
+            display: inline-block;
+            width: 50%;
+            margin: 5px;
+            font-size: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div style="width: 100%;" id="header_content">
+
+</div>
+<div style="width: 500px;" id="content_frame">
+    <h2 style="font-size: 15px;line-height: 22px; padding-top: 4px;" align="center">Asociación Mexicana de Criadores y Caballistas de Caballos Cuarto de Milla A.C.</h2>
+    <h3 style="font-size: 15px;line-height: 19px; padding-top: 4px;" align="center">Reporte de  Recibos</h3>
+    <table class="table table-flush" id="result_list" border="1px">
+        <thead class="thead-light">
+        <tr style="font-size: 12px;line-height: 19px; padding-top: 4px;" align="center">
+            <th width="15%"> # Recibo</th>
+            <th width="15%"> Cantidad</th>
+            <th width="35%"> Cuenta Contable</th>
+            <th width="35%"> Concepto</th>
+         </tr>
+        </thead>
+
+        <tbody>
+        {% for obj in recibos %}
+            <tr style="font-size: 12px;line-height: 19px;">
+                <td class="text-wrap">{{ obj.numero }}</td>
+                <td>$ {{ obj.pago.cuotaPagada }}</td>
+                <td>
+                    {% for cuenta in obj.pago.cuentasPago %}
+                        {% if cuenta %}
+                            <span class="badge badge-dot mr-4">
+                            <i class="bg-warning"></i>
+                            <span class="status">
+                                {{ cuenta.cuenta}} - $ {{ cuenta.importe}} <br>
+                            </span>
+                        {% endif %}
+                        {% if not forloop.last %}
+                            <br/>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td>{{ obj.pago.cuota }} - {{ obj.pago.conceptoPago }} </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+</div>
+
+<div id="footer_content">
+
+</div>
+
+
+</body>
+
+</html>

@@ -70,6 +70,11 @@ tr th.field-pago a{
 #result_list_en tbody tr>td:first-child{
       white-space: normal !important;
 }
+
+#result_list_rp tbody tr>td:first-child{
+      white-space: normal !important;
+}
+
 .table-sm th, .table-sm td {
     padding: 0.3rem;
     padding-left: 0.3rem !important;

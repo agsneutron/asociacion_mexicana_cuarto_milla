@@ -1059,6 +1059,39 @@ class getDashboard(ListView):
             ejemplares = Ejemplares.objects.count()
             cuadras = Cuadras.objects.count()
             pagos = Pago.objects.filter(Q(fechaPago__year=str(today.year))).aggregate(total=Sum('cuotaPagada'))
+            eventos_set = Evento.objects.all()
+
+            #recibos vs pagos
+            reporte_recibos_pagos = []
+            for obj_evento in eventos_set:
+                recibos_obj = Recibo.objects.filter(Q(pago__evento = obj_evento)).values('pago__evento__nombre',) \
+                    .annotate(
+                    total=Count('pago__evento__nombre'), monto=Sum('pago__cuotaPagada')).order_by()
+
+                pagos_obj = Pago.objects.filter(Q(evento = obj_evento)).values('evento__nombre',).annotate(
+                    total=Count('evento__nombre'), monto=Sum('cuotaPagada')).order_by()
+
+                numero_recibos = 0
+                numero_pagos = 0
+                monto_recibo = 0
+                monto_pago = 0
+                for total_recibo in recibos_obj:
+                    numero_recibos = total_recibo['total']
+                    monto_recibo = total_recibo['monto']
+
+                for total_pagos in pagos_obj:
+                    numero_pagos = total_pagos['total']
+                    monto_pago = total_pagos['monto']
+
+                data = {
+                    'evento': obj_evento.nombre,
+                    'numero_recibos': numero_recibos,
+                    'monto_recibo': monto_recibo,
+                    'numero_pagos': numero_pagos,
+                    'monto_pago': monto_pago,
+                }
+
+                reporte_recibos_pagos.append(data)
 
             #relacion de cuadras y ejemplares
             cuadras_ejemplares = Ejemplares.objects.values('cuadra__nombre').annotate(total=Count('cuadra__nombre')).order_by()
@@ -1121,8 +1154,8 @@ class getDashboard(ListView):
                 nominados_set.append(nominados_data)
 
                 # recibos
-                recibos_set = []
-                recibos_obj = Recibo.objects.values('pago__evento__nombre', 'pago__cuota__tipoCuota__nombre','pago__cuotaPagada')\
+                recibos_set = []                                                   #'pago__cuotaPagada'
+                recibos_obj = Recibo.objects.values('pago__evento__nombre', 'pago__cuota__tipoCuota__nombre')\
                     .annotate(total=Count('pago__evento__nombre')).order_by() #.aggregate(total_monto=Sum('pago__cuotaPagada'))\
 
                 for recibo in recibos_obj:
@@ -1143,6 +1176,7 @@ class getDashboard(ListView):
                 "cuadras_ejemplares": [],
                 "eventos_temporada": [],
                 'nominados': [],
+                'recibos_pagos': [],
                 "message": "error"
             }
             return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
@@ -1156,8 +1190,51 @@ class getDashboard(ListView):
             "eventos_temporada": eventos_temporada,
             'nominados': nominados_set,
             'recibos':recibos_set,
-            "message": "success"
+            'recibos_pagos': reporte_recibos_pagos,
+            "message": "success",
         }
 
         return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
 
+
+#reporte de recibos realizados
+class getReporteRecibos(ListView):
+
+    @staticmethod
+    def get_datos_reporte():
+
+        recibos_set = []
+        try:
+            recibos = Recibo.objects.all()
+
+            for object_recibo in recibos:
+                recibos_data = {
+                    'numero': object_recibo.numero_recibo,
+                    'pago': object_recibo.pago.to_serializable_dict(),
+                }
+                recibos_set.append(recibos_data)
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existen Recibos"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "recibos": recibos_set,
+        }
+
+        return params
+
+    def get(self, request, *args, **kwargs):
+
+        params = self.get_datos_reporte()
+
+        return render(request, 'amcm/reporte_recibos.html', params)
+
+
+class getReporteRecibosPDF(ListView):
+    def get(self, request, *args, **kwargs):
+
+        params = getReporteRecibos.get_datos_reporte()
+
+        return Render.renderCuota('amcm/reporte_recibos_pdf.html', params)
