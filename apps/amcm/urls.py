@@ -11,6 +11,7 @@ from apps.amcm import views
 
 urlpatterns = [
     path('get_recibo_pdf/', api.GenerarReciboPDF.as_view(), name="recibo"),
+    path('get_recibo_impresora/', api.GenerarReciboImpresora.as_view(), name="recibo_impresora"),
     url(r'^get_reporte/', login_required(api.getReporteEventos.as_view())),
     url(r'^get_reporte_cuota/', login_required(api.getReporteCuotas.as_view())),
     url(r'^get_reporte_cuota_pdf/', login_required(api.getReporteCuotasPDF.as_view())),
