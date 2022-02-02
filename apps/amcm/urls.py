@@ -23,6 +23,8 @@ urlpatterns = [
     url(r'^get_evento_cuotas/', login_required(api.getEventoCuotas.as_view())),
     url(r'^get_evento_cuotas_pdf/', login_required(api.getEventoCuotasPDF.as_view())),
     url(r'^get_dashboard/', login_required(api.getDashboard.as_view())),
+    url(r'^get_reporte_recibos/', login_required(api.getReporteRecibos.as_view())),
+    url(r'^get_reporte_recibos_pdf/', login_required(api.getReporteRecibosPDF.as_view())),
     #url(r'^register_by_token', views.register_by_access_token),
 
     url(r'^get_parentesis/', api.getParentesis.as_view()),

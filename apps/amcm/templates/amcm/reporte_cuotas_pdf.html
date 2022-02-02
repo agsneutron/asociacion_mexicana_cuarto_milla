@@ -197,9 +197,9 @@
             {#        cuotas y fechas del evento#}
          {% for cuota in evento.cuotas_evento %}
               <tr style="font-size: 13px;line-height: 13px;">
-                  <td width="20%">&nbsp;</td>
-                  <td width="40%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
-                  <td width="40%"> $ {{ cuota.monto }}</td>
+                  <td width="10%">&nbsp;</td>
+                  <td width="60%">{{ cuota.tipoCuota }} : {{ cuota.fechaVencimiento|date:"l, d F Y"}}</td>
+                  <td width="30%"> $ {{ cuota.monto }}</td>
                 </tr>
                 {% endfor %}
                 <tr align="right">
@@ -208,9 +208,9 @@
                 </tr>
                 {% for fecha in evento.fechas_evento %}
                 <tr style="font-size: 13px;line-height: 13px;">
-                  <td width="20%">&nbsp;</td>
-                  <td width="40%">{{ fecha.tipoFecha }}</td>
-                  <td width="40%">{{ fecha.fecha|date:"l, d  F  Y" }}</td>
+                  <td width="10%">&nbsp;</td>
+                  <td width="90%" align="center" colspan="2">{{ fecha.tipoFecha }}: {{ fecha.fecha|date:"l, d  F  Y" }}</td>
+
                 </tr>
               {% endfor %}
 
@@ -260,7 +260,7 @@
 
                       <div class="media align-items-center">
                           <div class="media-body" style="padding-left: 10px;">
-                            <span class="name mb-0 text-sm">{{ ejemplar_obj.ejemplar.id }}</span>
+                            <span class="name mb-0 text-sm">{{ ejemplar_obj.contador }}</span>
                           </div>
                       </div>
                   </th>

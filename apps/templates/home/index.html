@@ -224,97 +224,57 @@
                     <div class="card-header border-0">
                         <div class="row align-items-center">
                             <div class="col">
-                                <h3 class="mb-0">Caballos (nominados, inscritos) </h3>
+                                <h3 class="mb-0">Recibos  vs Pagos </h3>
                             </div>
                             {#                <div class="col text-right">#}
                             {#                  <a href="#!" class="btn btn-sm btn-primary">See all</a>#}
                             {#                </div>#}
                         </div>
                     </div>
-                    <div class="table-responsive">
+                    <div class="card widget-calendar">
+                        <div class="table-responsive">
+
                         <!-- Projects table -->
-                        <table class="table table-sm">
+                        <table class="table table-sm w-100" id="result_list_rp">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Caballo</th>
-                                <th scope="col">Fecha inicio</th>
-                                <th scope="col">Estatus</th>
-                                <th scope="col">Entrada</th>
+                                <th scope="col" width="30%">Evento</th>
+                                <th scope="col">Pagos</th>
+                                <th scope="col">Monto</th>
+                                <th scope="col">Recibos</th>
+                                <th scope="col">Monto</th>
+
+{#                                <th scope="col">Entrada</th>#}
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <th scope="row">
-                                    /argon/
-                                </th>
-                                <td>
-                                    4,569
-                                </td>
-                                <td>
-                                    340
-                                </td>
-                                <td>
-                                    <i class="fas fa-arrow-up text-success mr-3"></i> 46,53%
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    /argon/index.html
-                                </th>
-                                <td>
-                                    3,985
-                                </td>
-                                <td>
-                                    319
-                                </td>
-                                <td>
-                                    <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    /argon/charts.html
-                                </th>
-                                <td>
-                                    3,513
-                                </td>
-                                <td>
-                                    294
-                                </td>
-                                <td>
-                                    <i class="fas fa-arrow-down text-warning mr-3"></i> 36,49%
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    /argon/tables.html
-                                </th>
-                                <td>
-                                    2,050
-                                </td>
-                                <td>
-                                    147
-                                </td>
-                                <td>
-                                    <i class="fas fa-arrow-up text-success mr-3"></i> 50,87%
-                                </td>
-                            </tr>
-                            <tr>
-                                <th scope="row">
-                                    /argon/profile.html
-                                </th>
-                                <td>
-                                    1,795
-                                </td>
-                                <td>
-                                    190
-                                </td>
-                                <td>
-                                    <i class="fas fa-arrow-down text-danger mr-3"></i> 46,53%
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                </tr>
+{#                            <tbody>#}
+{#                            #}
+{#                            <tr>#}
+{#                                <th scope="row">#}
+{#                                    /argon/index.html#}
+{#                                </th>#}
+{#                                <td>#}
+{#                                    3,985#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    319#}
+{#                                </td>#}
+{#                                <td>#}
+{#                                    <i class="fas fa-arrow-down text-warning mr-3"></i> 46,53%#}
+{#                                </td>#}
+{#                            </tr>#}
+
                             </tbody>
                         </table>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -400,7 +360,7 @@
                         </div>
                     </div>
                     <div class="card-body">
- <div class="chart d-none">
+                <div class="chart d-none">
               <!-- Chart wrapper -->
               <canvas id="chart-bar-stacked" class="chart-canvas"></canvas>
             </div>

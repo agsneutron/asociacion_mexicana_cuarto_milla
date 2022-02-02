@@ -795,7 +795,13 @@ class Pago(models.Model):
         dict['conceptoPago'] = str(self.conceptoPago)
         dict['fechaPago'] = str(self.fechaPago)
         dict['fechaRegistro'] = str(self.fechaRegistro)
-        dict['valorRecibido'] = str(self.valorRecibido)
+        #dict['valorRecibido'] = str(self.valorRecibido)
+
+        cuentasPago = []
+        for obj in self.cuentaspago_set.all():
+            det = obj.to_serializable_dict()
+            cuentasPago.append(det)
+        dict['cuentasPago'] = cuentasPago
 
         return dict
 
@@ -897,6 +903,8 @@ class CuentasPago(models.Model):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
         dict['fecha_registro'] = str(self.fecha_registro)
+        dict['cuenta'] = self.cuenta
+        dict['importe'] = self.importe
         return dict
 
     def __str__(self):

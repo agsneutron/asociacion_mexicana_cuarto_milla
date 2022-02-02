@@ -96,80 +96,101 @@
     <div class="row">
       <div class="col">
         <div class="card">
-          <div class="card-header border-0">
-            <h3 class="mb-0"></h3>
-          </div>
+{#          <div class="card-header border-0">#}
+{#            <h3 class="mb-0"></h3>#}
+{#          </div>#}
           <div class="table-responsive">
 
-              <table class="table align-items-center table-flush">
-              <thead class="thead-light">
-                <tr align="center" >
-                    <th scope="col" class="sort" data-sort="name" width="50%">&nbsp;</th>
-                    {% for cuota in cuotas %}
-                    <th scope="col" class="sort" data-sort="name" style="border-style: solid;border-width: 1px; border-color: grey;">
-                        {{ cuota.tipoCuota }} <br/>
-                        {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>
-                       $ {{ cuota.monto }} <br/>
-                    </th>
-                    {% endfor %}
-                </tr>
-              </thead>
-              </table>
+{#              <table class="table align-items-center table-flush">#}
+{#              <thead class="thead-light">#}
+{#                <th align="center" >#}
+{#                     <th scope="col" class="sort" data-sort="name" width="5%">#}
+{#                           &nbsp;#}
+{#                        </th>#}
+{#                    <th scope="col" class="sort" data-sort="name" width="35%" colspan="2">&nbsp;</th>#}
+{#                    <th scope="col" class="sort" data-sort="name" width="60%">#}
+{#                        <table width="100%">#}
+{#                            <tr>#}
+{#                                {% for cuota in cuotas %}#}
+{#                                <td style="border-style: solid;border-width: 1px; border-color: grey;" align="center">#}
+{#                                    {{ cuota.tipoCuota }} <br/>#}
+{#                                    {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>#}
+{#                                   $ {{ cuota.monto }} <br/>#}
+{#                                </td>#}
+{#                                {% endfor %}#}
+{#                            </tr>#}
+{#                        </table>#}
+{#                    </th>#}
+{#                </tr>#}
+{#              </thead>#}
+{#              </table>#}
 
-          {% for obj in cuadras %}
-
-              <table class="table align-items-center table-flush">
-                  <thead class="thead-light">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
                     <tr>
                         <th scope="col" class="sort" data-sort="name" width="5%">
                            &nbsp;
                         </th>
-                        <th scope="col" class="sort" data-sort="name" width="45%">{{ obj.cuadra.nombre }}</th>
-                        <th scope="col" class="sort" data-sort="name">
-                            {{ obj.cuadra.telefono }}
-                        </th>
-                        <th scope="col" class="sort" data-sort="name">
-                            {{ obj.cuadra.representante }}
-                        </th>
-                        <th scope="col" class="sort" data-sort="name">
-                            {{ obj.cuadra.correoElectronico }}
-                        </th>
+                        <th scope="col" class="sort" data-sort="name" width="35%" colspan="2">&nbsp;</th>
+{#                        <th scope="col" class="sort" data-sort="name" width="60%">#}
+{#                            <table width="100%">#}
+{#                                <tr>#}
+                                    {% for cuota in cuotas %}
+                                    <th style="border-style: solid;border-width: 1px; border-color: grey;" align="center">
+                                        {{ cuota.tipoCuota }} <br/>
+                                        {{ cuota.fechaVencimiento|date:"d-m-Y" }} <br/>
+                                       $ {{ cuota.monto }} <br/>
+                                    </th>
+                                    {% endfor %}
+{#                                </tr>#}
+{#                            </table>#}
+{#                        </th>#}
                     </tr>
-                  </thead>
-                 <tbody class="list">
+                </thead>
+                <tbody class="list">
+                  {% for obj in cuadras %}
+                        <tr class="thead-light">
+                            <th scope="col" class="sort" data-sort="name" width="5%">
+                                &nbsp;
+                            </th>
+                            <th scope="col" class="sort" data-sort="name" width="35%" colspan="2">{{ obj.cuadra.nombre }}</th>
 
-              {% for ejemplar_obj in obj.ejemplares %}
-                <tr>
-                  <th scope="col" width="5%">
+                            <th scope="col" class="sort" data-sort="name" colspan="{{ cuotas|length }}">
+                                    {{ obj.cuadra.telefono }}  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;{{ obj.cuadra.representante }}  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  {{ obj.cuadra.correoElectronico }}
+                            </th>
+                        </tr>
 
-                      <div class="media align-items-center">
-                          <div class="media-body">
-                            <span class="name mb-0 text-sm">{{ ejemplar_obj.ejemplar.id }}</span>
-                          </div>
-                      </div>
-                  </th>
-                  <td class="budget" width="45%">
-                      {{ ejemplar_obj.ejemplar.nombre }}
-                  </td>
+                        {% for ejemplar_obj in obj.ejemplares %}
+                            <tr>
+                                <td scope="col" width="5%">
+                                    <span class="name mb-0 text-sm">{{ ejemplar_obj.contador }}</span>
+                                </td>
+                                <td scope="col" class="sort" width="5%">
+                                    {{ ejemplar_obj.ejemplar.lote }}
+                                </td>
+                                <td scope="col" class="sort" width="30%">
+                                     {{ ejemplar_obj.ejemplar.nombre }}
+                                </td>
+{#                                <td scope="col" class="sort" data-sort="name" width="60%">#}
+{#                                    <table  width="100%">#}
+{#                                        <tr>#}
+                                            {% for cuota_cuotas in ejemplar_obj.cuotas %}
+                                                <td scope="col" class="sort" style="text-align: center; border-width: 1px;border-color: grey; border-style: solid;">
+                                                    {% for recibo_obj in cuota_cuotas.recibo %}
+                                                        {{ recibo_obj.numero_recibo }}
+                                                    {% endfor %}
+                                                    &nbsp;
+                                                </td>
+                                            {% endfor %}
+{#                                        </tr>#}
+{#                                    </table>#}
+{#                                </td>#}
+                            </tr>
+                        {% endfor %}
 
-
-                      {% for cuota_cuotas in ejemplar_obj.cuotas %}
-                        <td scope="col" class="budget" style="text-align: left">
-                        &nbsp;
-                          {% for recibo_obj in cuota_cuotas.recibo %}
-                              {{ recibo_obj.numero_recibo }}
-                          {% endfor %}
-                           </td>
-                      {% endfor %}
-                </tr>
-
-              {% endfor %}
-
-
-              </tbody>
-              </table>
-            {% endfor %}
-
+                  {% endfor %}
+                </tbody>
+            </table>
 
 
           </div>
