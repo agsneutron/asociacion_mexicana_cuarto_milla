@@ -33,6 +33,29 @@
                     <!-- Card header -->
                     <div class="card-header border-0">
                         <h3 class="mb-0">Recibos</h3>
+
+                        <div class="input-daterange datepicker row align-items-center">
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="input-group input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control" placeholder="Start date" type="text" value="06/18/2020">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="input-group input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-calendar-grid-58"></i></span>
+                                        </div>
+                                        <input class="form-control" placeholder="End date" type="text" value="06/22/2020">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="table-responsive pb-4">
@@ -85,5 +108,7 @@
 {% endblock content %}
 
 <!-- Specific JS goes HERE -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+    <script src="/assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+{% endblock javascripts %}
 
