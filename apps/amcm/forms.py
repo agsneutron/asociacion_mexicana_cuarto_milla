@@ -43,11 +43,13 @@ class PagoForm(forms.ModelForm):
                     params = params.split('=')
                     evento_id = params[1]
                     evento = Evento.objects.filter(id=evento_id)
+                    kwargs = {'initial': {'evento': evento_id}}
                 else:
                     evento_id = 0
+                    kwargs = {'initial': {'evento': evento_id}}
             except:
-                evento_id=0
-        kwargs = {'initial': {'evento': evento_id}}
+                evento_id = 0
+
         self.request = kwargs.pop('request', None)
         super(PagoForm, self).__init__(*args, **kwargs)
         #self.fields['evento'].queryset = evento
@@ -103,7 +105,11 @@ class PagoForm(forms.ModelForm):
                 total_pago += pago.cuotaPagada
                 print(ejemplar)
 
-        monto_cuota = (self.instance.cuota.monto * ejemplares_total)
+        if self.instance.paquete:
+            monto_cuota = self.instance.paquete.importe
+        else:
+            monto_cuota = (self.instance.cuota.monto * ejemplares_total)
+
         monto_recibido = self.instance.cuotaPagada + total_pago
         if (monto_cuota - monto_recibido > 0):
             self.instance.estatus_cuota = 'PENDIENTE'

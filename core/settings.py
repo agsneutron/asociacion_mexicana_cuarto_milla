@@ -124,6 +124,7 @@ USE_TZ = True
 # vida del token
 SESSION_COOKIE_AGE = 60000
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240 # higher than the count of fields
 #############################################################
 # SRC: https://devcenter.heroku.com/articles/django-assets
 

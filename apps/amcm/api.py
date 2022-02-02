@@ -20,6 +20,7 @@ from apps.lib.utilities import Utilities
 from django.db.models import Sum
 from django.db.models import Count
 import datetime
+import os
 
 def html_to_pdf(content, output):
     """
@@ -164,7 +165,12 @@ class GenerarReciboPDF(ListView):
             }
             arrReferenciaFormaPago.append(referencia_json)
 
-        saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+        if recibo.pago.cuota:
+            saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+            concepto=recibo.pago.evento.nombre
+        else:
+            saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+            concepto = recibo.pago.paquete.get_paquete_display()
 
         params = {
             'no_recibo': recibo.numero_recibo,
@@ -178,12 +184,102 @@ class GenerarReciboPDF(ListView):
             'recibido_en': arrReferenciaFormaPago,
             'saldo': 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo),
             'cuentas': arrCuentas,
-            'evento': recibo.pago.evento.nombre,
+            'evento': concepto,
             'ejemplares': ejemplares,
             }
 
         return Render.render('amcm/recibo.html', params)
 
+class GenerarReciboImpresora(ListView):
+    def get(self, request, *args, **kwargs):
+        recibo_id = request.GET.get('recibo_id')
+        recibo = Recibo.objects.get(id=recibo_id)
+        ejemplares = recibo.pago.ejemplar.all()
+        total_ejemplares = 0
+        monto_pagado = 0
+        for ejemplar in ejemplares:
+            total_ejemplares += 1
+        pagos = Pago.objects.filter(evento=recibo.pago.evento, cuota=recibo.pago.cuota, cuadra=recibo.pago.cuadra,
+                                    id__lt=recibo.pago.id)
+        for pago in pagos:
+            if set(list(ejemplares)) == set(list(pago.ejemplar.all())):
+                monto_pagado += pago.cuotaPagada
+
+        arrCuentas = []
+        cuentas = recibo.pago.cuentaspago_set.all()
+        for cuenta in cuentas:
+            cuenta_json = {
+                'nombre': cuenta.cuenta.cuenta.nombre,
+                'importe': '{:,.2f}'.format(cuenta.importe),
+                'codigo': cuenta.cuenta.cuenta.codigo
+            }
+            arrCuentas.append(cuenta_json)
+
+        arrReferenciaFormaPago = []
+        referennciaformapago = recibo.pago.referenciaformapago_set.all()
+        for referencia in referennciaformapago:
+            referencia_json = {
+                'nombre': referencia.formapago.nombre,
+                'importe': '{:,.2f}'.format(referencia.importe),
+                'referencia': referencia.referencia
+            }
+            arrReferenciaFormaPago.append(referencia_json)
+
+        if recibo.pago.cuota:
+            saldo = (recibo.pago.cuota.monto * total_ejemplares) - (recibo.pago.cuotaPagada + monto_pagado)
+            concepto = recibo.pago.evento.nombre
+        else:
+            saldo = (recibo.pago.paquete.importe * total_ejemplares) - (recibo.pago.cuotaPagada + monto_pagado)
+            concepto = recibo.pago.paquete.get_paquete_display()
+
+        no_recibo = recibo.numero_recibo
+        dia = recibo.fecha_registro.day
+        mes =  recibo.fecha_registro.month
+        anio = recibo.fecha_registro.year
+        usuario = recibo.pago.cuadra.nombre + ' ' + recibo.pago.cuadra.representante
+        importe = '{:,.2f}'.format(recibo.pago.cuotaPagada)
+        importe_letra = '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
+        concepto_pago = recibo.pago.conceptoPago
+        recibido_en = arrReferenciaFormaPago
+        saldo = 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo)
+        cuentas = arrCuentas
+        evento = concepto
+        ejemplares = ejemplares
+
+        impresion = open('imprime.txt', 'w')
+        impresion.write("\n\n\n\n\n")
+        impresion.write("                                                                      " + str(no_recibo) + "\n")
+        impresion.write("\n\n\n\n")
+        impresion.write("                                                                  " + str(dia) + "   " + str(mes) + "   " + str(anio) + "\n")
+        impresion.write("\n\n")
+        impresion.write("                      " + str(usuario) + "\n\n")
+        impresion.write("                      "+ importe + "   " + importe_letra + "\n\n")
+        impresion.write("\n")
+        impresion.write("                      " + concepto_pago + "\n\n")
+        impresion.write("         EVENTO: " + evento+ "\n")
+        i=0
+        for caballo in ejemplares:
+            if i==0:
+                impresion.write("         EJEMPLARES: " + caballo.nombre + ",")
+                i+=1
+            else:
+                impresion.write(caballo.nombre + ",")
+        impresion.write("\n\n\n\n\n")
+        for recibido in recibido_en:
+            impresion.write("                      " + str(recibido['referencia']) + " " + recibido['importe'] +  "\n")
+
+        impresion.write("                      SE USA SALDO A FAVOR DEL RECIBO 62590 POR $1,183.40\n\n")
+        impresion.write("                      " + str(saldo) + "                         ")
+        i=0
+        for cuenta in cuentas:
+            if i==0:
+                impresion.write(str(cuenta['codigo']) + " " + str(cuenta['importe']) + "\n")
+                i += 1
+            else:
+                impresion.write("                                                                     " + str(cuenta) + "\n")
+        impresion.close()
+        os.popen("lp imprime.txt")
+        return HttpResponse(Utilities.json_to_dumps({"mensaje": "se imprimió correctamente"}), 'application/json; charset=utf-8')
 
 class getListadoElegibles(ListView):
 
@@ -519,7 +615,6 @@ class getEventoCuotas(ListView):
         params = self.get_datosReporte(evento_id, cuota_id)
 
         return render(request, 'amcm/evento_cuotas.html', params)
-
 
 class getEventoCuotasPDF(ListView):
 
@@ -1195,6 +1290,55 @@ class getDashboard(ListView):
         }
 
         return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class getParentesis(ListView):
+    def json_to_dumps(self,json_object):
+        return json.dumps(json_object, indent=4, separators=(',', ': '), sort_keys=False, ensure_ascii=False)
+
+    def post(self, request, *args, **kwargs):
+        datos = json.loads(request.body)
+        cadena = datos["cadena"]
+        contador=0
+        for i in cadena:
+            if i=='(':
+                contador+=1
+            else:
+                contador-=1
+
+        if contador==0:
+            message='True'
+        else:
+            message ='False'
+
+        params = {
+
+            "message": message
+        }
+
+        return HttpResponse(self.json_to_dumps(params), 'application/json; charset=utf-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class wordsReversed(ListView):
+    def json_to_dumps(self,json_object):
+        return json.dumps(json_object, indent=4, separators=(',', ': '), sort_keys=False, ensure_ascii=False)
+
+    def post(self, request, *args, **kwargs):
+        datos = json.loads(request.body)
+        cadena = datos["cadena"].split(' ')
+        reverseWord=''
+        for word in cadena:
+            if len(word)>=5:
+                reverseWord += word[::-1] + ' '
+            else:
+                reverseWord+=word + ' '
+
+        params = {
+
+            "message": reverseWord.rstrip()
+        }
+
+        return HttpResponse(self.json_to_dumps(params), 'application/json; charset=utf-8')
 
 
 #reporte de recibos realizados

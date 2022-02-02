@@ -45,7 +45,7 @@ class PaquetesDescuentoAdmin(admin.ModelAdmin):
     fieldsets = (
         (('Paquetes de Descuento'),
          {'fields': ('paquete', 'evento_uno','porcentaje_uno','evento_dos','porcentaje_dos','evento_tres',
-                     'porcentaje_tres','evento_cuatro','porcentaje_cuatro','evento_cinco','porcentaje_cinco','anio',)}),)
+                     'porcentaje_tres','evento_cuatro','porcentaje_cuatro','evento_cinco','porcentaje_cinco','anio','importe','ahorro')}),)
 
 
 # Administrador para el catálogo Cuotas.
@@ -448,16 +448,36 @@ class PagoAdmin(admin.ModelAdmin):
     actions = None
     list_filter = []
     list_per_page = sys.maxsize
-    list_display = ('evento', 'cuadra', 'cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
-    fields = ('evento', 'cuota', 'cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
+    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
+    fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
     def get_inline_instances(self, request, obj=None):
         return [ReferenciaFormaPagoInlineAdmin(self.model, self.admin_site),
             DefCuentasPagoAdmin(self)(self.model, self.admin_site),
         ]
 
+    def get_eventopaquete(self,obj):
+        response=''
+        if obj.evento:
+            response = obj.evento.nombre
+        else:
+            response = obj.paquete.get_paquete_display()
+        return response
+
+    get_eventopaquete.short_description = 'Evento'
+
+    def get_cuota(self,obj):
+        response=''
+        if obj.cuota:
+            response = obj.cuota
+        else:
+            response = 'Todas las cuotas - $ ' + str(obj.paquete.importe)
+        return response
+
+    get_cuota.short_description = 'Cuota'
+
     def get_form(self, request, obj=None, **kwargs):
-        if obj is not None:
+        if obj.evento is not None:
             evento_id = obj.evento.id
         else:
             print(request.GET.get('_changelist_filters'))

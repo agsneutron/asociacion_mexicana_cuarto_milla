@@ -655,6 +655,9 @@ class PaquetesDescuento(models.Model):
     porcentaje_cinco = models.FloatField(verbose_name='Porcentaje Quinto Futurity', blank=False, null=False, default=50)
     anio = models.IntegerField(verbose_name= "Año", null=False, blank=False,default=now().year)
 
+    importe = models.FloatField(verbose_name='Importe', null=False, blank=False, )
+    ahorro = models.FloatField(verbose_name='Ahorro', null=False, blank=False, )
+
 
     class Meta:
         ordering = ['paquete']
@@ -728,7 +731,7 @@ class inscripcion(models.Model):
 
 # Modelo de Registro de Cuota de Evento
 class Pago(models.Model):
-    evento = models.ForeignKey(Evento, verbose_name="Evento", null=False, blank=False, on_delete=models.CASCADE,)
+    evento = models.ForeignKey(Evento, verbose_name="Evento", null=True, blank=True, on_delete=models.CASCADE,)
 
     cuota = ChainedForeignKey(CuotaEvento,
                                  chained_field="evento",
@@ -739,6 +742,8 @@ class Pago(models.Model):
                                  null=True,
                                  blank=True,
                                 )
+
+    paquete = models.ForeignKey(PaquetesDescuento, verbose_name="Paquete", null=True, blank=True, on_delete=models.CASCADE, )
 
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.CASCADE, )
     ejemplar = ChainedManyToManyField(Ejemplares,
@@ -802,15 +807,26 @@ class Pago(models.Model):
 
     def __str__(self):
         cadena=''
+        respuesta=''
         for obj in self.ejemplar.all():
             cadena+=obj.nombre + ' '
-        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) + ' '+ cadena
+
+        if self.evento:
+            respuesta = str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) + ' '+ cadena
+        else:
+            respuesta = str(self.paquete.get_paquete_display()) +  ' ' + cadena
+        return respuesta
 
     def __unicode__(self):
         cadena = ''
+        respuesta=''
         for obj in self.ejemplar.all():
             cadena += obj.nombre + ' '
-        return str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) +' ' + cadena
+        if self.evento:
+            respuesta = str(self.evento.nombre) + ' ' + str(self.cuota.tipoCuota.nombre) + ' ' + cadena
+        else:
+            respuesta = str(self.paquete.get_paquete_display()) + ' ' + cadena
+        return respuesta
 
     def save(self, *args, **kwargs):
         canSave = True
@@ -1063,10 +1079,20 @@ class Recibo(models.Model):
         return dict
 
     def __str__(self):
-        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        respuesta=''
+        if self.pago.evento:
+            respuesta = str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        else:
+            respuesta = str(self.pago.paquete.get_paquete_display()) + ' ' + str(self.numero_recibo)
+        return respuesta
 
     def __unicode__(self):
-        return str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        respuesta = ''
+        if self.pago.evento:
+            respuesta = str(self.pago.evento.nombre) + ' ' + str(self.numero_recibo)
+        else:
+            respuesta = str(self.pago.paquete.get_paquete_display()) + ' ' + str(self.numero_recibo)
+        return respuesta
 
 
 # modelo reasignacion de cuadra
