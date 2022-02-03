@@ -15,6 +15,21 @@ function main_consulta() {
         getRecibosPDF()
     });
 
+    p_evento = new URL(location.href).searchParams.get("evento_id");
+    p_de = new URL(location.href).searchParams.get("fecha_de");
+    p_a = new URL(location.href).searchParams.get("fecha_a");
+
+    if (p_evento !== ''){
+        $("#evento").val(p_evento);
+    }
+
+    if (p_de !== ''){
+        $("#fecha_de").val(p_de);
+    }
+
+    if (p_a !== ''){
+        $("#fecha_a").val(p_a);
+    }
 }
 
 function getRecibos() {

@@ -21,7 +21,7 @@ from django.db.models import Sum
 from django.db.models import Count
 import datetime
 import os
-from datetime import datetime
+
 
 def html_to_pdf(content, output):
     """
@@ -1347,7 +1347,7 @@ class getReporteRecibos(ListView):
 
     @staticmethod
     def get_datos_reporte(idEvento, fecha_de, fecha_a):
-        filtros = "Recibos "
+        filtros = "Recibos  "
         recibos_set = []
         evento_set = []
         recibos = Recibo.objects.all()
@@ -1359,13 +1359,13 @@ class getReporteRecibos(ListView):
             elif idEvento is not None:
                 recibos = recibos.filter(Q(pago__evento=idEvento))
                 evento_filtro = Evento.objects.get(id=idEvento)
-                filtros = filtros + " del: " + evento_filtro.nombre
+                filtros = filtros + "  del:  " + evento_filtro.nombre
                 if fecha_de is not None:
                     recibos = recibos.filter(Q(fecha_registro__range=(fecha_de,fecha_a)))
-                    filtros = filtros + " del: " + str(fecha_de.date()) + " al: " + str(fecha_a.date())
+                    filtros = filtros + "  del periodo:  " + str(fecha_de.date()) + "  al:  " + str(fecha_a.date())
             elif fecha_de is not None:
                 recibos = recibos.filter(Q(fecha_registro__range=(fecha_de,fecha_a)))
-                filtros = filtros + " del: " + str(fecha_de.date()) + " al: " + str(fecha_a.date())
+                filtros = filtros + " del periodo: " + str(fecha_de.date()) + " al: " + str(fecha_a.date())
 
             for object_recibo in recibos:
                 recibos_data = {
@@ -1398,11 +1398,11 @@ class getReporteRecibos(ListView):
 
         if request.GET.get('fecha_de') is not None and request.GET.get('fecha_de') != '':
             getFecha = request.GET.get('fecha_de')
-            fecha_de = datetime.strptime(getFecha, '%m/%d/%Y')
+            fecha_de = datetime.datetime.strptime(getFecha, '%m/%d/%Y')
 
         if request.GET.get('fecha_a') is not None and request.GET.get('fecha_a') != '':
             getFecha = request.GET.get('fecha_a')
-            fecha_a = datetime.strptime(getFecha, '%m/%d/%Y')
+            fecha_a = datetime.datetime.strptime(getFecha, '%m/%d/%Y')
 
         params = self.get_datos_reporte(idEvento, fecha_de, fecha_a)
 
@@ -1420,11 +1420,11 @@ class getReporteRecibosPDF(ListView):
 
         if request.GET.get('fecha_de') is not None and request.GET.get('fecha_de') != '':
             getFecha = request.GET.get('fecha_de')
-            fecha_de = datetime.strptime(getFecha, '%m/%d/%Y')
+            fecha_de = datetime.datetime.strptime(getFecha, '%m/%d/%Y')
 
         if request.GET.get('fecha_a') is not None and request.GET.get('fecha_a') != '':
             getFecha = request.GET.get('fecha_a')
-            fecha_a = datetime.strptime(getFecha, '%m/%d/%Y')
+            fecha_a = datetime.datetime.strptime(getFecha, '%m/%d/%Y')
 
         params = getReporteRecibos.get_datos_reporte(idEvento, fecha_de, fecha_a)
 
