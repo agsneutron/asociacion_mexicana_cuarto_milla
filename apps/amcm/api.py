@@ -1,6 +1,8 @@
 # coding=utf-8
 import io
 import json
+
+from PIL._imaging import font
 from django.db.models import Sum
 
 from django.shortcuts import render
@@ -61,7 +63,9 @@ class Render():
         filename = 'recibo.pdf'
         template = get_template(path)
         html = template.render(params)
-        response = io.buffer = BytesIO()
+        #response = io.buffer = BytesIO()
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
 
         #pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), response, path=path)
         #https://www.it-swarm-es.com/es/django/django-pisa-agregar-imagenes-pdf-salida/968337910/
@@ -166,11 +170,25 @@ class GenerarReciboPDF(ListView):
             arrReferenciaFormaPago.append(referencia_json)
 
         if recibo.pago.cuota:
-            saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+            if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
+                saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+            else:
+                saldo = 0.00
             concepto=recibo.pago.evento.nombre
         else:
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+
             concepto = recibo.pago.paquete.get_paquete_display()
+            if recibo.pago.paquete.evento_uno:
+                concepto = concepto + ' ' + recibo.pago.paquete.evento_uno.nombre
+            if recibo.pago.paquete.evento_dos:
+                concepto = concepto + ', ' + recibo.pago.paquete.evento_dos.nombre
+            if recibo.pago.paquete.evento_tres:
+                concepto = concepto + ', ' + recibo.pago.paquete.evento_tres.nombre
+            if recibo.pago.paquete.evento_cuatro:
+                concepto = concepto + ', ' + recibo.pago.paquete.evento_cuatro.nombre
+            if recibo.pago.paquete.evento_cinco:
+                concepto = concepto + ', ' + recibo.pago.paquete.evento_cinco.nombre
 
         params = {
             'no_recibo': recibo.numero_recibo,
@@ -239,7 +257,8 @@ class GenerarReciboImpresora(ListView):
         usuario = recibo.pago.cuadra.nombre + ' ' + recibo.pago.cuadra.representante
         importe = '{:,.2f}'.format(recibo.pago.cuotaPagada)
         importe_letra = '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
-        concepto_pago = recibo.pago.conceptoPago
+        concepto_pago = recibo.pago.cuota.tipoCuota.nombre + ' ' + recibo.pago.evento.nombre
+        concepto_pago_observaciones = recibo.pago.conceptoPago
         recibido_en = arrReferenciaFormaPago
         saldo = 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo)
         cuentas = arrCuentas
@@ -247,29 +266,29 @@ class GenerarReciboImpresora(ListView):
         ejemplares = ejemplares
 
         impresion = open('imprime.txt', 'w')
-        impresion.write("\n\n\n\n\n")
-        impresion.write("                                                                      " + str(no_recibo) + "\n")
         impresion.write("\n\n\n\n")
-        impresion.write("                                                                  " + str(dia) + "   " + str(mes) + "   " + str(anio) + "\n")
+        impresion.write("                                                                  " + str(no_recibo) + "\n")
+        impresion.write("\n\n\n\n\n")
+        impresion.write("                                                                " + str(dia) + "    " + str(mes) + "   " + str(anio) + "\n")
         impresion.write("\n\n")
-        impresion.write("                      " + str(usuario) + "\n\n")
-        impresion.write("                      "+ importe + "   " + importe_letra + "\n\n")
+        impresion.write("              " + str(usuario) + "\n\n")
+        impresion.write("              "+ importe + "   " + importe_letra + "\n\n")
         impresion.write("\n")
-        impresion.write("                      " + concepto_pago + "\n\n")
-        impresion.write("         EVENTO: " + evento+ "\n")
+        impresion.write("              " + concepto_pago + "\n",font('Arial,h1,normal'))
+        impresion.write("   EVENTO: " + evento+ "\n")
         i=0
         for caballo in ejemplares:
             if i==0:
-                impresion.write("         EJEMPLARES: " + caballo.nombre + ",")
+                impresion.write("   EJEMPLARES: " + caballo.nombre + ",")
                 i+=1
             else:
                 impresion.write(caballo.nombre + ",")
-        impresion.write("\n\n\n\n\n")
+        impresion.write("\n\n\n\n\n\n")
         for recibido in recibido_en:
-            impresion.write("                      " + str(recibido['referencia']) + " " + recibido['importe'] +  "\n")
+            impresion.write("               " + str(recibido['nombre']) + " "  + str(recibido['referencia']) + " " + recibido['importe'] +  "\n")
 
-        impresion.write("                      SE USA SALDO A FAVOR DEL RECIBO 62590 POR $1,183.40\n\n")
-        impresion.write("                      " + str(saldo) + "                         ")
+        impresion.write("     " + concepto_pago_observaciones + "\n")
+        impresion.write("  " + str(saldo) + "                                ")
         i=0
         for cuenta in cuentas:
             if i==0:

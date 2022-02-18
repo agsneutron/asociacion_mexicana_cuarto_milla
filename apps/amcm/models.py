@@ -10,6 +10,7 @@ from django.utils.timezone import now
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db.models.query_utils import Q
+from django.db.models import Max
 # Catalogs Models
 
 #catalogo para descuentos
@@ -119,6 +120,16 @@ class TipoCuota(models.Model):
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False, unique=False)
     descripcion = models.CharField(verbose_name="Descripción", max_length=255, null=False, blank=False)
     moneda = models.ForeignKey(TipoMoneda, verbose_name="Tipo de Cuota", null=False, blank=False, on_delete=models.CASCADE,)
+
+    EVENTO = 'EVENTO'
+    GENERAL = 'GENERAL'
+    TIPO_CHOICES = (
+        (EVENTO, 'CUOTA PARA EVENTOS'),
+        (GENERAL, 'CUOTA PARA PAGOS EN GENERAL'),
+    )
+    tipo = models.CharField(max_length=15, choices=TIPO_CHOICES, default=EVENTO,
+                               verbose_name="Tipo")
+
 
     class Meta:
         ordering = ['nombre']
@@ -584,6 +595,11 @@ class Evento(models.Model):
         return self.nombre
 
     def save(self, *args, **kwargs):
+
+        if self.orden==None:
+            orden = Evento.objects.aggregate(Max('orden'))
+            orden_max =orden.get("orden__max")
+            self.orden=orden_max+1
 
         if self.elegibles_evento != None:
             elegibles = ListadoElegibles.objects.filter(elegible_id=self.elegibles_evento)
@@ -1062,6 +1078,7 @@ class ReferenciaFormaPago(models.Model):
 class Recibo(models.Model):
     pago = models.ForeignKey(Pago, verbose_name="Pago", null=False, blank=False, on_delete=models.CASCADE,)
     numero_recibo = models.IntegerField(verbose_name= "Número de Recibo", null=False, blank=False, unique=True)
+    letra = models.CharField(verbose_name="Letra", null=True, blank=True, max_length=4)
     observaciones = models.CharField(verbose_name="Observaciones", null=True, blank=True, max_length=500 )
     fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,default=now())
 

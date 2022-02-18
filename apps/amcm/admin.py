@@ -57,7 +57,7 @@ class TipoCuotaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'descripcion', 'moneda')
     fieldsets = (
         (('Tipo de Cuota'),
-         {'fields': ('nombre', 'descripcion', 'moneda')}),)
+         {'fields': ('nombre', 'descripcion', 'moneda','tipo')}),)
 
 
 # administrador tipo evento
@@ -477,8 +477,11 @@ class PagoAdmin(admin.ModelAdmin):
     get_cuota.short_description = 'Cuota'
 
     def get_form(self, request, obj=None, **kwargs):
-        if obj.evento is not None:
-            evento_id = obj.evento.id
+        if obj is not None:
+            if obj.evento:
+                evento_id = obj.evento.id
+            else:
+                evento_id = 0
         else:
             print(request.GET.get('_changelist_filters'))
             params = request.GET.get('_changelist_filters')
@@ -550,7 +553,7 @@ class ReciboAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = sys.maxsize
     list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
-    fields = ('pago', 'numero_recibo', 'observaciones', 'fecha_registro',)
+    fields = ('pago', 'numero_recibo', 'letra', 'observaciones', 'fecha_registro',)
 
     def edit_link(self, obj):
         return format_html('<a href="/admin/amcm/recibo/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
@@ -567,7 +570,7 @@ class ReciboAdmin(admin.ModelAdmin):
     recibo_link.allow_tags = True
 
     fields = (
-    'pago', 'numero_recibo', 'fecha_registro','observaciones')
+    'pago', 'numero_recibo','letra', 'fecha_registro','observaciones')
 
     def get_form(self, request, obj=None, **kwargs):
         if obj is not None:

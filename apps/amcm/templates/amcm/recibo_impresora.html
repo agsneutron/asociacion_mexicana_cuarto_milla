@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+
+    <title>
+        AMCM
+    </title>
+
+    <style>
+
+       /* @font-face {
+            font-family: RobotoCondensed;
+            src: url('RobotoCondensed-Regular.ttf');
+        }*/
+
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        p {font-family: 'Helvetica'; }
+
+        th,
+        td {
+            text-align: left;
+            padding: 0px;
+            font-family: Helvetica;
+        }
+
+        .striped:nth-child(even) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            /*  background-color: #04AA6D;
+            color: white; */
+        }
+
+
+
+
+        @page {
+            size: letter portrait;
+            margin: 0.5cm;
+
+            @frame header_frame { /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 80pt;
+            width: 500pt;
+            right: 30pt;
+            height: 148pt;
+        }
+        @frame content_frame {
+            /* Content Frame */
+        left: 30pt; width: 620pt; top: 40pt; height: 852pt; right: 10pt;font: small-caps 100%/200% serif;
+        }
+        @frame footer_frame {
+            /* Another static Frame */
+        -pdf-frame-content:footer_content;
+        left: 80pt; width: 500pt; top: 542pt; height: 100pt;
+        }
+        }
+
+        @media screen and (min-width: 576px) {
+
+            .container,
+            .container-sm {
+                max-width: 540px;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+
+            .container,
+            .container-md,
+            .container-sm {
+                max-width: 720px;
+            }
+        }
+
+        @media screen and (min-width: 992px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm {
+                max-width: 960px;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl {
+                max-width: 1140px;
+            }
+        }
+
+        @media screen and (min-width: 1400px) {
+
+            .container,
+            .container-lg,
+            .container-md,
+            .container-sm,
+            .container-xl,
+            .container-xxl {
+                max-width: 1320px;
+            }
+        }
+
+        .container,
+        .container-fluid,
+        .container-lg,
+        .container-md,
+        .container-sm,
+        .container-xl,
+        .container-xxl {
+            width: 100%;
+            padding-right: var(--bs-gutter-x, .75rem);
+            padding-left: var(--bs-gutter-x, .75rem);
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .table-bordered td, .table-bordered th {
+            border: 1px solid #070707;
+            text-align: center;
+        }
+
+        @media print {
+            .striped:nth-child(even) td {
+                background-color: #f2f2f2 !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        .flex-container {
+            -webkit-display: -webkit-box;
+            -webkit-display: -webkit-flex;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-flex-wrap: wrap;
+        }
+
+        .flex-item {
+            border: 1px solid #4a4a4a;
+            display: inline-block;
+            width: 50%;
+            margin: 5px;
+            font-size: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+<div style="width: 100%;" id="header_content">
+
+</div>
+<div style="width: 600px;" id="content_frame">
+
+    <table style="width: 100%;">
+        <tr>
+            <td colspan="2" style="width: 80%;text-align: center">
+                <p style="font-size: 17px"></p>
+            </td>
+            <td style="width: 20%; text-align: center; border: 0px solid #000">
+                <p style="margin: 1px; font-size: 4px">.</p>
+                <p style="font-size: 12px; margin-top: 3px; margin-bottom: 0px"></p>
+
+                <p style="margin-top: 10px; margin-bottom: 5px;font-size: 14px"></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" style="height: 80px">
+
+            </td>
+        </tr>
+        <tr>
+            <td style="width: 35%;text-align: left">
+                <p style="font-size: 10px;line-height: 0px;"></p>
+            </td>
+            <td style="width: 33%;text-align: right">
+                <p style="font-size: 10px;line-height: 0px; margin-right: 10px;"></p>
+            </td>
+            <td style="width: 20%; text-align: center; border: 0px solid #000">
+                <p style="margin: 1px; font-size: 2px">.</p>
+                <span></span><br>
+
+                <table>
+                    <tr style="height: 5px">
+                        <td colspan="3" style="height: 5px"></td>
+                    </tr>
+                    <tr style="text-align: center;">
+                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 20px">
+                            {{ dia }}</p>
+                        </td>
+                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 20px">
+                            {{ mes }}</p>
+                        </td>
+                        <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 20px">
+                            {{ anio }}</p>
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+    </table>
+    <br>
+    <table style="width: 100%;">
+        <tbody>
+        <tr style="border: 0px solid #000;">
+            <td style="padding-left: 5px;padding-top: 2px;height: 30px;width: 90%"><p
+                    style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 16px; "> {{ usuario }}</p></td>
+        </tr>
+        <tr style="border: 0px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 25px;width: 90%"><p
+                    style="margin-left: 150px;margin-top: 0px; margin-bottom: 0px;font-size: 18px">{{ importe }} {{ importe_letra }}</p></td>
+        </tr>
+        <tr style="border: 0px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 25px;width: 90%"><p
+                    style="margin-left: 150px;margin-top: 0px; margin-bottom: 0px;font-size: 18px"></p></td>
+        </tr>
+        <tr style="border: 0px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 30px;width: 90%"><p
+                    style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 15px; ">{{ concepto }}</p></td>
+        </tr>
+        <tr style="border: 0px solid #000"  >
+            <td style="padding-left: 5px;padding-top: 2px;height: 55px;width: 90%" >
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px">EVENTO: {{ evento }}</p></td>
+        </tr>
+        <tr style="border: 0px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 35px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px"> {% if ejemplares != None %} EJEMPLARES: {% endif %}
+                    {% for obj in ejemplares %}
+                        {{ obj }}
+                        {% if not forloop.last %}
+                                , &nbsp;
+                            {% endif %}
+                    {% endfor %}
+                </p>
+            </td>
+        </tr>
+
+        <tr style="border: 0px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 40px;width: 90%">
+                <p style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 13px">
+                    {% if recibido_en %}
+                        {% for obj  in recibido_en  %}
+                            {{ obj.nombre }} &nbsp;&nbsp;
+                            {{ obj.referencia }} &nbsp;&nbsp;
+                            $ {{ obj.importe }} &nbsp;&nbsp;
+                            {% if not forloop.last %}
+                                -- &nbsp;
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </p>
+            </td>
+        </tr>
+        <tr style="border: 0px solid #000">
+            <td style="padding-left: 5px;padding-top: 2px;height: 27px;width: 90%"><p
+                    style="margin-top: 0px; margin-bottom: 0px;font-size: 18px"></p></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 15%"></td>
+            <td style="width: 65%">
+                <table>
+                    <tr>
+                        <td style="width: 33%; font-size: 14px">{{ saldo }}</td>
+                        <td style="width: 33%"></td>
+                        <td style="width: 33%">
+
+                        </td>
+                    </tr>
+
+
+                </table>
+            </td>
+            <td style="width: 20%">
+                <table>
+                    {% for item in cuentas %}
+                        <tr style="border: 0px solid #000; height: 25px">
+                            <td style="width: 50%; text-align: center"><span style="font-size: 15px">{{ item.codigo }}</span> &nbsp;
+                                {{item.importe}}
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+
+<div id="footer_content">
+
+</div>
+
+
+</body>
+
+</html>
