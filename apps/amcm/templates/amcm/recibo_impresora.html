@@ -178,7 +178,7 @@
 <div style="width: 600px;" id="content_frame">
 
     <table style="width: 100%;">
-        <tr>
+        <tr style="height: 50px">
             <td colspan="2" style="width: 80%;text-align: center">
                 <p style="font-size: 17px"></p>
             </td>
@@ -190,15 +190,10 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" style="height: 80px">
-
-            </td>
-        </tr>
-        <tr>
             <td style="width: 35%;text-align: left">
                 <p style="font-size: 10px;line-height: 0px;"></p>
             </td>
-            <td style="width: 33%;text-align: right">
+            <td style="width: 34%;text-align: right">
                 <p style="font-size: 10px;line-height: 0px; margin-right: 10px;"></p>
             </td>
             <td style="width: 20%; text-align: center; border: 0px solid #000">
@@ -230,11 +225,11 @@
         <tbody>
         <tr style="border: 0px solid #000;">
             <td style="padding-left: 5px;padding-top: 2px;height: 30px;width: 90%"><p
-                    style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 16px; "> {{ usuario }}</p></td>
+                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 16px; "> {{ usuario }}</p></td>
         </tr>
         <tr style="border: 0px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 25px;width: 90%"><p
-                    style="margin-left: 150px;margin-top: 0px; margin-bottom: 0px;font-size: 18px">{{ importe }} {{ importe_letra }}</p></td>
+                    style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 18px">{{ importe }} {{ importe_letra }}</p></td>
         </tr>
         <tr style="border: 0px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 25px;width: 90%"><p
@@ -242,11 +237,11 @@
         </tr>
         <tr style="border: 0px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 30px;width: 90%"><p
-                    style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 15px; ">{{ concepto }}</p></td>
+                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 15px; ">{{ concepto }}</p></td>
         </tr>
         <tr style="border: 0px solid #000"  >
             <td style="padding-left: 5px;padding-top: 2px;height: 55px;width: 90%" >
-                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px">EVENTO: {{ evento }}</p></td>
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px">{{ evento }}</p></td>
         </tr>
         <tr style="border: 0px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 35px;width: 90%">
@@ -263,7 +258,7 @@
 
         <tr style="border: 0px solid #000">
             <td style="padding-left: 5px;padding-top: 2px;height: 40px;width: 90%">
-                <p style="margin-left: 130px;margin-top: 0px; margin-bottom: 0px;font-size: 13px">
+                <p style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 13px">
                     {% if recibido_en %}
                         {% for obj  in recibido_en  %}
                             {{ obj.nombre }} &nbsp;&nbsp;

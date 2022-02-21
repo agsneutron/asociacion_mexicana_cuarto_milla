@@ -195,7 +195,7 @@ class GenerarReciboPDF(ListView):
             'dia':recibo.fecha_registro.day,
             'mes': recibo.fecha_registro.month,
             'anio': recibo.fecha_registro.year,
-            'usuario': recibo.pago.cuadra.nombre +' '+ recibo.pago.cuadra.representante,
+            'usuario': recibo.pago.cuadra.nombre , #+' '+ recibo.pago.cuadra.representante,
             'importe':'{:,.2f}'.format(recibo.pago.cuotaPagada),
             'importe_letra': '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)',
             'concepto': recibo.pago.conceptoPago,
