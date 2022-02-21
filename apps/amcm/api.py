@@ -206,7 +206,7 @@ class GenerarReciboPDF(ListView):
             'ejemplares': ejemplares,
             }
 
-        return Render.render('amcm/recibo.html', params)
+        return Render.render('amcm/recibo_impresora.html', params)
 
 class GenerarReciboImpresora(ListView):
     def get(self, request, *args, **kwargs):
