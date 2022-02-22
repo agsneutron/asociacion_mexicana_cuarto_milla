@@ -773,7 +773,7 @@ class Pago(models.Model):
 
     cuotaPagada = models.FloatField(verbose_name='Monto Recibido', null=False, blank=False,)
     #cuotaLetra = models.CharField(verbose_name="Cuota en Letra", null=False, blank=False, max_length=500,)
-    conceptoPago = models.CharField(verbose_name="Concepto del Pago", null=False, blank=False, max_length=250,)
+    conceptoPago = models.CharField(verbose_name="Concepto del Pago", null=True, blank=True, max_length=250,default="")
     fechaPago = models.DateField(verbose_name='Fecha del Pago' ,null=True, blank=True, editable=True,default=now())
     fechaRegistro = models.DateField(verbose_name='Fecha de Registro',null=False, blank=False, editable=True,default=now())
     #numeroRecibo = models.IntegerField(verbose_name= "Recibo", null=False, blank=False,)

@@ -170,15 +170,17 @@ class GenerarReciboPDF(ListView):
             arrReferenciaFormaPago.append(referencia_json)
 
         if recibo.pago.cuota:
+            conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
                 saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             else:
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
         else:
+            conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
 
-            concepto = recibo.pago.paquete.get_paquete_display()
+            concepto = ""
             if recibo.pago.paquete.evento_uno:
                 concepto = concepto + ' ' + recibo.pago.paquete.evento_uno.nombre
             if recibo.pago.paquete.evento_dos:
@@ -198,7 +200,7 @@ class GenerarReciboPDF(ListView):
             'usuario': recibo.pago.cuadra.nombre , #+' '+ recibo.pago.cuadra.representante,
             'importe':'{:,.2f}'.format(recibo.pago.cuotaPagada),
             'importe_letra': '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)',
-            'concepto': recibo.pago.conceptoPago,
+            'concepto': 'PAGO DE ' + conceptoCuotas,
             'recibido_en': arrReferenciaFormaPago,
             'saldo': 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo),
             'cuentas': arrCuentas,
