@@ -165,7 +165,8 @@ class GenerarReciboPDF(ListView):
             referencia_json={
                 'nombre': referencia.formapago.nombre,
                 'importe':'{:,.2f}'.format(referencia.importe),
-                'referencia':referencia.referencia
+                'referencia':referencia.referencia,
+                'fecha': referencia.fecha_registro
             }
             arrReferenciaFormaPago.append(referencia_json)
 
@@ -200,7 +201,7 @@ class GenerarReciboPDF(ListView):
             'usuario': recibo.pago.cuadra.nombre , #+' '+ recibo.pago.cuadra.representante,
             'importe':'{:,.2f}'.format(recibo.pago.cuotaPagada),
             'importe_letra': '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)',
-            'concepto': 'PAGO DE ' + conceptoCuotas,
+            'concepto': conceptoCuotas,
             'recibido_en': arrReferenciaFormaPago,
             'saldo': 'SALDO POR PAGAR: ' + '{:,.2f}'.format(saldo),
             'cuentas': arrCuentas,

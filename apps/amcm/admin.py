@@ -431,6 +431,7 @@ class ReferenciaFormaPagoInlineAdmin(admin.TabularInline):
     extra = 0
     list_per_page = sys.maxsize
     list_display = ('formapago', 'referencia',)
+    #fields = ('formapago', 'referencia', 'importe', 'fecha_registro')
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super().get_formset(request, obj, **kwargs)

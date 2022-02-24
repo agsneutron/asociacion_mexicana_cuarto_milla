@@ -1052,6 +1052,8 @@ class ReferenciaFormaPago(models.Model):
     formapago = models.ForeignKey(FormaPago, verbose_name="Forma de Pago", null=False, blank=False,on_delete=models.CASCADE,)
     referencia = models.CharField(verbose_name="Referencia", null= False, blank= False, max_length= 100)
     importe = models.FloatField(verbose_name='Importe', blank=False, null=False, default=0)
+    fecha_registro = models.DateField(verbose_name='Fecha de registro', null=False, blank=False, editable=True,
+                                      default=now())
 
 
     class Meta:
