@@ -485,15 +485,15 @@ class Cuadras(models.Model):
 class Ejemplares(models.Model):
     lote = models.IntegerField(verbose_name="Lote", unique=False, blank=False,null=False)
     nombre = models.CharField(verbose_name="Nombre", max_length=100, null=False, blank=False)
-    edad = models.FloatField(verbose_name="Edad", blank=False, null=False, default=0)
-    peso = models.FloatField(verbose_name='Peso', blank=False, null=False, default=0)
-    sexo = models.ForeignKey(Sexo, verbose_name="Sexo", null=False, blank=False,on_delete=models.CASCADE,)
+    edad = models.FloatField(verbose_name="Edad", blank=True, null=True, default=0)
+    peso = models.FloatField(verbose_name='Peso', blank=True, null=True, default=0)
+    sexo = models.ForeignKey(Sexo, verbose_name="Sexo", null=True, blank=True,on_delete=models.CASCADE,)
     nacionalidad = models.ForeignKey(Nacionalidad, verbose_name="Nacionalidad", null=False, blank=False,on_delete=models.CASCADE,)
-    color = models.CharField(verbose_name="Color", max_length=100, null=False, blank=False)
-    padre = models.CharField(verbose_name="Padre del Caballo", max_length=100, null=False, blank=False)
-    madre = models.CharField(verbose_name="Madre del Caballo", max_length=100, null=False, blank=False)
+    color = models.CharField(verbose_name="Color", max_length=100, null=True, blank=True)
+    padre = models.CharField(verbose_name="Padre del Caballo", max_length=100, null=True, blank=True)
+    madre = models.CharField(verbose_name="Madre del Caballo", max_length=100, null=True, blank=True)
     estatus = models.ForeignKey(EstatusEjemplar, verbose_name="Estatus del Ejemplar", null=False, blank=False, on_delete=models.CASCADE,)
-    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=False, blank=False)
+    observaciones = models.TextField(verbose_name="Observaciones", max_length=500, null=True, blank=True)
 
     cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False,on_delete=models.CASCADE,)
 

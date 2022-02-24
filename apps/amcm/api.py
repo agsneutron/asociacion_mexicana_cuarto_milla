@@ -60,7 +60,7 @@ def html_to_pdf(content, output):
 class Render():
     @staticmethod
     def render(path, params):
-        filename = 'recibo.pdf'
+        filename = 'recibo'+ str(datetime.datetime.now()) +'.pdf'
         template = get_template(path)
         html = template.render(params)
         #response = io.buffer = BytesIO()

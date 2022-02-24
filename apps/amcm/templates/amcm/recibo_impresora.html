@@ -231,18 +231,18 @@
             <td style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%"><p
                     style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 18px"><strong>{{ importe }} {{ importe_letra }}</strong></p></td>
         </tr>
-
+        <tr><td><br></td></tr>
         <tr style="border: 0px solid #000">
             <td style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%"><p
                     style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 15px; "><strong>{{ concepto }}</strong></p></td>
         </tr>
         <tr style="border: 0px solid #000"  >
-            <td style="padding-left: 5px;padding-top: 0px;height: 45px;width: 90%" >
+            <td valign="top" style="padding-left: 5px;padding-top: 0px;height: 45px;width: 90%" >
                 <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px"><strong>{{ evento }}</strong></p></td>
         </tr>
 
         <tr style="border: 0px solid #000">
-            <td style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%">
+            <td valign="top" style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%">
                 <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px"><strong>
                     {% for obj in ejemplares %}
                         {{ obj }}
@@ -255,10 +255,9 @@
         </tr>
 
         <tr><td><br></td></tr>
-        <tr><td><br></td></tr>
 
         <tr style="border: 0px solid #000">
-            <td style="padding-left: 5px;padding-top: 0px;height: 35px;width: 90%">
+            <td valign="top" style="padding-left: 5px;padding-top: 0px;height: 35px;width: 90%">
                 <p style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 15px"><strong>
                     {% if recibido_en %}
                         {% for obj  in recibido_en  %}
@@ -284,12 +283,12 @@
     <table style="width: 100%;">
         <tr>
             <td style="width: 15%"></td>
-            <td style="width: 60%">
+            <td valign="top" style="width: 60%">
                 <table>
                     <tr>
-                        <td style="width: 40%; font-size: 15px">{{ saldo }}</td>
-                        <td style="width: 30%"></td>
-                        <td style="width: 30%">
+                        <td style="width: 60%; font-size: 15px">{{ saldo }}</td>
+                        <td style="width: 20%"></td>
+                        <td style="width: 20%">
 
                         </td>
                     </tr>
