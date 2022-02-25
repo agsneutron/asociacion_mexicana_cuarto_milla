@@ -449,6 +449,7 @@ class PagoAdmin(admin.ModelAdmin):
     actions = None
     list_filter = []
     list_per_page = sys.maxsize
+    ordering = ('id',)
     list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
@@ -553,8 +554,14 @@ class ReciboAdmin(admin.ModelAdmin):
     form = ReciboForm
     actions = None
     list_per_page = sys.maxsize
-    list_display = ('pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
+
+    list_display = ('pk','pago', 'numero_recibo', 'fecha_registro','observaciones','edit_link','recibo_link',)
     fields = ('pago', 'numero_recibo', 'letra', 'observaciones', 'fecha_registro',)
+    ordering = ('-pk',)
+
+    @admin.display(description='related fecha_registro', ordering='fecha_registro')
+    def display_related_fecha_registro(self, obj):
+        return obj.fecha_registro
 
     def edit_link(self, obj):
         return format_html('<a href="/admin/amcm/recibo/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="far fa-edit"></i></button></a>',
@@ -600,6 +607,7 @@ class ReasignaEjemplarAdmin(admin.ModelAdmin):
     actions = None
     list_per_page = sys.maxsize
     list_display = ('ejemplar', 'cuadra',)
+
 
 
 #Admin para catalogo forma de pago

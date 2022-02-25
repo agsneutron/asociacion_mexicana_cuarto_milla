@@ -173,7 +173,11 @@ class GenerarReciboPDF(ListView):
         if recibo.pago.cuota:
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
-                saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
+                if recibo.pago.cuota.tipoCuota.id == 2:
+                    descuento = recibo.pago.cuota.monto*recibo.pago.evento.descuento.porcentaje
+                    saldo=(recibo.pago.cuota.monto - descuento) - (recibo.pago.cuotaPagada+monto_pagado)
+                else:
+                    saldo=(recibo.pago.cuota.monto*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             else:
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
