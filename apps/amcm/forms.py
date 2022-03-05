@@ -127,3 +127,25 @@ class ReciboForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(ReciboForm, self).__init__(*args, **kwargs)
+
+
+class EventoElegiblesForm(forms.ModelForm):
+    class Meta:
+        model = EventoElegibles
+        fields = "__all__"
+    def __init__(self, *args, **kwargs):
+        if kwargs is not None:
+            try:
+                if kwargs['initial'] != {}:
+                    params = kwargs['initial']['_changelist_filters']
+                    params = params.split('=')
+                    evento_id = params[1]
+                    evento = Evento.objects.filter(id=evento_id)
+                    kwargs = {'initial': {'evento': evento_id}}
+                else:
+                    evento_id = 0
+                    kwargs = {'initial': {'evento': evento_id}}
+            except:
+                evento_id = 0
+        self.request = kwargs.pop('request', None)
+        super(EventoElegiblesForm, self).__init__(*args, **kwargs)

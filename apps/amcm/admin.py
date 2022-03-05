@@ -662,11 +662,60 @@ class ListadoElegiblesAdmin(admin.ModelAdmin):
 
 #Admin para catalogo elegible
 class EventoElegiblesAdmin(admin.ModelAdmin):
+    form = EventoElegiblesForm
     model = EventoElegibles
     actions = None
     list_per_page = sys.maxsize
     #list_per_page = 100000
+    fields = (
+        'evento', 'cuadra', 'ejemplar', 'elegible', 'estaus')
+    list_editable = ('estaus',)
     list_display = ('evento', 'elegible', 'cuadra', 'ejemplar', 'estaus')
+
+    def get_queryset(self, request):
+        evento_id = request.GET.get('evento_id')
+        qs = super(EventoElegiblesAdmin, self).get_queryset(request)
+        if request.GET.get('evento_id') != None:
+            qs = qs.filter(evento_id= evento_id)
+        return qs
+
+    def get_form(self, request, obj=None, **kwargs):
+        if obj is not None:
+            if obj.evento:
+                evento_id = obj.evento.id
+            else:
+                evento_id = 0
+        else:
+            print(request.GET.get('_changelist_filters'))
+            params = request.GET.get('_changelist_filters')
+            if params:
+                params = params.split('=')
+                evento_id = params[1]
+            else:
+                evento_id = 0
+        self.param = evento_id
+
+        form = super(EventoElegiblesAdmin, self).get_form(request, obj, **kwargs)
+
+        field = form.base_fields['cuadra']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['ejemplar']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        field = form.base_fields['elegible']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+
+        field = form.base_fields['evento']
+        field.widget.can_add_related = False
+        field.widget.can_change_related = False
+        if evento_id:
+           evento = Evento.objects.filter(pk=evento_id)
+        else:
+           evento = Evento.objects.all().order_by('id')
+           field.queryset = evento
+        return form
 
 
 

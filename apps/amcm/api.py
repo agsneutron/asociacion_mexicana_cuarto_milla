@@ -433,13 +433,25 @@ class getListadoElegibles(ListView):
             "evento": all_evento.to_serializable_dict,
             'cycle': range(0, i),
             "cuotas": cuotas_set,
-            'descuento': descuento
+            'descuento': descuento,
         }
 
         return params
 
+
+    @staticmethod
+    def setRetirarEjemplar(ejemplar_evento_id):
+
+        EventoElegibles.objects.filter(id=ejemplar_evento_id).update(estaus=1)
+        message = True
+        return message
+
     def get(self, request, *args, **kwargs):
         evento_id = request.GET.get('evento_id')
+        ejemplar_evento_id = request.GET.get('ejemplar_evento_id')
+
+        if ejemplar_evento_id:
+            self.setRetirarEjemplar(ejemplar_evento_id)
 
         params = self.get_datosReporte(evento_id)
 
@@ -694,6 +706,25 @@ class getReporteEventos(ListView):
         # return HttpResponse(template.render(params, request))
 
         return render(request, 'amcm/reporte.html', params)
+
+
+class getEventoEjemplares(ListView):
+
+    def get(self, request, *args, **kwargs):
+
+        try:
+            all_eventos = Evento.objects.all()
+
+        except Evento.DoesNotExist:
+            return HttpResponse(
+                Utilities.json_to_dumps({"error": "No existen Eventos"}),
+                'application/json; charset=utf-8')
+
+        params = {
+            "eventos": all_eventos
+        }
+
+        return render(request, 'amcm/ejemplares_eventos.html', params)
 
 
 class getReporteCuotas(ListView):
@@ -1458,3 +1489,18 @@ class getReporteRecibosPDF(ListView):
         params = getReporteRecibos.get_datos_reporte(idEvento, fecha_de, fecha_a)
 
         return Render.renderCuota('amcm/reporte_recibos_pdf.html', params)
+
+2
+@method_decorator(csrf_exempt, name='dispatch')
+class setRetirarEjemplar(ListView):
+
+    def get(self, request, *args, **kwargs):
+        evento_ejemplar_id = request.GET.get('evento_ejemplar_id')
+
+        EventoElegibles.objects.filter(id=evento_ejemplar_id).update(estatus=1)
+        message = "retirado"
+        params = {
+            "estatus": message
+        }
+
+        return HttpResponse(self.json_to_dumps(params), 'application/json; charset=utf-8')

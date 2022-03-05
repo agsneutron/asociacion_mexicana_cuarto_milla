@@ -25,8 +25,12 @@ urlpatterns = [
     url(r'^get_dashboard/', login_required(api.getDashboard.as_view())),
     url(r'^get_reporte_recibos/', login_required(api.getReporteRecibos.as_view())),
     url(r'^get_reporte_recibos_pdf/', login_required(api.getReporteRecibosPDF.as_view())),
+    url(r'^get_eventos_ejemplares/', login_required(api.getEventoEjemplares.as_view())),
     #url(r'^register_by_token', views.register_by_access_token),
 
     url(r'^get_parentesis/', api.getParentesis.as_view()),
     url(r'^words_reversed/', api.wordsReversed.as_view()),
+
+    #api retirar ejemplar
+    url(r'^set_retirar_ejemplar/', login_required(api.setRetirarEjemplar.as_view())),
 ]

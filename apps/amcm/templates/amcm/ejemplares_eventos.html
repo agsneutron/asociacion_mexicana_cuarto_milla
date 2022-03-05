@@ -1,0 +1,73 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+
+    <div class="header pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 d-inline-block mb-0">Ejemplares por Evento</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                            </ol>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <br/>
+                    <div class="table-responsive pb-4">
+                        <table class="table table-flush" id="result_list">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Evento</th>
+                                <th>Ejemplares</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            {% for obj in eventos %}
+                                <tr>
+                                    <td class="text-wrap">{{ obj.nombre }}</td>
+
+                                    <td class="px-1">
+                                        <a href="/admin/amcm/eventoelegibles/?evento_id={{ obj.id }}">
+                                            <button type="button" class="btn btn-sm">
+                                                <i class="fa fa-horse-head"></i>
+                                            </button>
+                                        </a>
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}
