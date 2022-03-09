@@ -64,10 +64,9 @@ class Render():
         filename = 'recibo'+ str(datetime.datetime.now()) +'.pdf'
         template = get_template(path)
         html = template.render(params)
-        response=None
-        response = io.buffer = BytesIO()
-        #response = HttpResponse(content_type='application/pdf')
-        #response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        #response = io.buffer = BytesIO()
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="report.pdf"'
 
         #pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), response, path=path)
         #https://www.it-swarm-es.com/es/django/django-pisa-agregar-imagenes-pdf-salida/968337910/

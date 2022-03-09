@@ -1066,6 +1066,7 @@ class ReferenciaFormaPago(models.Model):
         dict['formapago'] = self.formapago
         dict['referencia'] = self.referencia
         dict['importe'] = self.importe
+        dict['fecha_registro'] = str(dict['fecha_registro'].strftime("%d/%m/%Y")).upper() if dict['fecha_registro'] != None else ""
 
         return dict
 
