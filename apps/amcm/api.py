@@ -61,23 +61,21 @@ def html_to_pdf(content, output):
 class Render():
     @staticmethod
     def render(path, params):
-        filename = 'recibo'+ str(datetime.datetime.now()) +'.pdf'
+        filename = 'dictamenFactibilidad.pdf'
         template = get_template(path)
         html = template.render(params)
-        response = io.buffer = BytesIO()
-        #response = HttpResponse(content_type='application/pdf')
-        #response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+        response = StringIO.StringIO()
 
-        #pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), response, path=path)
-        #https://www.it-swarm-es.com/es/django/django-pisa-agregar-imagenes-pdf-salida/968337910/
+        pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), response, path=path)
+        # https://www.it-swarm-es.com/es/django/django-pisa-agregar-imagenes-pdf-salida/968337910/
 
-        pdf = pisa.CreatePDF(io.BytesIO(html.encode("UTF-8")), response,link_callback=path)
+        # pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), response,link_callback=path)
         if not pdf.err:
             response = HttpResponse(response.getvalue(), content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
             return response
         else:
-            return HttpResponse("Error al generar el documento PDF", status=400)
+            return HttpResponse("Error al generar el Dictamen PDF", status=400)
 
     @staticmethod
     def renderCuota(path, params):
