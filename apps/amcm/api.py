@@ -64,6 +64,7 @@ class Render():
         filename = 'recibo'+ str(datetime.datetime.now()) +'.pdf'
         template = get_template(path)
         html = template.render(params)
+        response=None
         response = io.buffer = BytesIO()
         #response = HttpResponse(content_type='application/pdf')
         #response['Content-Disposition'] = 'attachment; filename="report.pdf"'
