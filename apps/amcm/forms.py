@@ -138,6 +138,9 @@ class EventoElegiblesForm(forms.ModelForm):
             try:
                 if kwargs['initial'] != {}:
                     params = kwargs['initial']['_changelist_filters']
+                    head, sep, tail = params.partition('&')
+                    params = head
+
                     params = params.split('=')
                     evento_id = params[1]
                     evento = Evento.objects.filter(id=evento_id)

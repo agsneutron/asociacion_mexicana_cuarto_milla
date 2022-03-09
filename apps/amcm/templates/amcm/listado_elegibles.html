@@ -170,7 +170,7 @@
                                                 {% endfor %}
                                                 <td width="width: 5%">
                                                     {% if not ejemplar.estatus %}
-                                                        <a href="/admin/amcm/eventoelegibles/{{ ejemplar.eventoelegible }}/change/">
+                                                        <a href="/amcm/get_listado_elegibles/?evento_id={{ evento.id }}&ejemplar_evento_id={{ ejemplar.eventoelegible }}">
                                                             <button type="button"
                                                                     class="btn btn-outline-secondary btn-sm"><i
                                                                     class="far fa-window-close"></i></button>

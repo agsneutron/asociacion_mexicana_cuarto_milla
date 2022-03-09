@@ -688,9 +688,13 @@ class EventoElegiblesAdmin(admin.ModelAdmin):
         else:
             print(request.GET.get('_changelist_filters'))
             params = request.GET.get('_changelist_filters')
+            head, sep, tail = params.partition('&')
+            params = head
+            print(params)
             if params:
                 params = params.split('=')
                 evento_id = params[1]
+                print(evento_id)
             else:
                 evento_id = 0
         self.param = evento_id
