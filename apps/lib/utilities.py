@@ -73,7 +73,7 @@ class Utilities():
 
     @staticmethod
     def numero_to_letras(numero):
-        indicador = [("", ""), ("Mil", "Mil"), ("Millon", "Millones"), ("Mil", "Mil"), ("Billon", "Billones")]
+        indicador = [("", ""), ("MIL", "MIL"), ("MILLON", "MILLONES"), ("MIL", "MIL"), ("BILLON", "BILLONES")]
         entero = int(numero)
         decimal = int(round((numero - entero) * 100))
         # print 'decimal : ',decimal
@@ -106,16 +106,16 @@ class Utilities():
 
     @staticmethod
     def convierte_cifra(numero, sw):
-        lista_centana = ["", ("Cien", "Ciento"), "Docientos", "Trecientos", "Cuatrocientos", "Quinientos",
-                         "Seiscientos", "Setecientos", "Ochocientos", "Novecientos"]
+        lista_centana = ["", ("CIEN", "CIENTO"), "DOCIENTOS", "TECIENTOS", "CUATROCIENTOS", "QUINIENTOS",
+                         "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"]
         lista_decena = ["", (
-        "Diez", "Once", "Doce", "Trece", "Catorce", "Quince", "Dieciseis", "Diescisiete", "Dieciocho", "Diecinueve"),
-                        ("Veinte", "Veinti"), ("Treinta", "Treinta y "), ("Cuarenta", "Cuarenta y "),
-                        ("Cincuenta", "Cincuenta y "), ("Sesenta", "Sesenta y "),
-                        ("Setenta", "Setenta y "), ("Ochenta", "Ochenta y "),
+        "DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISEIS", "DIESCISIETE", "DIECIOCHO", "DIECINUEVE"),
+                        ("VEINTE", "VEINTI"), ("TREINTA", "TREINTA Y "), ("CUARENTA", "CUARENTA Y "),
+                        ("CINCUENTA", "CINCUENTA Y "), ("SESENTA", "SESENTA Y "),
+                        ("SETENTA", "SETENTA Y "), ("OCHENTA", "OCHENTA Y "),
                         ("Noventa", "Noventa y ")
                         ]
-        lista_unidad = ["", ("Un", "Uno"), "Dos", "Tres", "Cuatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve"]
+        lista_unidad = ["", ("UN", "UNO"), "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"]
         centena = int(numero / 100)
         decena = int((numero - (centena * 100)) / 10)
         unidad = int(numero - (centena * 100 + decena * 10))

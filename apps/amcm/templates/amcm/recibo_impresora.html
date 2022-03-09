@@ -224,26 +224,26 @@
     <table style="width: 100%;">
         <tbody>
         <tr style="border: 0px solid #000;">
-            <td style="padding-left: 5px;padding-top: 8px;height: 40px;width: 90%"><p
-                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 16px; "><strong> {{ usuario }}</strong></p></td>
+            <td style="padding-left: 5px;padding-top: 8px;width: 90%"><p
+                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 20px; "><strong> {{ usuario }}</strong></p></td>
         </tr>
         <tr style="border: 0px solid #000">
-            <td style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%"><p
-                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 18px"><strong>{{ importe }} {{ importe_letra }}</strong></p></td>
+            <td style="padding-left: 5px;padding-top: 0px;width: 90%"><p
+                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 16px"><strong>{{ importe }} {{ importe_letra }}</strong></p></td>
         </tr>
-        <tr><td><br></td></tr>
+        <tr><td><br>
         <tr style="border: 0px solid #000">
-            <td style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%"><p
-                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 15px; "><strong>{{ concepto }}</strong></p></td>
+            <td style="padding-left: 5px;padding-top: 3px;width: 90%"><p
+                    style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 20px; "><strong>{{ concepto }}</strong></p></td>
         </tr>
         <tr style="border: 0px solid #000"  >
-            <td valign="top" style="padding-left: 5px;padding-top: 0px;height: 45px;width: 90%" >
-                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px"><strong>{{ evento }}</strong></p></td>
+            <td valign="top" style="padding-left: 5px;padding-top: 0px;width: 90%" >
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 20px"><strong>{{ evento }}</strong></p></td>
         </tr>
 
         <tr style="border: 0px solid #000">
-            <td valign="top" style="padding-left: 5px;padding-top: 0px;height: 30px;width: 90%">
-                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 15px"><strong>
+            <td valign="top" style="padding-left: 5px;padding-top: 0px;width: 90%">
+                <p style="margin-top: 0px; margin-bottom: 0px;font-size: 20px"><strong>
                     {% for obj in ejemplares %}
                         {{ obj }}
                         {% if not forloop.last %}
@@ -254,11 +254,11 @@
             </td>
         </tr>
 
-        <tr><td><br></td></tr>
+        <tr><td><br><br><br>
 
         <tr style="border: 0px solid #000">
-            <td valign="top" style="padding-left: 5px;padding-top: 0px;height: 35px;width: 90%">
-                <p style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 15px"><strong>
+            <td valign="top" style="padding-left: 5px;padding-top: 3px;width: 90%">
+                <p style="margin-left: 100px;margin-top: 0px; margin-bottom: 0px;font-size: 17px"><strong>
                     {% if recibido_en %}
                         {% for obj  in recibido_en  %}
                             {{ obj.nombre }} &nbsp;&nbsp;
@@ -282,11 +282,11 @@
 
     <table style="width: 100%;">
         <tr>
-            <td style="width: 15%"></td>
-            <td valign="top" style="width: 60%">
+            <td style="width: 10%"></td>
+            <td valign="top" style="width: 65%">
                 <table>
                     <tr>
-                        <td style="width: 60%; font-size: 15px">{{ saldo }}</td>
+                        <td style="width: 60%; font-size: 17px">{{ saldo }}</td>
                         <td style="width: 20%"></td>
                         <td style="width: 20%">
 
@@ -299,7 +299,7 @@
             <td style="width: 25%">
                 <table>
                     {% for item in cuentas %}
-                        <tr style="border: 0px solid #000; height: 30px">
+                        <tr style="border: 0px solid #000;">
                             <td style="width: 50%; text-align: center">
                                 <span style="font-size: 20px">{{ item.codigo }} </span> &nbsp;
                                 <span style="font-size: 15px"> {{item.importe}}</span> &nbsp;
