@@ -175,6 +175,7 @@ class GenerarReciboPDF(ListView):
             }
             arrReferenciaFormaPago.append(referencia_json)
 
+        renglones=[1,2,3]
         if recibo.pago.cuota:
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
@@ -192,7 +193,7 @@ class GenerarReciboPDF(ListView):
         else:
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
-
+            renglones=[]
             concepto = ""
             if recibo.pago.paquete.evento_uno:
                 concepto = concepto + ' ' + recibo.pago.paquete.evento_uno.nombre
@@ -204,6 +205,27 @@ class GenerarReciboPDF(ListView):
                 concepto = concepto + ', ' + recibo.pago.paquete.evento_cuatro.nombre
             if recibo.pago.paquete.evento_cinco:
                 concepto = concepto + ', ' + recibo.pago.paquete.evento_cinco.nombre
+
+        cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
+        if len(cantidad_letra) <=50:
+            font_size_letra = 20
+        else:
+            font_size_letra = 17
+
+        if len(concepto) <=50:
+            font_size_concepto = 20
+        else:
+            font_size_concepto = 17
+
+        caballos=''
+        for obj in ejemplares:
+            caballos += obj.nombre + ','
+
+        if len(caballos) <=50:
+            font_size_caballos = 20
+        else:
+            font_size_caballos = 17
+            renglones = [1, 2]
 
         params = {
             'no_recibo': recibo.numero_recibo,
@@ -219,6 +241,10 @@ class GenerarReciboPDF(ListView):
             'cuentas': arrCuentas,
             'evento': concepto,
             'ejemplares': ejemplares,
+            'font_size_letra':font_size_letra,
+            'font_size_evento':font_size_concepto,
+            'font_size_caballos':font_size_caballos,
+            'renglones':renglones,
             }
 
         return Render.render('amcm/recibo_impresora.html', params)
