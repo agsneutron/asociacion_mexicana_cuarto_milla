@@ -449,8 +449,8 @@ class PagoAdmin(admin.ModelAdmin):
     actions = None
     list_filter = []
     list_per_page = sys.maxsize
-    ordering = ('id',)
-    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
+    ordering = ('-id',)
+    list_display = ('id','get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
     def get_inline_instances(self, request, obj=None):
