@@ -76,9 +76,10 @@ class Render():
 
 
         if not pdf.err:
+            stream.flush()
             response = HttpResponse(stream.getvalue(), content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
-            response.flush()
+            stream.flush()
             return response
         else:
             return HttpResponse("Error al generar el documento PDF", status=400)
