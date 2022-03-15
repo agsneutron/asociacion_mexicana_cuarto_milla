@@ -177,8 +177,8 @@ class GenerarReciboPDF(ListView):
             arrReferenciaFormaPago.append(referencia_json)
 
         renglones=[1,2,3]
-        ancho_evento=30
-        ancho_caballos=80
+        ancho_evento=27
+        ancho_caballos=71
         if recibo.pago.cuota:
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
@@ -194,8 +194,8 @@ class GenerarReciboPDF(ListView):
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
         else:
-            ancho_evento=80
-            ancho_caballos=30
+            ancho_evento=71
+            ancho_caballos=27
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             renglones=[]
@@ -216,37 +216,37 @@ class GenerarReciboPDF(ListView):
             recibido_en += obj['nombre'] + ' ' + obj['importe'] + ' ' + obj['referencia'] + ' ' +obj['fecha'] + ', '
 
         if len(recibido_en) <=50:
-            font_size_recibido = 20
+            font_size_recibido = 18
         else:
-            font_size_recibido =17
+            font_size_recibido =16
 
         cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
         if len(cantidad_letra) <=50:
-            font_size_letra = 20
+            font_size_letra = 18
         else:
             if len(cantidad_letra)>50 and len(cantidad_letra)<59:
-                font_size_letra = 19
+                font_size_letra = 17
             else:
                 if len(cantidad_letra) > 58 and len(cantidad_letra) < 67:
-                    font_size_letra = 17
+                    font_size_letra = 16
                 else:
                     if len(cantidad_letra) > 66 and len(cantidad_letra) < 75:
                         font_size_letra = 16
 
 
         if len(concepto) <=50:
-            font_size_concepto = 20
+            font_size_concepto = 18
         else:
-            font_size_concepto = 17
+            font_size_concepto = 16
 
         caballos=''
         for obj in ejemplares:
             caballos += obj.nombre + ','
 
         if len(caballos) <=160:  #50
-            font_size_caballos = 20
+            font_size_caballos = 18
         else:
-            font_size_caballos = 17
+            font_size_caballos = 16
             renglones = [1, 2]
 
         params = {

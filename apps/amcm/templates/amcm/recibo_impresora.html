@@ -202,7 +202,7 @@
 
                 <table>
                     <tr style="height: 5px">
-                        <td colspan="3" style="height: 5px"></td>
+                        <td colspan="3" style="height: 54px"></td>
                     </tr>
                     <tr style="text-align: center;">
                         <td style="text-align: center;"><p style="margin-top: 0px; margin-bottom: 0px;font-size: 20px">
@@ -224,20 +224,20 @@
     <table style="width: 100%; table-layout:fixed;" >
         <tbody>
         <tr style="border: 0px">
-            <td style="padding-left: 62px;padding-bottom: 0px;padding-top:5px;height: 40px;width: 90%;font-size: 20px">
+            <td style="padding-left: 62px;padding-bottom: 0px;padding-top:5px;height: 37px;width: 90%;font-size: 18px">
                 {{ usuario }} </td>
         </tr>
         <tr style="border: 0px solid #000">
-            <td style="padding-left: 62px;padding-bottom: 0px;padding-top:0px;height: 30px;width: 90%;font-size: {{ font_size_letra }}px">
+            <td style="padding-left: 62px;padding-bottom: 0px;padding-top:0px;height: 27px;width: 90%;font-size: {{ font_size_letra }}px">
                 {{ importe }} {{ importe_letra }}</td>
         </tr>
         <tr><td style="padding-top:23px;"></td></tr>
         <tr style="border: 0px solid #000">
-            <td style="padding-left: 62px;padding-bottom: 0px;padding-top:0px;height: 30px;width: 90%;font-size: 20px">
+            <td style="padding-left: 62px;padding-bottom: 0px;padding-top:0px;height: 27px;width: 90%;font-size: 18px">
                 {{ concepto }}</td>
         </tr>
         <tr style="border: 0px solid #000"  >
-            <td valign="top" style="padding-left: 5px;padding-bottom: 0px;padding-top:0px;height: {{ ancho_evento }}px;width: 90%;font-size: 20px" >
+            <td valign="top" style="padding-left: 5px;padding-bottom: 0px;padding-top:0px;height: {{ ancho_evento }}px;width: 90%;font-size: 18px" >
                 {{ evento }}</td>
         </tr>
 
@@ -256,7 +256,7 @@
 
 
         <tr style="border: 0px solid #000">
-            <td valign="top" style="padding-left: 62px;padding-bottom: 0px;padding-top:0px;height: 60px;width: 90%;font-size: {{ font_size_recibido }}px">
+            <td valign="top" style="padding-left: 62px;padding-bottom: 0px;padding-top:0px;height: 54px;width: 90%;font-size: {{ font_size_recibido }}px">
 
                     {% if recibido_en %}
                         {% for obj  in recibido_en  %}
@@ -297,7 +297,7 @@
                     {% for item in cuentas %}
                         <tr style="border: 0px solid #000; height: 30px">
                             <td style="width: 50%; text-align: center">
-                                <span style="font-size: 20px">{{ item.codigo }} </span> &nbsp;
+                                <span style="font-size: 18px">{{ item.codigo }} </span> &nbsp;
                                 <span style="font-size: 15px"> {{item.importe}}</span> &nbsp;
 
                             </td>
