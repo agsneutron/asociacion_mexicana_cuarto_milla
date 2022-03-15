@@ -171,11 +171,13 @@ class GenerarReciboPDF(ListView):
                 'nombre': referencia.formapago.nombre,
                 'importe':'{:,.2f}'.format(referencia.importe),
                 'referencia':referencia.referencia,
-                'fecha': referencia.fecha_registro
+                'fecha': str(referencia.fecha_registro.strftime("%d/%m/%Y")).upper()
             }
             arrReferenciaFormaPago.append(referencia_json)
 
         renglones=[1,2,3]
+        ancho_evento=30
+        ancho_caballos=80
         if recibo.pago.cuota:
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
@@ -191,6 +193,8 @@ class GenerarReciboPDF(ListView):
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
         else:
+            ancho_evento=80
+            ancho_caballos=30
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             renglones=[]
@@ -206,11 +210,28 @@ class GenerarReciboPDF(ListView):
             if recibo.pago.paquete.evento_cinco:
                 concepto = concepto + ', ' + recibo.pago.paquete.evento_cinco.nombre
 
+        recibido_en = ''
+        for obj in arrReferenciaFormaPago:
+            recibido_en += obj['nombre'] + ' ' + obj['importe'] + ' ' + obj['referencia'] + ' ' +obj['fecha'] + ', '
+
+        if len(recibido_en) <=50:
+            font_size_recibido = 20
+        else:
+            font_size_recibido =17
+
         cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
         if len(cantidad_letra) <=50:
             font_size_letra = 20
         else:
-            font_size_letra = 17
+            if len(cantidad_letra)>50 and len(cantidad_letra)<59:
+                font_size_letra = 19
+            else:
+                if len(cantidad_letra) > 58 and len(cantidad_letra) < 67:
+                    font_size_letra = 17
+                else:
+                    if len(cantidad_letra) > 66 and len(cantidad_letra) < 75:
+                        font_size_letra = 16
+
 
         if len(concepto) <=50:
             font_size_concepto = 20
@@ -221,7 +242,7 @@ class GenerarReciboPDF(ListView):
         for obj in ejemplares:
             caballos += obj.nombre + ','
 
-        if len(caballos) <=50:
+        if len(caballos) <=160:  #50
             font_size_caballos = 20
         else:
             font_size_caballos = 17
@@ -244,6 +265,9 @@ class GenerarReciboPDF(ListView):
             'font_size_letra':font_size_letra,
             'font_size_evento':font_size_concepto,
             'font_size_caballos':font_size_caballos,
+            'font_size_recibido':font_size_recibido,
+            'ancho_evento':ancho_evento,
+            'ancho_caballos':ancho_caballos,
             'renglones':renglones,
             }
 
