@@ -220,9 +220,9 @@ class GenerarReciboPDF(ListView):
             recibido_en += obj['nombre'] + ' ' + obj['importe'] + ' ' + obj['referencia'] + ' ' +obj['fecha'] + ', '
 
         if len(recibido_en) <=50:
-            font_size_recibido = 10
+            font_size_recibido = 18
         else:
-            font_size_recibido =10
+            font_size_recibido =16
 
         cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
         if len(cantidad_letra) <=50:
