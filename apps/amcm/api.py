@@ -1527,10 +1527,11 @@ class setRetirarEjemplar(ListView):
     def get(self, request, *args, **kwargs):
         evento_ejemplar_id = request.GET.get('evento_ejemplar_id')
 
-        EventoElegibles.objects.filter(id=evento_ejemplar_id).update(estatus=1)
+        EventoElegibles.objects.filter(id=evento_ejemplar_id).update(estaus=1)
         message = "retirado"
         params = {
+            "message": "success",
             "estatus": message
         }
 
-        return HttpResponse(self.json_to_dumps(params), 'application/json; charset=utf-8')
+        return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
