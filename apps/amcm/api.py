@@ -10,6 +10,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.list import ListView
 from requests import RequestException
+from django.views.decorators.cache import never_cache
+
 
 from io import BytesIO
 from django.http import HttpResponse
@@ -60,6 +62,7 @@ def html_to_pdf(content, output):
 
 class Render():
     @staticmethod
+    @never_cache
     def render(path, params):
         filename = 'recibo_'+ str(params['no_recibo']) +'.pdf'
         template = get_template(path)
@@ -141,6 +144,7 @@ class Render():
 
 # ******************************************** renderear PDF ***********************************************
 class GenerarReciboPDF(ListView):
+    @never_cache
     def get(self, request, *args, **kwargs):
         anterior=False;
         recibo_id = request.GET.get('recibo_id')
@@ -216,9 +220,9 @@ class GenerarReciboPDF(ListView):
             recibido_en += obj['nombre'] + ' ' + obj['importe'] + ' ' + obj['referencia'] + ' ' +obj['fecha'] + ', '
 
         if len(recibido_en) <=50:
-            font_size_recibido = 18
+            font_size_recibido = 10
         else:
-            font_size_recibido =16
+            font_size_recibido =10
 
         cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
         if len(cantidad_letra) <=50:
