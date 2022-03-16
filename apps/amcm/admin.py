@@ -669,7 +669,7 @@ class EventoElegiblesAdmin(admin.ModelAdmin):
     #list_per_page = 100000
     fields = (
         'evento', 'cuadra', 'ejemplar', 'elegible', 'estaus')
-    list_editable = ('estaus',)
+    #list_editable = ('estaus',)
     list_display = ('evento', 'elegible', 'cuadra', 'ejemplar', 'estaus')
 
     def get_queryset(self, request):

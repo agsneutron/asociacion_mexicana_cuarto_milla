@@ -1,7 +1,17 @@
 {% extends 'layouts/base.html' %}
 
 {% block title %} Listado {% endblock title %}
+{% block stylesheets %}
+     <link rel="stylesheet" href="/static/assets/vendor/sweetalert2/dist/sweetalert2.min.css">
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+ <script src="/static/assets/ajax/listados.js"></script>
 
+    <style>
+    .hidden {
+        display:none;
+    }
+    </style>
+{% endblock stylesheets %}
 {% block content %}
 
     <div class="header pb-6">
@@ -155,7 +165,7 @@
                                                 <td width="35%"
                                                     style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d;"> {{ ejemplar.nombre }}</td>
                                                 {% for obj in ejemplar.recibos %}
-                                                    <td style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center;width: 10%">
+                                                    <td  id="ejemplar_{{ ejemplar.eventoelegible }}" style="border-style: solid; border-width: 1px; border-top-color: #0a0c0d; text-align: center;width: 10%">
                                                         {% for numero in obj.recibo %}
                                                             {{ numero.numero_recibo }}
                                                             {% if  not forloop.last %}
@@ -170,11 +180,11 @@
                                                 {% endfor %}
                                                 <td width="width: 5%">
                                                     {% if not ejemplar.estatus %}
-                                                        <a href="/amcm/get_listado_elegibles/?evento_id={{ evento.id }}&ejemplar_evento_id={{ ejemplar.eventoelegible }}">
-                                                            <button type="button"
+
+                                                            <button id="retirar_{{ ejemplar.eventoelegible }}" type="button" onclick="setRetirado({{ ejemplar.eventoelegible }})"
                                                                     class="btn btn-outline-secondary btn-sm"><i
                                                                     class="far fa-window-close"></i></button>
-                                                        </a>
+
                                                     {% endif %}
                                                 </td>
                                             </tbody>
@@ -246,5 +256,7 @@
                 table.rows('.parent').nodes().to$().find('td:first-child').trigger('click');
             });
         });
+
     </script>
+
 {% endblock extra_js %}
