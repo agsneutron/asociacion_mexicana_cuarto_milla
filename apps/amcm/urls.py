@@ -7,10 +7,11 @@ from django.urls import path, re_path
 from apps.amcm import api
 from django.conf.urls import url
 from apps.amcm import views
+from django.views.decorators.cache import cache_page
 
 
 urlpatterns = [
-    path('get_recibo_pdf/', api.GenerarReciboPDF.as_view(), name="recibo"),
+    path('get_recibo_pdf/', cache_page(60 * 15)(api.GenerarReciboPDF.as_view()), name="recibo"),
     path('get_recibo_impresora/', api.GenerarReciboImpresora.as_view(), name="recibo_impresora"),
     url(r'^get_reporte/', login_required(api.getReporteEventos.as_view())),
     url(r'^get_reporte_cuota/', login_required(api.getReporteCuotas.as_view())),
