@@ -177,8 +177,8 @@ class GenerarReciboPDF(ListView):
             arrReferenciaFormaPago.append(referencia_json)
 
         renglones=[1,2,3]
-        ancho_evento=27
-        ancho_caballos=71
+        ancho_evento=26
+        ancho_caballos=69
         if recibo.pago.cuota:
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
@@ -194,8 +194,8 @@ class GenerarReciboPDF(ListView):
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
         else:
-            ancho_evento=71
-            ancho_caballos=27
+            ancho_evento=69
+            ancho_caballos=25
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             renglones=[]
