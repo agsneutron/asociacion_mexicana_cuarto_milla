@@ -182,7 +182,7 @@ class GenerarReciboPDF(ListView):
 
         renglones=[1,2,3]
         ancho_evento=26
-        ancho_caballos=69
+        ancho_caballos=91
         if recibo.pago.cuota:
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
@@ -198,7 +198,7 @@ class GenerarReciboPDF(ListView):
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
         else:
-            ancho_evento=69
+            ancho_evento=91
             ancho_caballos=25
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
@@ -238,10 +238,13 @@ class GenerarReciboPDF(ListView):
                         font_size_letra = 16
 
 
-        if len(concepto) <=50:
+        if len(conceptoCuotas + ', ' +concepto) <=52:
             font_size_concepto = 18
         else:
-            font_size_concepto = 16
+            if len(conceptoCuotas + ', ' +concepto) > 52 and len(conceptoCuotas + ', ' +concepto) < 60:
+                font_size_concepto = 17
+            else:
+                font_size_concepto = 16
 
         caballos=''
         for obj in ejemplares:
