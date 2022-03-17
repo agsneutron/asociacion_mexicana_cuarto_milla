@@ -433,10 +433,10 @@ class CuentasContables(models.Model):
         return dict
 
     def __str__(self):
-        return self.nombre
+        return str(self.codigo) + ' - ' + self.nombre
 
     def __unicode__(self):
-        return self.nombre
+        return str(self.codigo) + ' - ' + self.nombre
 
 
 
