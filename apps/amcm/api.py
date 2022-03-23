@@ -225,6 +225,7 @@ class GenerarReciboPDF(ListView):
             font_size_recibido =16
 
         cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
+        len_cantidad_letra = len(cantidad_letra)
         if len(cantidad_letra) <=50:
             font_size_letra = 18
         else:
@@ -232,10 +233,10 @@ class GenerarReciboPDF(ListView):
                 font_size_letra = 17
             else:
                 if len(cantidad_letra) > 58 and len(cantidad_letra) < 67:
-                    font_size_letra = 16
+                    font_size_letra = 17
                 else:
-                    if len(cantidad_letra) > 66 and len(cantidad_letra) < 75:
-                        font_size_letra = 16
+                    if len(cantidad_letra) > 66 and len(cantidad_letra) < 80:
+                        font_size_letra = 18
 
 
         if len(conceptoCuotas + ', ' +concepto) <=52:

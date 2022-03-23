@@ -5,12 +5,13 @@
     </div>
 {% endif %}
 {% if results %}
+
     <div class="table-responsive results">
-        <table id="result_list" class="table align-items-center  mod-table">
+        <table  class="table align-items-center  mod-table" style="font-size: 15px" >
             <thead>
             <tr>
                 {% for header in result_headers %}
-                    <th scope="col"{{ header.class_attrib }}>
+                    <th scope="col"{{ header.class_attrib }} style="width: 30%">
                         {% if header.sortable %}
                             {% if header.sort_priority > 0 %}
                                 <div class="sortoptions">

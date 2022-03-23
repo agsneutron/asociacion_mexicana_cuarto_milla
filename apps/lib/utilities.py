@@ -106,7 +106,7 @@ class Utilities():
 
     @staticmethod
     def convierte_cifra(numero, sw):
-        lista_centana = ["", ("CIEN", "CIENTO"), "DOCIENTOS", "TECIENTOS", "CUATROCIENTOS", "QUINIENTOS",
+        lista_centana = ["", ("CIEN", "CIENTO"), "DOCIENTOS", "TRECIENTOS", "CUATROCIENTOS", "QUINIENTOS",
                          "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"]
         lista_decena = ["", (
         "DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE", "DIECISEIS", "DIESCISIETE", "DIECIOCHO", "DIECINUEVE"),
