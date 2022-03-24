@@ -454,6 +454,9 @@ class PagoAdmin(admin.ModelAdmin):
     list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
+    search_fields = [
+        'cuadra',
+    ]
     def get_inline_instances(self, request, obj=None):
         return [ReferenciaFormaPagoInlineAdmin(self.model, self.admin_site),
             DefCuentasPagoAdmin(self)(self.model, self.admin_site),
@@ -557,13 +560,19 @@ class ReciboAdmin(admin.ModelAdmin):
     #list_per_page = sys.maxsize
 
 
-    list_display = ('pago', 'numero_recibo', 'fecha_registro','edit_link','recibo_link',)
+    list_display = ('get_pago', 'numero_recibo', 'fecha_registro','edit_link','recibo_link',)
     fields = ('pago', 'numero_recibo', 'letra', 'observaciones', 'fecha_registro',)
     ordering = ('-id',)
     list_per_page = 5
     search_fields = [
         'numero_recibo',
     ]
+
+    def get_pago(self,obj):
+        response = obj.pago.evento.nombre
+        return response
+
+    get_pago.short_description = 'Evento'
 
     @admin.display(description='related fecha_registro', ordering='fecha_registro')
     def display_related_fecha_registro(self, obj):

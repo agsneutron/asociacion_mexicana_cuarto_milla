@@ -342,6 +342,7 @@ class CuentasEvento(models.Model):
     evento = models.ForeignKey('Evento', verbose_name='Evento', blank=False, null=False,  on_delete=models.CASCADE,)
 
     class Meta:
+        ordering = ['cuenta']
         verbose_name = "Cuentas Contables del Evento"
         verbose_name_plural = "Cuentas Contables del Evento"
 
@@ -353,10 +354,10 @@ class CuentasEvento(models.Model):
         return dict
 
     def __str__(self):
-        return self.cuenta.nombre
+        return str(self.cuenta.codigo) + ' - ' + self.cuenta.nombre
 
     def __unicode__(self):
-        return self.cuenta.nombre
+        return str(self.cuenta.codigo) + ' - ' + self.cuenta.nombre
 
 
 
@@ -421,7 +422,7 @@ class CuentasContables(models.Model):
                               verbose_name="Estatus de Cuenta")
 
     class Meta:
-        ordering = ['nombre']
+        ordering = ['codigo']
         verbose_name = "Cuenta Contable"
         verbose_name_plural = "Cuentas Contables"
 
