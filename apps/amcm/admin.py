@@ -279,9 +279,11 @@ class EventoAdmin(admin.ModelAdmin):
     model = Evento
     # fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    list_per_page = sys.maxsize
+    #list_per_page = sys.maxsize
+    list_per_page = 10
     inlines = [FechasEventoInlineAdmin, CondicionesEventoInlineAdmin, CuotasEventoInlineAdmin, CuentasEventoInlineAdmin]
     list_display = ('nombre', 'yardas', 'bolsa', 'fondo', 'tipoEvento', 'edit_link','pago_link',)
+    search_fields = ['nombre', ]
     fieldsets = (
         (('Evento'),
          {'fields': ('nombre', 'temporada', 'tipoEvento',  'yardas', 'elegibles_evento', 'elegibles_subasta', 'descuento', 'bolsa', 'fondo', 'descripcion_evento', 'observaciones', )}),)
