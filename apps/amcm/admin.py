@@ -454,9 +454,8 @@ class PagoAdmin(admin.ModelAdmin):
     list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
-    search_fields = [
-        'cuadra',
-    ]
+    #search_fields = ['cuadra',]
+
     def get_inline_instances(self, request, obj=None):
         return [ReferenciaFormaPagoInlineAdmin(self.model, self.admin_site),
             DefCuentasPagoAdmin(self)(self.model, self.admin_site),
@@ -564,9 +563,7 @@ class ReciboAdmin(admin.ModelAdmin):
     fields = ('pago', 'numero_recibo', 'letra', 'observaciones', 'fecha_registro',)
     ordering = ('-id',)
     list_per_page = 5
-    search_fields = [
-        'numero_recibo',
-    ]
+    #search_fields = ['cuadra',]
 
     def get_pago(self,obj):
         response = obj.pago.evento.nombre
