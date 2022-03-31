@@ -186,8 +186,10 @@ class CuadraAdmin(admin.ModelAdmin):
     model = Cuadras
     #fields = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones')
     actions = None
-    list_per_page = sys.maxsize
+    #list_per_page = sys.maxsize
+    list_per_page = 15
     inlines = [ContactoInlineAdmin, EjemplarInlineAdmin, ]
+    search_fields = ('nombre','representante','telefono', 'celular', 'correoElectronico',)
     list_display = ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico',)
     fieldsets = (
         (('Cuadras'), {'fields': ('nombre', 'representante', 'telefono', 'celular', 'correoElectronico', 'observaciones',)}),)
