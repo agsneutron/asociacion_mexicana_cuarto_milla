@@ -449,11 +449,12 @@ class PagoAdmin(admin.ModelAdmin):
     param=0
     inlines = [ReferenciaFormaPagoInlineAdmin, DefCuentasPagoAdmin(param=param), ] #CuentasPagoInlineAdmin
     actions = None
+    search_fields = ('cuadra__nombre',)
     list_filter = []
     list_per_page = sys.maxsize
     ordering = ('-id',)
     list_per_page = 5
-    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_link')
+    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_ver_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
     #search_fields = ['cuadra',]
@@ -472,6 +473,8 @@ class PagoAdmin(admin.ModelAdmin):
         return response
 
     get_eventopaquete.short_description = 'Evento'
+    get_eventopaquete.allow_tags = True
+    get_eventopaquete.admin_order_field = 'evento'
 
     def get_cuota(self,obj):
         response=''
@@ -482,6 +485,8 @@ class PagoAdmin(admin.ModelAdmin):
         return response
 
     get_cuota.short_description = 'Cuota'
+    get_cuota.allow_tags = True
+    get_cuota.admin_order_field = 'cuota'
 
     def get_form(self, request, obj=None, **kwargs):
         if obj is not None:
@@ -537,8 +542,25 @@ class PagoAdmin(admin.ModelAdmin):
                 obj.id,
                 )
 
-    recibo_link.short_description = 'Recibos'
+    recibo_link.short_description = 'Imprime'
     recibo_link.allow_tags = True
+
+    def recibo_ver_link(self, obj):
+        try:
+            recibo = Recibo.objects.get(pago__id=obj.id)
+            return format_html(
+                '<a href="/admin/amcm/recibo/{}/change/"><button type="button" class="btn btn-outline-secondary btn-sm"><i class="fas fa-list-alt"></i></button></a>',
+                recibo.id,
+                )
+
+        except Recibo.DoesNotExist:
+            return format_html(
+                '',
+                obj.id,
+                )
+
+    recibo_ver_link.short_description = 'Ver Recibo'
+    recibo_ver_link.allow_tags = True
 
     def get_queryset(self, request):
         evento_id = request.GET.get('evento_id')
@@ -559,19 +581,30 @@ class ReciboAdmin(admin.ModelAdmin):
     form = ReciboForm
     actions = None
     #list_per_page = sys.maxsize
+    search_fields = ('pago__evento__nombre', 'pago__cuadra__nombre', 'numero_recibo')
 
 
-    list_display = ('get_pago', 'numero_recibo', 'fecha_registro','edit_link','recibo_link',)
+    list_display = ('get_pago', 'get_cuadra','numero_recibo', 'fecha_registro','edit_link','recibo_link',)
     fields = ('pago', 'numero_recibo', 'letra', 'observaciones', 'fecha_registro',)
     ordering = ('-id',)
     list_per_page = 5
     #search_fields = ['cuadra',]
 
     def get_pago(self,obj):
-        response = obj.pago.evento.nombre
+        response = obj.pago.evento
         return response
 
     get_pago.short_description = 'Evento'
+    get_pago.allow_tags = True
+    get_pago.admin_order_field = 'pago__evento'
+
+    def get_cuadra(self,obj):
+        response = obj.pago.cuadra.nombre
+        return response
+
+    get_cuadra.short_description = 'Cuadra'
+    get_cuadra.allow_tags = True
+    get_cuadra.admin_order_field = 'pago__cuadra'
 
     @admin.display(description='related fecha_registro', ordering='fecha_registro')
     def display_related_fecha_registro(self, obj):

@@ -54,6 +54,8 @@
                    var valor_cuota = cuota.substr(indice+1, cuota.length);
 
                     document.getElementById("totalpago").innerText= "$ " + valor_cuota * selected.length ;
+                    document.getElementById("id_cuotaPagada").value = valor_cuota * selected.length ;
+
                });
             });
 </script>

@@ -850,6 +850,15 @@ class Pago(models.Model):
 
         super(Pago, self).save(*args, **kwargs)
 
+        try:
+            recibo = Recibo.objects.get(pago=self)
+            print("ya existe el recibo")
+        except Recibo.DoesNotExist:
+            recibo = Recibo()
+            recibo.pago=self
+            recibo.numero_recibo=self.id
+            recibo.observaciones=str(self.id)
+            recibo.save()
 
 
 @receiver(post_save, sender=Pago, dispatch_uid='save_credito')
@@ -1096,6 +1105,15 @@ class Recibo(models.Model):
         dict['id'] = str(self.id)
         dict['Pago'] = str(self.pago.evento.nombre) +' - ' +str(self.pago.cuota.tipoCuota.nombre)
         dict['cuadra'] = str(self.pago.cuadra.nombre)
+
+        return dict
+
+    def to_serializable_dict_rpt(self):
+        dict = model_to_dict(self)
+        dict['id'] = str(self.id)
+        dict['Pago'] = str(self.pago.evento.nombre) +' - ' +str(self.pago.cuota.tipoCuota.nombre)
+        dict['cuadra'] = str(self.pago.cuadra.nombre)
+        dict['numero_recibo'] = str(self.numero_recibo) + (self.letra if self.letra != None else "")
 
         return dict
 

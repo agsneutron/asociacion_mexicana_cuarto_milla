@@ -64,7 +64,11 @@ class Render():
     @staticmethod
     @never_cache
     def render(path, params):
-        filename = 'recibo_'+ str(params['no_recibo']) +'.pdf'
+        if path == 'amcm/listado_elegibles_pdf.html':
+            filename = 'listado.pdf'
+        else:
+            filename = 'recibo_' + str(params['no_recibo']) + '.pdf'
+
         template = get_template(path)
         html = template.render(params)
         stream = io.buffer = BytesIO()
@@ -405,6 +409,8 @@ class getListadoElegibles(ListView):
                 for obj in elegibles:
                     # datos de la cuadra
                     cuadra = Cuadras.objects.get(id=obj['cuadra'])
+                    if cuadra.nombre=='CUADRA BASTIDA':
+                        print('hola')
 
                     # datos del ejemplar
                     evento_ejemplares = EventoElegibles.objects.filter(
@@ -416,7 +422,7 @@ class getListadoElegibles(ListView):
 
                         # buscar si hay recibo de PU (2) o NOM EXT  (6)
                         pagos_cuota = Recibo.objects.filter(
-                            Q(pago__cuota__tipoCuota_id__in=(2, 4))  # & Q(pago__estatus_cuota="PAGADO")
+                            Q(pago__cuota__tipoCuota_id__in=(2, 6))  # & Q(pago__estatus_cuota="PAGADO")
                             & Q(pago__cuadra=cuadra)
                             & Q(pago__ejemplar=evento_ejemplar.ejemplar))
 
@@ -428,7 +434,7 @@ class getListadoElegibles(ListView):
                             recibo_unico = True
                             for pago_cuota in pagos_cuota:
                                 registro_unico = {}
-                                recibos.append(pago_cuota.to_serializable_dict())
+                                recibos.append(pago_cuota.to_serializable_dict_rpt())
 
                             registro_unico = {
                                 'cuota': pago_cuota.pago.cuota,
@@ -450,7 +456,7 @@ class getListadoElegibles(ListView):
                                     recibos = []
                                     for pago_cuota in pagos_cuota:
                                         registro = {}
-                                        recibos.append(pago_cuota.to_serializable_dict())
+                                        recibos.append(pago_cuota.to_serializable_dict_rpt())
 
                                     registro = {
                                         'cuota': pago_cuota.pago.cuota,
