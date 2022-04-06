@@ -25,6 +25,9 @@ from django.db.models import Sum
 from django.db.models import Count
 import datetime
 import os
+import locale
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+
 
 
 def html_to_pdf(content, output):
@@ -716,6 +719,8 @@ class getEventoCuotas(ListView):
                 Utilities.json_to_dumps({"error": "No existe lista de elegibles"}),
                 'application/json; charset=utf-8')
 
+        dt = datetime.datetime.now()
+        fecha = dt.strftime("%d de %B del %Y")
         params = {
             "reporte_cuotas": reporte,
             "evento": all_evento.to_serializable_dict,
@@ -724,6 +729,7 @@ class getEventoCuotas(ListView):
             'descuento': descuento,
             "total": total,
             'titulo': cuota_obj,
+            'fecha':fecha,
             "ejemplares_cuota": cuadra_ejemplares_reporte
         }
         print(params)
