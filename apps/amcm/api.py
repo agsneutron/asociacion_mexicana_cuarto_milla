@@ -66,8 +66,12 @@ class Render():
     def render(path, params):
         if path == 'amcm/listado_elegibles_pdf.html':
             filename = 'listado.pdf'
+        elif path == 'amcm/evento_cuotas_pdf_original.html':
+            filename = 'evento_listado.pdf'
+        elif path == 'amcm/evento_cuotas_pdf.html':
+            filename = 'listado_cuotas_' + str(params['evento'].__self__) + '.pdf'
         else:
-            filename = 'recibo_' + str(params['no_recibo']) + '.pdf'
+            filename = 'listado_evento' + str(params['no_recibo']) + '.pdf'
 
         template = get_template(path)
         html = template.render(params)
@@ -193,6 +197,8 @@ class GenerarReciboPDF(ListView):
                 if recibo.pago.cuota.tipoCuota.id == 2:
                     descuento = recibo.pago.cuota.monto*recibo.pago.evento.descuento.porcentaje
                     descuento = descuento*total_ejemplares
+                    # el descuento ya está aplicado en el monto de la cuota del evento
+                    descuento = 0
                     monto_a_pagar = recibo.pago.cuota.monto*total_ejemplares
 
                     saldo=(monto_a_pagar - descuento) - (recibo.pago.cuotaPagada+monto_pagado)
@@ -581,11 +587,13 @@ class getEventoCuotas(ListView):
                     total_cuota = 0
                     ejemplares_pago = []
                     cuadra_ejemplares = []
-                    pagos = Recibo.objects.filter(pago__evento=reporte_cuota.evento_id, pago__cuota_id=reporte_cuota.id,
-                                                  pago__estatus_cuota="PAGADO").order_by('pago__cuadra').distinct()
+                    # pago__estatus_cuota="PAGADO"
+                    #pagos = Recibo.objects.filter(pago__evento=reporte_cuota.evento_id, pago__cuota_id=reporte_cuota.id
+                    #                             ).order_by('pago__cuadra').distinct()
+                    pagos = Pago.objects.filter(evento=reporte_cuota.evento_id, cuota_id=reporte_cuota.id).order_by('cuadra').distinct()
                     if pagos:
                         for x in pagos:
-                            ejemplar_pago_set = x.pago.ejemplar.all()
+                            ejemplar_pago_set = x.ejemplar.all()
                             for ejemplar_obj in ejemplar_pago_set:
                                 ejemplares_pago.append(ejemplar_obj)
 
@@ -640,12 +648,15 @@ class getEventoCuotas(ListView):
             #    print(caballo)
             ejemplares_pago = []
             cuadra_ejemplares_reporte = []
-            pagos = Recibo.objects.filter(pago__evento=evento_id, pago__cuota_id__in=cuotas_all,
-                                          pago__estatus_cuota="PAGADO").order_by('pago__cuadra').distinct()
+            #pagos = Recibo.objects.filter(pago__evento=evento_id, pago__cuota_id__in=cuotas_all,
+            #                              pago__estatus_cuota="PAGADO").order_by('pago__cuadra').distinct()
+
+            pagos = Pago.objects.filter(evento=evento_id, cuota_id__in=cuotas_all).order_by('cuadra').distinct()
+
             if pagos:
                 for ejemplar_obj in pagos:  # ejemplar_pago_set:
                     # ejemplares_pago.append(ejemplar_obj)
-                    ejemplar_pago_set = ejemplar_obj.pago.ejemplar.all()
+                    ejemplar_pago_set = ejemplar_obj.ejemplar.all()
                     for x in ejemplar_pago_set:
                         i = i + 1
                         data = {

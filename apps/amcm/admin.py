@@ -456,7 +456,7 @@ class PagoAdmin(admin.ModelAdmin):
     list_per_page = sys.maxsize
     ordering = ('-id',)
     list_per_page = 5
-    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','estatus_cuota','edit_link','recibo_ver_link','recibo_link')
+    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','get_estatus','edit_link','recibo_ver_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
     #search_fields = ['cuadra',]
@@ -489,6 +489,20 @@ class PagoAdmin(admin.ModelAdmin):
     get_cuota.short_description = 'Cuota'
     get_cuota.allow_tags = True
     get_cuota.admin_order_field = 'cuota'
+
+    def get_estatus(self,obj):
+        estatus = 'PAGADO'
+        if obj.estatus_cuota=='PAGADO' and obj.estatus_credito=='PAGADO':
+            estatus='PAGADO'
+        elif obj.estatus_cuota=='PAGADO'and obj.estatus_credito=='CREDITO':
+            estatus= 'CREDITO'
+        else:
+            estatus = 'PENDIENTE'
+        return estatus
+
+    get_estatus.short_description = 'Estatus'
+    get_estatus.allow_tags = True
+    get_estatus.admin_order_field = 'estatus_cuota'
 
     def get_form(self, request, obj=None, **kwargs):
         if obj is not None:
