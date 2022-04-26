@@ -451,12 +451,12 @@ class PagoAdmin(admin.ModelAdmin):
     param=0
     inlines = [ReferenciaFormaPagoInlineAdmin, DefCuentasPagoAdmin(param=param), ] #CuentasPagoInlineAdmin
     actions = None
-    search_fields = ('cuadra__nombre',)
+    search_fields = ('cuadra__nombre','evento__nombre','cuota__tipoCuota__nombre')
     list_filter = []
     list_per_page = sys.maxsize
     ordering = ('-id',)
     list_per_page = 5
-    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','get_estatus','edit_link','recibo_ver_link','recibo_link')
+    list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','get_estatus','get_recibo','edit_link','recibo_ver_link','recibo_link')
     fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
 
     #search_fields = ['cuadra',]
@@ -489,6 +489,17 @@ class PagoAdmin(admin.ModelAdmin):
     get_cuota.short_description = 'Cuota'
     get_cuota.allow_tags = True
     get_cuota.admin_order_field = 'cuota'
+
+
+    def get_recibo(self,obj):
+        response=''
+        for recibo in obj.recibo_set.all():
+            response = recibo.numero_recibo
+        return response
+
+    get_recibo.short_description = 'Recibo'
+    get_recibo.allow_tags = True
+    get_recibo.admin_order_field = 'recibo'
 
     def get_estatus(self,obj):
         estatus = 'PAGADO'
