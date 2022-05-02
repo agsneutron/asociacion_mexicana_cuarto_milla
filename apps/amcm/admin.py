@@ -795,6 +795,12 @@ class EventoElegiblesAdmin(admin.ModelAdmin):
            field.queryset = evento
         return form
 
+#Admin para catalogo elegible
+class EstadoCuentaAdmin(admin.ModelAdmin):
+    form = EstadoCuentaForm
+    actions = None
+    list_per_page = sys.maxsize
+    list_display = ('cuadra', 'fecha_registro', 'saldo')
 
 
 admin.site.register(Cuotas, CuotaAdmin)
@@ -822,3 +828,4 @@ admin.site.register(FormaPago, FormaPagoAdmin)
 admin.site.register(Elegible, ElegibleAdmin)
 admin.site.register(EventoElegibles, EventoElegiblesAdmin)
 admin.site.register(ListadoElegibles, ListadoElegiblesAdmin)
+admin.site.register(EstadoCuenta, EstadoCuentaAdmin)

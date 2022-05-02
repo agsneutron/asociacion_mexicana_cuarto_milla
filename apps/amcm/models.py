@@ -797,6 +797,8 @@ class Pago(models.Model):
     estatus_cuota = models.CharField(max_length=15, choices=PAGO_CUOTA_CHOICES, default=PAGADO,
                                        verbose_name="Estatus de Pago de Cuota")
 
+    tuvo_credito = models.BooleanField(verbose_name='tuvo_credito', default=False, null=False)
+
     class Meta:
         #ordering = ['evento']
         verbose_name = "Pago"
@@ -807,8 +809,8 @@ class Pago(models.Model):
     def to_serializable_dict(self):
         dict = model_to_dict(self)
         dict['id'] = str(self.id)
-        dict['cuota'] = str(self.cuota.tipoCuota.nombre)
-        dict['evento'] = str(self.evento.nombre)
+        dict['cuota'] = str(self.cuota.tipoCuota.nombre) if self.cuota else ''
+        dict['evento'] = str(self.evento.nombre) if self.evento else ''
         dict['cuotaPagada'] = str(self.cuotaPagada)
         dict['cuotaLetra'] = ""
         dict['conceptoPago'] = str(self.conceptoPago)
@@ -849,7 +851,8 @@ class Pago(models.Model):
 
     def save(self, *args, **kwargs):
         canSave = True
-
+        if self.estatus_credito=='CREDITO':
+            self.tuvo_credito=True
         super(Pago, self).save(*args, **kwargs)
 
         try:
@@ -1177,3 +1180,29 @@ class Credito(models.Model):
     def __unicode__(self):
         return str(self.pago.evento.nombre) + ' ' + str(self.pago.cuadra.nombre)
 
+# Modelo de Registro de estado de cuenta
+class EstadoCuenta(models.Model):
+    cuadra = models.ForeignKey(Cuadras, verbose_name="Cuadra", null=False, blank=False, on_delete=models.RESTRICT,)
+    nombre_cuadra = models.CharField(verbose_name="NombreCuadra", null=False, blank=False, max_length=150)
+    fecha_registro = models.DateTimeField(verbose_name='Fecha de registro', null=False, blank=False, editable=False,default=now())
+    saldo = models.FloatField(verbose_name='Saldo', null=False, blank=False, default=0)
+
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Estado de Cuenta"
+        verbose_name_plural = "Estado de Cuenta"
+
+class EstadoCuentaDetalle(models.Model):
+    estado_cuenta = models.ForeignKey(EstadoCuenta, verbose_name="Cuadra", null=False, blank=False, on_delete=models.RESTRICT,)
+    fecha = models.DateField(verbose_name='Fecha', null=False, blank=False, editable=False)
+    concepto = models.CharField(verbose_name="Concepto", null=True, blank=True, max_length=500 )
+    debe = models.FloatField(verbose_name='Debe', null=False, blank=False,)
+    haber = models.FloatField(verbose_name='Haber', null=False, blank=False,)
+    saldo = models.FloatField(verbose_name='Saldo', null=False, blank=False,)
+    fecha_registro = models.DateTimeField(verbose_name='Fecha de registro', null=False, blank=False, editable=False,default=now())
+
+    class Meta:
+        #ordering = ['evento']
+        verbose_name = "Detalle Estado de Cuenta"
+        verbose_name_plural = "Detalle Estado de Cuenta"

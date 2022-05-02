@@ -32,6 +32,12 @@ urlpatterns = [
     url(r'^get_parentesis/', api.getParentesis.as_view()),
     url(r'^words_reversed/', api.wordsReversed.as_view()),
 
+    url(r'^get_estado_cuenta_x_cuadra/', login_required(api.getEstadoCuentaXCuadraXls.as_view())),
+    url(r'^set_estado_cuenta_x_cuadra/', login_required(api.setEstadoCuentaXCuadra.as_view())),
+
     #api retirar ejemplar
     url(r'^set_retirar_ejemplar/', login_required(api.setRetirarEjemplar.as_view())),
+
+    #vista deudores
+    url(r'^get_view_deudores/', login_required(api.getViewDeudores.as_view())),
 ]

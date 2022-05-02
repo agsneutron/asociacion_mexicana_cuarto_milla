@@ -1,0 +1,90 @@
+{% extends 'layouts/base.html' %}
+{% load tz %}
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/static/assets/ajax/estado_cuenta.js"></script>
+    <div class="header pb-6">
+        <div class="container-fluid">
+            <div class="header-body">
+                <div class="row align-items-center py-4">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="h2 d-inline-block mb-0">Reporte de Deudores</h6>
+                        <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                                <li class="breadcrumb-item"><a href="/"><i class="fas fa-home"></i></a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div class="col-lg-6 col-5 text-right">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page content -->
+    <div class="container-fluid mt--6">
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <!-- Card header -->
+                    <div class="card-header border-0">
+{#                        <h3 class="mb-0">Recibos</h3>#}
+{#                        <br>#}
+                        <h5>Selecciona una cuadra: </h5>
+                        <div class="input-daterange datepicker row align-items-center">
+                            <div class="col">
+                                <div class="form-group">
+                                    <div class="input-group input-group-alternative">
+
+                                         <select class="form-control select2" id="cuadra" placeholder="Evento">
+                                              <option value="">Selecciona Cuadra:</option>
+                                              {% for obj in cuadras %}
+                                                  <option value="{{ obj.id }}">{{ obj.nombre}}</option>
+                                              {% endfor %}
+                                          </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div>
+                            <div class="col text-right">
+                                <button class="btn btn-icon btn-3 btn-neutral" type="button" id="descarga">
+                                    <span class="btn-inner--icon"><i class="ni ni-cloud-download-95"></i></span>
+
+                                    <span class="btn-inner--text">Descargar</span>
+
+                                </button>
+{#                                 <a href="#" id="descarga" class="btn btn-sm btn-neutral"><i class="far fa-file-alt"></i> Descargar</a>#}
+{#                                &nbsp;&nbsp;&nbsp;#}
+                                <button class="btn btn-icon btn-3 btn-primary" type="button" id="guarda">
+                                    <span class="btn-inner--icon"><i class="ni ni-zoom-split-in"></i></span>
+
+                                    <span class="btn-inner--text">Guardar Estado de Cuenta</span>
+
+                                </button>
+
+                            </div>
+                        </div>
+                    <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+     {% include "includes/footer.html" %}
+
+    </div>
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+
+{% endblock javascripts %}
+

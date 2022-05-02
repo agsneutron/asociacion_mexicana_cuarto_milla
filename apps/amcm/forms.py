@@ -6,6 +6,11 @@ Copyright (c) 2021 - AriSan FusionTI
 from django import forms
 from apps.amcm.models import *
 
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+from django.forms import widgets
+from django.conf import settings
+
 class EventoForm(forms.ModelForm):
     class Meta:
         model = Evento
@@ -133,22 +138,35 @@ class EventoElegiblesForm(forms.ModelForm):
     class Meta:
         model = EventoElegibles
         fields = "__all__"
-    def __init__(self, *args, **kwargs):
-        if kwargs is not None:
-            try:
-                if kwargs['initial'] != {}:
-                    params = kwargs['initial']['_changelist_filters']
-                    head, sep, tail = params.partition('&')
-                    params = head
 
-                    params = params.split('=')
-                    evento_id = params[1]
-                    evento = Evento.objects.filter(id=evento_id)
-                    kwargs = {'initial': {'evento': evento_id}}
-                else:
-                    evento_id = 0
-                    kwargs = {'initial': {'evento': evento_id}}
-            except:
-                evento_id = 0
-        self.request = kwargs.pop('request', None)
-        super(EventoElegiblesForm, self).__init__(*args, **kwargs)
+
+
+class RelatedFieldWidgetCanAdd(widgets.Select):
+
+    def __init__(self, related_model, related_url=None, *args, **kw):
+
+        super(RelatedFieldWidgetCanAdd, self).__init__(*args, **kw)
+
+        if not related_url:
+            rel_to = related_model
+            info = (rel_to._meta.app_label, rel_to._meta.object_name.lower())
+            related_url = 'admin:%s_%s_add' % info
+
+        # Be careful that here "reverse" is not allowed
+        self.related_url = related_url
+
+    def render(self, name, value, *args, **kwargs):
+        self.related_url = reverse(self.related_url)
+        output = [super(RelatedFieldWidgetCanAdd, self).render(name, value, *args, **kwargs)]
+        output.append(u'<a href="%s" class="add-another" id="add_id_%s" onclick="return showAddAnotherPopup(this);"> ' % \
+            (self.related_url, name))
+        output.append(u'<img src="%sadmin/img/icon_addlink.gif" width="10" height="10" alt="%s"/></a>' % (settings.STATIC_URL, ('Add Another')))
+        return mark_safe(u''.join(output))
+
+class EstadoCuentaForm(forms.ModelForm):
+    estadocuenta = forms.ModelChoiceField(required=False,queryset=EstadoCuenta.objects.all(),
+                                           widget=RelatedFieldWidgetCanAdd(EstadoCuenta, related_url=""))
+
+    class Meta:
+        model = EstadoCuenta
+        fields = ('cuadra', 'estadocuenta')

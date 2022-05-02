@@ -73,6 +73,8 @@ class Render():
             filename = 'evento_listado.pdf'
         elif path == 'amcm/evento_cuotas_pdf.html':
             filename = 'listado_cuotas_' + str(params['evento'].__self__) + '.pdf'
+        elif path == 'amcm/estado_cuenta.html':
+            filename = 'estado_cuenta.pdf'
         else:
             filename = 'listado_evento' + str(params['no_recibo']) + '.pdf'
 
@@ -1555,6 +1557,26 @@ class getReporteRecibos(ListView):
         return render(request, 'amcm/reporte_recibos.html', params)
 
 
+#reporte de deudores
+@method_decorator(csrf_exempt, name='dispatch')
+class getViewDeudores(ListView):
+
+    @staticmethod
+    def get_cuadras():
+
+        cuadras_set = Cuadras.objects.all()
+
+        params = {
+            "cuadras": cuadras_set
+        }
+
+        return params
+
+    def get(self, request, *args, **kwargs):
+        params = self.get_cuadras()
+
+        return render(request, 'amcm/vista_reporte_deudores.html', params)
+
 class getReporteRecibosPDF(ListView):
     def get(self, request, *args, **kwargs):
 
@@ -1576,7 +1598,7 @@ class getReporteRecibosPDF(ListView):
 
         return Render.renderCuota('amcm/reporte_recibos_pdf.html', params)
 
-2
+
 @method_decorator(csrf_exempt, name='dispatch')
 class setRetirarEjemplar(ListView):
 
@@ -1589,5 +1611,96 @@ class setRetirarEjemplar(ListView):
             "message": "success",
             "estatus": message
         }
+
+        return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class getEstadoCuentaXCuadraXls(ListView):
+    def get(self, request, *args, **kwargs):
+        cuadra_id = request.GET.get('cuadra_id')
+        pagos = Pago.objects.filter(cuadra__id=cuadra_id, tuvo_credito=True)
+        if pagos.count()>0:
+            cuadra = {'id':pagos[0].cuadra.id,'nombre':pagos[0].cuadra.nombre}
+            arrPagos=[]
+            saldo=0
+            for pago in pagos:
+                saldo+=pago.cuota.monto
+                arrPagos.append({'fecha':str(pago.cuota.fechaVencimiento.strftime("%d/%m/%Y")).upper(),
+                                 'concepto':pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre,
+                                 'debe':'{:,.2f}'.format(pago.cuota.monto),'haber':'{:,.2f}'.format(0),'saldo':'{:,.2f}'.format(saldo)})
+
+            pagos = ReferenciaFormaPago.objects.filter(pago__cuadra__id=cuadra_id, pago__tuvo_credito=True).\
+                values('formapago__nombre','referencia','importe','fecha_registro').distinct()
+            saldo_referencia=0
+            saldo_final=0
+            for pago in pagos:
+                saldo_referencia+=pago['importe']
+                saldo_final = saldo - saldo_referencia
+                arrPagos.append({'fecha': str(pago['fecha_registro'].strftime("%d/%m/%Y")).upper(),
+                                 'concepto': pago['formapago__nombre'] + ' ' + pago['referencia'],
+                                 'debe': '{:,.2f}'.format(0), 'haber': '{:,.2f}'.format(pago['importe']), 'saldo': '{:,.2f}'.format(saldo_final)})
+                print (pago)
+
+            params = {'cuadra': cuadra,'estado_cuenta': arrPagos}
+        else:
+            params = {'cuadra': '','estado_cuenta': []}
+
+        return Render.render('amcm/estado_cuenta.html', params)
+
+        #return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+
+@method_decorator(csrf_exempt, name='dispatch')
+class setEstadoCuentaXCuadra(ListView):
+    def get(self, request, *args, **kwargs):
+        cuadra_id = request.GET.get('cuadra_id')
+        pagos = Pago.objects.filter(cuadra__id=cuadra_id, tuvo_credito=True)
+        if pagos.count()>0:
+            obj_cuadra = pagos[0].cuadra
+            arrPagos=[]
+            saldo=0
+            for pago in pagos:
+                saldo+=pago.cuota.monto
+                arrPagos.append({'fecha':pago.cuota.fechaVencimiento,
+                                 'concepto':pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre,
+                                 'debe':pago.cuota.monto,'haber':0,'saldo':saldo})
+
+            pagos = ReferenciaFormaPago.objects.filter(pago__cuadra__id=cuadra_id, pago__tuvo_credito=True).\
+                values('formapago__nombre','referencia','importe','fecha_registro').distinct()
+            saldo_referencia=0
+            saldo_final=0
+            for pago in pagos:
+                saldo_referencia+=pago['importe']
+                saldo_final = saldo - saldo_referencia
+                arrPagos.append({'fecha': pago['fecha_registro'],
+                                 'concepto': pago['formapago__nombre'] + ' ' + pago['referencia'],
+                                 'debe': 0, 'haber': pago['importe'], 'saldo': saldo_final})
+
+            estado_cuenta = EstadoCuenta()
+            estado_cuenta.cuadra=obj_cuadra
+            estado_cuenta.nombre_cuadra = obj_cuadra.nombre
+            estado_cuenta.saldo = saldo_final
+            estado_cuenta.save()
+
+            for pago in arrPagos:
+                detalle_estado_cuenta = EstadoCuentaDetalle()
+                detalle_estado_cuenta.estado_cuenta = estado_cuenta
+                detalle_estado_cuenta.fecha = pago['fecha']
+                detalle_estado_cuenta.concepto = pago['concepto']
+                detalle_estado_cuenta.debe = pago['debe']
+                detalle_estado_cuenta.haber = pago['haber']
+                detalle_estado_cuenta.saldo = pago['saldo']
+                detalle_estado_cuenta.save()
+
+
+
+            params = {
+                "message": "Se generó correctamente el registro del estado de cuenta",
+                "estatus": 'ok',
+            }
+        else:
+            params = {
+                "message": "No Existe Información para registrar",
+                "estatus": 'error'
+            }
 
         return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
