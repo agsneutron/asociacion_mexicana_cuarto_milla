@@ -75,6 +75,8 @@ class Render():
             filename = 'listado_cuotas_' + str(params['evento'].__self__) + '.pdf'
         elif path == 'amcm/estado_cuenta.html':
             filename = 'estado_cuenta.pdf'
+        elif path == 'amcm/estado_cuenta_pagos.html':
+            filename = 'estado_cuenta_pagos.pdf'
         else:
             filename = 'listado_evento' + str(params['no_recibo']) + '.pdf'
 
@@ -1583,6 +1585,25 @@ class getViewDeudores(ListView):
 
         return render(request, 'amcm/vista_reporte_deudores.html', params)
 
+#reporte de pagos generales
+class getViewPagos(ListView):
+
+    @staticmethod
+    def get_cuadras():
+
+        cuadras_set = Cuadras.objects.all()
+
+        params = {
+            "cuadras": cuadras_set
+        }
+
+        return params
+
+    def get(self, request, *args, **kwargs):
+        params = self.get_cuadras()
+
+        return render(request, 'amcm/vista_reporte_pagos.html', params)
+
 class getReporteRecibosPDF(ListView):
     def get(self, request, *args, **kwargs):
 
@@ -1727,3 +1748,60 @@ class setEstadoCuentaXCuadra(ListView):
             }
 
         return HttpResponse(Utilities.json_to_dumps(params), 'application/json; charset=utf-8')
+
+# pagos totales por cuadra
+@method_decorator(csrf_exempt, name='dispatch')
+class getEstadoCuentaXCuadraGeneral(ListView):
+    def get(self, request, *args, **kwargs):
+        cuadra_id = request.GET.get('cuadra_id')
+        pagos = Pago.objects.filter(cuadra__id=cuadra_id)
+        if pagos.count()>0:
+            cuadra = {'id':pagos[0].cuadra.id,'nombre':pagos[0].cuadra.nombre}
+            arrPagos=[]
+            saldo=0
+            for pago in pagos:
+                saldo+=pago.cuota.monto
+                ejemplares=''
+                for ejemplar in pago.ejemplar.all():
+                    if ejemplares=='':
+                        ejemplares += ejemplar.nombre
+                    else:
+                        ejemplares += ',' + ejemplar.nombre
+                recibos = ''
+                for recibo in pago.recibo_set.all():
+                    if recibos=='':
+                        recibos += str(recibo.numero_recibo)
+                        if recibo.letra is not None:
+                            recibos += '-' + recibo.letra
+                    else:
+                        recibos += ',' + str(recibo.numero_recibo)
+                        if recibo.letra is not None:
+                            recibos += '-' + recibo.letra
+
+                arrPagos.append({'fecha':str(pago.cuota.fechaVencimiento.strftime("%d/%m/%Y")).upper(),
+                                 'concepto': pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre ,
+                                 'ejemplares':'(' + ejemplares + ')',
+                                 'recibos':recibos,
+                                 'debe':'{:,.2f}'.format(pago.cuota.monto),'haber':'{:,.2f}'.format(0),'saldo':'{:,.2f}'.format(saldo)})
+
+            pagos = ReferenciaFormaPago.objects.filter(pago__cuadra__id=cuadra_id).\
+                values('pago__recibo__numero_recibo','formapago__nombre','referencia','importe','importe_pago','fecha_registro')
+            saldo_referencia=0
+            saldo_final=0
+
+            for pago in pagos:
+
+                saldo_referencia+=pago['importe_pago']
+                saldo_final = saldo - saldo_referencia
+                arrPagos.append({'fecha': str(pago['fecha_registro'].strftime("%d/%m/%Y")).upper(),
+                                 'concepto': pago['formapago__nombre'] + ' ' + pago['referencia'] + ' (' + '{:,.2f}'.format(pago['importe']) + ')',
+                                 'ejemplares': '',
+                                 'recibos':pago['pago__recibo__numero_recibo'] ,
+                                 'debe': '{:,.2f}'.format(0), 'haber': '{:,.2f}'.format(pago['importe_pago']), 'saldo': '{:,.2f}'.format(saldo_final)})
+                print (pago)
+
+            params = {'cuadra': cuadra,'estado_cuenta': arrPagos, 'fecha_reporte':now()}
+        else:
+            params = {'cuadra': '','estado_cuenta': []}
+
+        return Render.render('amcm/estado_cuenta_pagos.html', params)

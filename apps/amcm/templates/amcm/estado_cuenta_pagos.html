@@ -1,0 +1,78 @@
+{% load i18n  %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DEUDORES</title>
+    <style type="text/css">
+        body {
+            font-size: 12px;
+            line-height: 13px;
+        }
+
+
+        p {
+            margin: 2px;
+        }
+        table {
+            border-top: 1px solid #eee;
+        }
+
+        @page {
+            size: letter landscape;
+            margin: 2cm;
+        }
+
+
+    </style>
+</head>
+
+<body>
+     <table  align="center" cellspacing="0" cellpadding="0" border="0" width="100%" style="border-color: transparent; border-width: 0px; border-style: hidden; table-layout: fixed; width: max-content;">
+
+                <tr style="border-color: transparent; border-width: 0px; border-style: hidden; padding: 5px;">
+                    <td colspan="3" width="100%" style="background-color:#009551; color: #fff;  font-weight: bold; font-family: Arial; font-size: 14px; text-align: center;">PAGOS</td>
+                </tr>
+                <tr style="border-color: transparent; border-width: 0px; padding: 3px;">
+
+                    <td width="10%" style="font-weight: bold; color: #0B3957; font-family: Arial; font-size: 12px; text-align: left;"><span >Cuadra: </span> </td>
+                    <td width="60%" style="font-weight: bold; color: #000000; font-family: Arial; font-size: 12px; text-align: left;"><span >{{cuadra.nombre}} </span> </td>
+                    <td width="30%" style="font-weight: bold; color: #000000; font-family: Arial; font-size: 12px; text-align: right;"><span >{{fecha_reporte}} </span> </td>
+
+
+                </tr>
+
+        </table>
+        <br/>
+
+         <table   align="center" cellspacing="0" cellpadding="0" border="1" width="100%" style="border-color: #C0C0C0;  border-width: 1px;">
+            <thead>
+                <tr  style="border-color: #C0C0C0;  border-width: 1px;vertical-align: middle">
+                    <th width="10%" style="background-color:#009551; color: #fff;  font-weight: bold; font-size: 16px; font-family: Arial; text-align: center; padding: 5px;">Fecha</th>
+                    <th width="30%" style="background-color:#009551; color: #fff;  font-weight: bold; font-size: 16px; font-family: Arial; text-align: center; padding: 5px;">Concepto</th>
+                    <th width="15%" style="background-color:#009551; color: #fff;  font-weight: bold; font-size: 16px; font-family: Arial; text-align: center; padding: 5px;">Recibos</th>
+                    <th width="15%" style="background-color:#009551; color: #fff;  font-weight: bold; font-size: 16px; font-family: Arial; text-align: center; padding: 5px;">Debe</th>
+                    <th width="15%" style="background-color:#009551; color: #fff;  font-weight: bold; font-size: 16px; font-family: Arial; text-align: center; padding: 5px;">Haber</th>
+                    <th width="15%" style="background-color:#009551; color: #fff;  font-weight: bold; font-size: 16px; font-family: Arial; text-align: center; padding: 5px;">Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in estado_cuenta  %}
+                    <tr  style="border-color: #C0C0C0;  border-width: 1px;vertical-align: middle" >
+                        <td style="padding: 5px;vertical-align: middle">{{ obj.fecha }}</td>
+                        <td style="padding: 5px;vertical-align: middle">{{ obj.concepto }} <strong>{{ obj.ejemplares }}</strong></td>
+                        <td style="padding: 5px;vertical-align: middle;text-align: right">{{ obj.recibos }}</td>
+                        <td style="padding: 5px;vertical-align: middle;text-align: right">{{ obj.debe }}</td>
+                        <td style="padding: 5px;vertical-align: middle;text-align: right">{{ obj.haber }}</td>
+                        <td style="padding: 5px;vertical-align: middle;text-align: right">{{ obj.saldo }}</td>
+                    </tr>
+                {% endfor %}
+            <tbody>
+
+        </table>
+            <div>
+                <pdf:nextpage />
+            </div>
+
+</body>
+</html>

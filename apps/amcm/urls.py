@@ -35,9 +35,12 @@ urlpatterns = [
     url(r'^get_estado_cuenta_x_cuadra/', login_required(api.getEstadoCuentaXCuadraXls.as_view())),
     url(r'^set_estado_cuenta_x_cuadra/', login_required(api.setEstadoCuentaXCuadra.as_view())),
 
+    url(r'^get_estado_cuenta_pagos/', login_required(api.getEstadoCuentaXCuadraGeneral.as_view())),
+
     #api retirar ejemplar
     url(r'^set_retirar_ejemplar/', login_required(api.setRetirarEjemplar.as_view())),
 
     #vista deudores
     url(r'^get_view_deudores/', login_required(api.getViewDeudores.as_view())),
+    url(r'^get_view_pagos/', login_required(api.getViewPagos.as_view())),
 ]
