@@ -1556,9 +1556,15 @@ class getReporteRecibos(ListView):
 
         return render(request, 'amcm/reporte_recibos.html', params)
 
+from django.contrib.admin.views.decorators import staff_member_required
+
+class AdminRequiredMixin(object):
+    @classmethod
+    def as_view(cls, **initkwargs):
+        view = super(AdminRequiredMixin, cls).as_view(**initkwargs)
+        return staff_member_required(view)
 
 #reporte de deudores
-@method_decorator(csrf_exempt, name='dispatch')
 class getViewDeudores(ListView):
 
     @staticmethod
@@ -1625,8 +1631,15 @@ class getEstadoCuentaXCuadraXls(ListView):
             saldo=0
             for pago in pagos:
                 saldo+=pago.cuota.monto
+                ejemplares=''
+                for ejemplar in pago.ejemplar.all():
+                    if ejemplares=='':
+                        ejemplares += ejemplar.nombre
+                    else:
+                        ejemplares += ',' + ejemplar.nombre
                 arrPagos.append({'fecha':str(pago.cuota.fechaVencimiento.strftime("%d/%m/%Y")).upper(),
-                                 'concepto':pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre,
+                                 'concepto': pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre ,
+                                 'ejemplares':'(' + ejemplares + ')',
                                  'debe':'{:,.2f}'.format(pago.cuota.monto),'haber':'{:,.2f}'.format(0),'saldo':'{:,.2f}'.format(saldo)})
 
             pagos = ReferenciaFormaPago.objects.filter(pago__cuadra__id=cuadra_id, pago__tuvo_credito=True).\
@@ -1638,10 +1651,11 @@ class getEstadoCuentaXCuadraXls(ListView):
                 saldo_final = saldo - saldo_referencia
                 arrPagos.append({'fecha': str(pago['fecha_registro'].strftime("%d/%m/%Y")).upper(),
                                  'concepto': pago['formapago__nombre'] + ' ' + pago['referencia'],
+                                 'ejemplares': '',
                                  'debe': '{:,.2f}'.format(0), 'haber': '{:,.2f}'.format(pago['importe']), 'saldo': '{:,.2f}'.format(saldo_final)})
                 print (pago)
 
-            params = {'cuadra': cuadra,'estado_cuenta': arrPagos}
+            params = {'cuadra': cuadra,'estado_cuenta': arrPagos, 'fecha_reporte':now()}
         else:
             params = {'cuadra': '','estado_cuenta': []}
 
@@ -1660,8 +1674,15 @@ class setEstadoCuentaXCuadra(ListView):
             saldo=0
             for pago in pagos:
                 saldo+=pago.cuota.monto
+                ejemplares = ''
+                for ejemplar in pago.ejemplar.all():
+                    if ejemplares == '':
+                        ejemplares += ejemplar.nombre
+                    else:
+                        ejemplares += ',' + ejemplar.nombre
                 arrPagos.append({'fecha':pago.cuota.fechaVencimiento,
                                  'concepto':pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre,
+                                 'ejemplares':'(' + ejemplares + ')',
                                  'debe':pago.cuota.monto,'haber':0,'saldo':saldo})
 
             pagos = ReferenciaFormaPago.objects.filter(pago__cuadra__id=cuadra_id, pago__tuvo_credito=True).\
@@ -1673,6 +1694,7 @@ class setEstadoCuentaXCuadra(ListView):
                 saldo_final = saldo - saldo_referencia
                 arrPagos.append({'fecha': pago['fecha_registro'],
                                  'concepto': pago['formapago__nombre'] + ' ' + pago['referencia'],
+                                 'ejemplares': '',
                                  'debe': 0, 'haber': pago['importe'], 'saldo': saldo_final})
 
             estado_cuenta = EstadoCuenta()
@@ -1686,6 +1708,7 @@ class setEstadoCuentaXCuadra(ListView):
                 detalle_estado_cuenta.estado_cuenta = estado_cuenta
                 detalle_estado_cuenta.fecha = pago['fecha']
                 detalle_estado_cuenta.concepto = pago['concepto']
+                detalle_estado_cuenta.ejemplares = pago['ejemplares']
                 detalle_estado_cuenta.debe = pago['debe']
                 detalle_estado_cuenta.haber = pago['haber']
                 detalle_estado_cuenta.saldo = pago['saldo']

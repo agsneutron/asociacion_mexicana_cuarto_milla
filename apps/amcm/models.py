@@ -1197,6 +1197,7 @@ class EstadoCuentaDetalle(models.Model):
     estado_cuenta = models.ForeignKey(EstadoCuenta, verbose_name="Cuadra", null=False, blank=False, on_delete=models.RESTRICT,)
     fecha = models.DateField(verbose_name='Fecha', null=False, blank=False, editable=False)
     concepto = models.CharField(verbose_name="Concepto", null=True, blank=True, max_length=500 )
+    ejemplares = models.CharField(verbose_name="Ejemplares", null=True, blank=True, max_length=500 )
     debe = models.FloatField(verbose_name='Debe', null=False, blank=False,)
     haber = models.FloatField(verbose_name='Haber', null=False, blank=False,)
     saldo = models.FloatField(verbose_name='Saldo', null=False, blank=False,)
