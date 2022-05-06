@@ -1760,13 +1760,16 @@ class getEstadoCuentaXCuadraGeneral(ListView):
             arrPagos=[]
             saldo=0
             for pago in pagos:
-                saldo+=pago.cuota.monto
+
                 ejemplares=''
+                ejemplares_count=0
                 for ejemplar in pago.ejemplar.all():
                     if ejemplares=='':
                         ejemplares += ejemplar.nombre
                     else:
                         ejemplares += ',' + ejemplar.nombre
+                    ejemplares_count +=1
+                saldo += (pago.cuota.monto*ejemplares_count)
                 recibos = ''
                 for recibo in pago.recibo_set.all():
                     if recibos=='':
@@ -1782,7 +1785,7 @@ class getEstadoCuentaXCuadraGeneral(ListView):
                                  'concepto': pago.cuota.tipoCuota.nombre + ' ' + pago.evento.nombre ,
                                  'ejemplares':'(' + ejemplares + ')',
                                  'recibos':recibos,
-                                 'debe':'{:,.2f}'.format(pago.cuota.monto),'haber':'{:,.2f}'.format(0),'saldo':'{:,.2f}'.format(saldo)})
+                                 'debe':'{:,.2f}'.format(pago.cuota.monto*ejemplares_count),'haber':'{:,.2f}'.format(0),'saldo':'{:,.2f}'.format(saldo)})
 
             pagos = ReferenciaFormaPago.objects.filter(pago__cuadra__id=cuadra_id).\
                 values('pago__recibo__numero_recibo','formapago__nombre','referencia','importe','importe_pago','fecha_registro')
