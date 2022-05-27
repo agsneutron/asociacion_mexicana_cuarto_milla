@@ -77,6 +77,8 @@ class Render():
             filename = 'estado_cuenta.pdf'
         elif path == 'amcm/estado_cuenta_pagos.html':
             filename = 'estado_cuenta_pagos.pdf'
+        elif path == 'amcm/recibo_impresora.html':
+            filename = 'Recibo-' + str(params['no_recibo']) + '.pdf'
         else:
             filename = 'listado_evento' + str(params['no_recibo']) + '.pdf'
 
@@ -199,7 +201,10 @@ class GenerarReciboPDF(ListView):
         ancho_evento=26
         ancho_caballos=91
         if recibo.pago.cuota:
+
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
+            if recibo.pago.estatus_credito == 'ANTICIPO':
+                conceptoCuotas = 'ANTICIPO DE ' + conceptoCuotas
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
                 if recibo.pago.cuota.tipoCuota.id == 2:
                     descuento = recibo.pago.cuota.monto*recibo.pago.evento.descuento.porcentaje
@@ -218,6 +223,8 @@ class GenerarReciboPDF(ListView):
             ancho_evento=91
             ancho_caballos=25
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
+            if recibo.pago.estatus_credito == 'ANTICIPO':
+                conceptoCuotas = 'ANTICIPO DE ' + conceptoCuotas
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             renglones=[]
             concepto = ""
@@ -567,8 +574,10 @@ class getEventoCuotas(ListView):
         cuota_obj = CuotaEvento.objects.filter(Q(evento_id=evento_id) & Q(id=cuota_id))
         i = 0
         total_cuota = 0
+        fondo_aportacion = 0
         try:
             all_evento = Evento.objects.get(id=evento_id)
+            fondo_aportacion = all_evento.fondo
             cuota_obj = CuotaEvento.objects.filter(Q(evento_id=evento_id) & Q(id=cuota_id))
             for cuota in cuota_obj:
                 cuota_obj = cuota
@@ -637,6 +646,8 @@ class getEventoCuotas(ListView):
                             }
                             total = total + (reporte_cuota.monto * total_cuota)
                             reporte.append(response)
+
+                            # aqui meter lo del fondo fondo_aportacion
                     else:
                         response = {
                             'monto_cuota': 0,

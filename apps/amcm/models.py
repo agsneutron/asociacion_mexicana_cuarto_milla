@@ -510,7 +510,7 @@ class Ejemplares(models.Model):
         dict['nombre'] = str(self.nombre)
         dict['edad'] = str(self.edad)
         dict['peso'] = str(self.peso)
-        dict['sexo'] = self.sexo.nombre
+        dict['sexo'] = self.sexo.nombre if self.sexo else ''
         dict['nacionalidad'] = self.nacionalidad.nombre
         dict['color'] = str(self.color)
         dict['padre'] = str(self.padre)
@@ -783,9 +783,11 @@ class Pago(models.Model):
     PAGADO = 'PAGADO'
     CREDITO = 'CREDITO'
     PENDIENTE = 'PENDIENTE'
+    ANTICIPO = 'ANTICIPO'
     PAGO_CHOICES = (
         (PAGADO, 'PAGADO'),
         (CREDITO, 'CREDITO'),
+        (ANTICIPO, 'ANTICIPO'),
     )
     estatus_credito = models.CharField(max_length=15, choices=PAGO_CHOICES, default=PAGADO,
                               verbose_name="Estatus del Pago")
@@ -798,6 +800,7 @@ class Pago(models.Model):
                                        verbose_name="Estatus de Pago de Cuota")
 
     tuvo_credito = models.BooleanField(verbose_name='tuvo_credito', default=False, null=False)
+    #es_anticipo = models.BooleanField(verbose_name='Es Anticipo?', default=False, null=False)
 
     class Meta:
         #ordering = ['evento']

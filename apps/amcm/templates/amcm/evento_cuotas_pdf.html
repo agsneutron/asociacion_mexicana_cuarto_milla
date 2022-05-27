@@ -15,12 +15,13 @@
         table {
             border-collapse: collapse;
             width: 100%;
+
         }
 
         th,
         td {
             text-align: left;
-            padding: 0px;
+            padding: 2px;
         }
 
         .striped:nth-child(even) {
@@ -34,28 +35,30 @@
 
         @page {
             size: letter portrait;
-            margin: 0.5cm;
-
-            @frame header_frame {
-            -pdf-frame-content: header_content;
-            left: 30pt;
-            width: 610pt;
-            right: 20pt;
-            height: 148pt;
+            @frame content_frame{
+                /* Content Frame */
+                left: 50pt;
+                width: 500pt;
+                top: 40pt;
+                height: 682pt;
+                right: 10pt;
+            }
+            @frame header_frame{
+                /* header Frame */
+                -pdf-frame-content: header_content;
+                left: 80pt;
+                width: 500pt;
+                right: 30pt;
+                height: 148pt;
+            }
+            @frame footer_frame {
+                /* footer Frame */
+                -pdf-frame-content:footer_content;
+                left: 80pt; width: 500pt; top: 705pt; height: 100pt;
+            }
         }
 
-        @frame content_frame {
-            /* Content Frame */
-        left: 30pt; width: 550pt; top: 40pt; height: 852pt; right: 10pt;
-        }
-        @frame footer_frame {
-            /* Another static Frame */
-        -pdf-frame-content:footer_content;
-        left: 80pt; width: 500pt; top: 542pt; height: 100pt;
-        }
-        }
-
-        @media screen and (min-width: 576px) {
+                @media screen and (min-width: 576px) {
 
             .container,
             .container-sm {
@@ -118,69 +121,46 @@
             margin-right: auto;
             margin-left: auto;
         }
-
         .table thead th {
-            vertical-align: bottom;
-            border-bottom: 1px solid #f1f1f1;
-        }
+    vertical-align: bottom;
+    border-bottom: 0px solid #f1f1f1;
+}
 
-        .table-bordered td, .table-bordered th {
-            border: 1px solid #070707;
-            text-align: center;
-        }
+.table-bordered td, .table-bordered th {
+    border: 1px solid #070707;
+    text-align: center;
+}
+@media print {
+    .striped:nth-child(even) td {
+       background-color: #f2f2f2 !important;
+        -webkit-print-color-adjust: exact;
+   }
+}
 
-        @media print {
-            .striped:nth-child(even) td {
-                background-color: #f2f2f2 !important;
-                -webkit-print-color-adjust: exact;
-            }
-        }
-
-        .flex-container {
-            -webkit-display: -webkit-box;
-            -webkit-display: -webkit-flex;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-flex-wrap: wrap;
-        }
-
-        .flex-item {
-            border: 1px solid #4a4a4a;
-            display: inline-block;
-            width: 50%;
-            margin: 5px;
-            font-size: 15px;
-            text-align: center;
-        }
     </style>
 </head>
 
 <body>
 
+{% comment %}<div style="width: 100%;" id="header_content">
+
+    <img src="http://127.0.0.1:8000/static/admin/img/banner-superior-reportes.jpg" style="width: 877px; height: 127px">
+
+</div>{% endcomment %}
+<div style="" id="content_frame">
     <table style="width: 100%;">
         <tr>
-            <td colspan="2" style="width: 100%;text-align: center;height: 100px">
+            <td colspan="2" style="width: 100%;text-align: center">
+               <p style="font-size: 18px; text-align: center; font-weight: bold;">{{ evento.nombre }}</p>
+
             </td>
         </tr>
-
         <tr>
             <td colspan="2" style="width: 100%;text-align: center">
-               <p style="font-size: 20px; text-align: center; font-weight: bold;">{{ evento.nombre }}</p>
+               <p style="font-size: 12px; text-align: center;" align="center">{{ evento.descripcion_evento| linebreaks }}</p>
 
             </td>
         </tr>
-        <tr>
-            <td colspan="2" style="width: 100%;text-align: center;">
-               <p style="font-size: 16px; text-align: center;" align="center">{{ evento.descripcion_evento| linebreaks }}</p>
-
-            </td>
-        </tr>
-        <tr>
-                <td style="width: 100%; height: 20px" >
-
-                </td>
-            </tr>
         <tr>
             <td style="width: 50%;text-align: left">
                 <p style="font-size: 12px; text-align: left">{{ evento.observaciones| linebreaks }}</p>
@@ -192,11 +172,84 @@
     </table>
 
     <br>
+    <table style="width: 100%;">
+        {% for obj in reporte_cuotas %}
+        <tr style="padding-top: 5px;">
+            <td style="width: 70%;text-align: right">
+                <p style="font-size: 12px; text-align: right"> {{ obj.cuota }}  POR <strong>{{ obj.total_cuota }}</strong> EJEMPLARES =</p>
+            </td>
+            <td style="width: 20%;text-align: right">
+                <p style="font-size: 12px; text-align: right">  $ {{ obj.monto_cuota }}</p>
+            </td>
+            <td style="width: 10%;text-align: right">
+            </td>
+        </tr>
+        {% endfor %}
 
+
+        <tr>
+            <td style="width: 70%;text-align: right">
+                <p style="font-size: 12px; text-align: right"></p>
+            </td>
+            <td style="width: 20%;text-align: right">
+                <hr>
+                <p style="font-size: 12px; text-align: right"> TOTAL &nbsp;&nbsp;<strong>$ {{ total }}</strong></p>
+            </td>
+            <td style="width: 10%;text-align: right">
+            </td>
+        </tr>
+
+
+    </table>
+
+
+
+
+    <table style="width: 100%;" align="center">
+        <tbody>
+         {% for cuota in evento.cuotas_evento %}
+        <tr style="border-top: 1px solid #000; border-right:1px solid #000; border-left: 1px solid #000; border-bottom: 1px solid #000; margin-left: 5px; margin-top: 15px; margin-bottom:5px; padding-top: 12px; padding-bottom: 2px;" valign="middle" >
+            <td style="width: 70%;text-align: left;">
+
+                <p style="font-size: 12px; text-align: left;"> {{ cuota.tipoCuota}}
+                    {% if cuota.tipoCuota.id == 2 %}
+                        ( ${{ cuota.monto }} ) CON EL {{ evento.descuento }} DE DESCUENTO
+                    {% else %}
+                        : {{ cuota.fechaVencimiento|date:"l, d F Y" }}
+                    {% endif %}
+                </p>
+            </td>
+            <td style="width: 20%;text-align: left;">
+                <p style="font-size: 12px; text-align: left">
+                    {% if cuota.tipoCuota.id == 2 %}
+                        $ {{ descuento }}
+                    {% else %}
+                        $ {{ cuota.monto }} {{ cuota.observacion }}
+                    {% endif %}
+                </p>
+            </td>
+{#            <td style="width: 10%;text-align: right">#}
+{##}
+{#            </td>#}
+        </tr>
+         {% endfor %}
+
+
+
+        </tbody>
+    </table>
+    <br>
+    <p style="font-size: 12px; text-align: center; font-weight: bold">
+    {% for fecha in evento.fechas_evento %}
+
+        {{ fecha.tipoFecha}}:     {{ fecha.fecha|date:"l, d F Y"  }}
+        <br/>
+    {% endfor %}
+</p>
     <p style="font-size: 12px; text-align: left;">A CONTINUACIÓN LOS EJEMPLARES QUE PAGARON LA {{ titulo.tipoCuota.descripcion }}:</p>
 
 {#     <div class="table-responsive pb-12" align="center">#}
-        <table width="70%" align="left">
+        <table width="100%" align="center">
 {#            <tr>#}
 {#                <td>#}
 {#                <div class="row" style="display: -webkit-box; display: -webkit-flex; display: flex;">#}
@@ -204,33 +257,70 @@
                 {% regroup ejemplares_cuota by cuadra as cuadras_list %}
                 {% for cuadra in cuadras_list %}
 
-                    {% for ejemplar in cuadra.list %}
+                    {% if not forloop.counter|divisibleby:2 %}
+{#                    <div class="col-4" style="margin-bottom: 20px; display: -webkit-box; display: -webkit-flex; display: flex;">#}
+                       <tr>
+                        <td>
+                            <table>
+                                <tr>
+                                    <td style="width: 10%">&nbsp;</td>
+                                    <td colspan="2">
+                                        <p style="font-size: 13px;text-align: left"><strong>{{ cuadra.grouper }}</strong></p>
+                                    </td>
+                                </tr>
+                                {% for ejemplar in cuadra.list %}
                                     <tr>
-                                        <td style="width: 5%">
-                                        </td>
-                                        <td style="width: 5%">
+                                        <td style="width: 10%">
                                             <p style="font-size: 12px;text-align: left">{{ ejemplar.contador }}</p>
                                         </td>
-
-                                        <td style="width: 50%">
+                                        {% comment %}<td style="width: 10%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_lote }}</p>
+                                        </td>{% endcomment %}
+                                        <td style="width: 80%">
                                             <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
                                         </td>
-
-                                        <td style="width: 45%">
-                                            <p style="font-size: 13px;text-align: left"><strong>{{ cuadra.grouper }}</strong></p>
-                                        </td>
-
                                     </tr>
-                    {% endfor %}
+                                {% endfor %}
+                            </table>
+                        </td>
 
-
+{#                    </div>#}
+                    {% else %}
+                        <td>
+                            <table>
+                                <tr>
+                                    <td style="width: 10%">&nbsp;</td>
+                                    <td colspan="2">
+                                        <p style="font-size: 13px;text-align: left"><strong>{{ cuadra.grouper }}</strong></p>
+                                    </td>
+                                </tr>
+                                {% for ejemplar in cuadra.list %}
+                                    <tr>
+                                        <td style="width: 10%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.contador }}</p>
+                                        </td>
+{#                                        <td style="width: 10%">#}
+{#                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_lote }}</p>#}
+{#                                        </td>#}
+                                        <td style="width: 80%">
+                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                        </td>
+                       </tr>
+                    {% endif %}
+                    {#  bloque por cada registro, titulo + varios subregistros#}
 
                 {% endfor %}
 {#                </div>#}
 {#                </td>#}
 {#            </tr>#}
         </table>
-        <br>
+{#     </div>#}
+
+    <br>
         <table width="100%" align="center">
             <tr>
                 <td style="width: 100%" >
@@ -238,7 +328,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 100%; height: 30px" >
+                <td style="width: 100%; height: 5px" >
 
                 </td>
             </tr>
@@ -248,7 +338,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 100%; height: 90px" >
+                <td style="width: 100%; height: 60px" >
 
                 </td>
             </tr>
@@ -263,19 +353,17 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 100%; height: 30px" >
+                <td style="width: 100%; height: 20px" >
 
                 </td>
             </tr>
             <tr>
                 <td style="width: 100%" >
-                    <p style="font-size: 13px;text-align: left">c.c. Sr. Aarón Paredes, Secretario de Carreras, A.M.H.</p>
+                    <p style="font-size: 13px;text-align: left">c.c. Sr. Aarón Paredes Aguilar, Secretario de Carreras, A.M.H.</p>
                 </td>
             </tr>
         </table>
 
-
-{#     </div>#}
 
 
 </div>

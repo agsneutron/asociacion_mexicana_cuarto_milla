@@ -457,7 +457,7 @@ class PagoAdmin(admin.ModelAdmin):
     ordering = ('-id',)
     list_per_page = 5
     list_display = ('get_eventopaquete', 'cuadra', 'get_cuota','cuotaPagada','get_estatus','get_recibo','edit_link','recibo_ver_link','recibo_link')
-    fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), ('fechaPago','estatus_credito', ), )
+    fields = ('evento', 'cuota', 'paquete','cuadra', 'ejemplar', ('cuotaPagada', 'conceptoPago',), 'fechaPago','estatus_credito', )
 
     #search_fields = ['cuadra',]
 
