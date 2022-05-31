@@ -1578,6 +1578,8 @@ class AdminRequiredMixin(object):
         return staff_member_required(view)
 
 #reporte de deudores
+from notion.client import NotionClient
+from notion.block import FramerBlock, VideoBlock,PageBlock,EmbedBlock
 class getViewDeudores(ListView):
 
     @staticmethod
@@ -1592,6 +1594,15 @@ class getViewDeudores(ListView):
         return params
 
     def get(self, request, *args, **kwargs):
+        # Obtain the `token_v2` value by inspecting your browser cookies on a logged-in session on Notion.so
+        ##client = NotionClient(token_v2="d7ee991a7879908ccbf32a3287122176b925a2cf67944af0516338a6b8226e1dc60b41d51c385c1dabf134fdf464fb45de5dc9c21f2ed701c8a2a4eb516c5e6c60356b8cda14f2978a461fc0fda9")
+
+        # Replace this URL with the URL of the page you want to edit
+        ##page = client.get_block("https://www.notion.so/HI-97da578e14a24347b14aa9d8f5434126")
+        ##video = page.children.add_new(VideoBlock, width=200)
+        # sets "property.source" to the URL, and "format.display_source" to the embedly-converted URL
+        ##video.set_source_url("https://www.youtube.com/watch?v=yKUM45-LuHk")
+
         params = self.get_cuadras()
 
         return render(request, 'amcm/vista_reporte_deudores.html', params)

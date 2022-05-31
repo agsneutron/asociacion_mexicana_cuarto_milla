@@ -784,10 +784,12 @@ class Pago(models.Model):
     CREDITO = 'CREDITO'
     PENDIENTE = 'PENDIENTE'
     ANTICIPO = 'ANTICIPO'
+    PAGO_TOTAL = 'PAGO TOTAL'
     PAGO_CHOICES = (
         (PAGADO, 'PAGADO'),
         (CREDITO, 'CREDITO'),
         (ANTICIPO, 'ANTICIPO'),
+        (PAGO_TOTAL, 'PAGO TOTAL')
     )
     estatus_credito = models.CharField(max_length=15, choices=PAGO_CHOICES, default=PAGADO,
                               verbose_name="Estatus del Pago")
