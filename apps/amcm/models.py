@@ -534,7 +534,8 @@ class Evento(models.Model):
     descripcion_evento = models.TextField(verbose_name="Descripción", max_length=2500, null=False, blank=True)
 
     bolsa = models.FloatField(verbose_name="Aportación AMCM", null=False, blank=False)
-    fondo = models.FloatField(verbose_name="Fondo",  null=False, blank=False)
+    fondo = models.FloatField(verbose_name="Importe del Fondo",  null=False, blank=False)
+    descripcion_fondo = models.CharField(verbose_name="Descripción del Fondo", max_length=100, null=False, blank=False, default='')
     temporada = models.IntegerField(verbose_name="Temporada",  null=False, blank=False)
     observaciones = models.TextField(verbose_name="Datos del peso", max_length=500, null=False, blank=True)
 

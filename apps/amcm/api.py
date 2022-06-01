@@ -173,7 +173,7 @@ class GenerarReciboPDF(ListView):
             total_ejemplares +=1
         pagos = Pago.objects.filter(evento=recibo.pago.evento,cuota=recibo.pago.cuota,cuadra=recibo.pago.cuadra,id__lt=recibo.pago.id)
         for pago in pagos:
-            if set(list(ejemplares)) == set(list(pago.ejemplar.all())):
+            if set(list(ejemplares)) == set(list(pago.ejemplar.all())) and pago.recibo_set is not None:
                 monto_pagado += pago.cuotaPagada
 
         arrCuentas=[]
@@ -205,6 +205,9 @@ class GenerarReciboPDF(ListView):
             conceptoCuotas = recibo.pago.cuota.tipoCuota.nombre
             if recibo.pago.estatus_credito == 'ANTICIPO':
                 conceptoCuotas = 'ANTICIPO DE ' + conceptoCuotas
+            if recibo.pago.estatus_credito == 'PAGO TOTAL':
+                conceptoCuotas = 'PAGO TOTAL DE ' + conceptoCuotas
+
             if recibo.pago.cuota.tipoCuota.tipo == 'EVENTO':
                 if recibo.pago.cuota.tipoCuota.id == 2:
                     descuento = recibo.pago.cuota.monto*recibo.pago.evento.descuento.porcentaje
@@ -225,6 +228,9 @@ class GenerarReciboPDF(ListView):
             conceptoCuotas = recibo.pago.paquete.get_paquete_display()
             if recibo.pago.estatus_credito == 'ANTICIPO':
                 conceptoCuotas = 'ANTICIPO DE ' + conceptoCuotas
+            if recibo.pago.estatus_credito == 'PAGO TOTAL':
+                conceptoCuotas = 'PAGO TOTAL DE ' + conceptoCuotas
+
             saldo=(recibo.pago.paquete.importe*total_ejemplares) - (recibo.pago.cuotaPagada+monto_pagado)
             renglones=[]
             concepto = ""
@@ -280,6 +286,9 @@ class GenerarReciboPDF(ListView):
         else:
             font_size_caballos = 16
             renglones = [1, 2]
+
+        if recibo.pago.estatus_credito == 'PAGO TOTAL':
+            saldo=0
 
         params = {
             'no_recibo': recibo.numero_recibo,
@@ -567,6 +576,7 @@ class getEventoCuotas(ListView):
         cuotas_set = []
         reporte_cuotas = []
         reporte = []
+        aportacion_fondo = []
         total = 0
         descuento = 0
         cuotas_all = []
@@ -578,6 +588,26 @@ class getEventoCuotas(ListView):
         try:
             all_evento = Evento.objects.get(id=evento_id)
             fondo_aportacion = all_evento.fondo
+            if all_evento.bolsa > 0:
+                response = {
+                    'monto_cuota': all_evento.bolsa,
+                    'total_cuota': all_evento.bolsa,
+                    'cuota': 'AMCM APORTARÁ PARA ESTA CARRERA',
+                    'cuadra_ejemplar': ''
+                }
+                total = total + all_evento.bolsa
+                aportacion_fondo.append(response)
+
+            if all_evento.fondo > 0:
+                response = {
+                    'monto_cuota': all_evento.fondo,
+                    'total_cuota': all_evento.fondo,
+                    'cuota': 'FONDO: ' + all_evento.descripcion_fondo,
+                    'cuadra_ejemplar': ''
+                }
+                total = total + all_evento.fondo
+                aportacion_fondo.append(response)
+
             cuota_obj = CuotaEvento.objects.filter(Q(evento_id=evento_id) & Q(id=cuota_id))
             for cuota in cuota_obj:
                 cuota_obj = cuota
@@ -608,6 +638,8 @@ class getEventoCuotas(ListView):
                     #                             ).order_by('pago__cuadra').distinct()
                     pagos = Pago.objects.filter(evento=reporte_cuota.evento_id, cuota_id=reporte_cuota.id).order_by('cuadra').distinct()
                     if pagos:
+
+
                         for x in pagos:
                             ejemplar_pago_set = x.ejemplar.all()
                             for ejemplar_obj in ejemplar_pago_set:
@@ -738,6 +770,7 @@ class getEventoCuotas(ListView):
         fecha = dt.strftime("%d de %B del %Y")
         params = {
             "reporte_cuotas": reporte,
+            'aportacion_fondo': aportacion_fondo,
             "evento": all_evento.to_serializable_dict,
             'cycle': range(0, i),
             "cuotas": cuotas_set,

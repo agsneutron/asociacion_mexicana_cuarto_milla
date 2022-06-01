@@ -288,7 +288,7 @@ class EventoAdmin(admin.ModelAdmin):
     search_fields = ['nombre', ]
     fieldsets = (
         (('Evento'),
-         {'fields': ('nombre', 'temporada', 'tipoEvento',  'yardas', 'elegibles_evento', 'elegibles_subasta', 'descuento', 'bolsa', 'fondo', 'descripcion_evento', 'observaciones', )}),)
+         {'fields': ('nombre', 'temporada', 'tipoEvento',  'yardas', 'elegibles_evento', 'elegibles_subasta', 'descuento', 'bolsa', 'descripcion_fondo', 'fondo', 'descripcion_evento', 'observaciones', )}),)
 
 
 
@@ -503,7 +503,7 @@ class PagoAdmin(admin.ModelAdmin):
 
     def get_estatus(self,obj):
         estatus = 'PAGADO'
-        if obj.estatus_cuota=='PAGADO' and obj.estatus_credito=='PAGADO':
+        if obj.estatus_cuota=='PAGADO' and (obj.estatus_credito=='PAGADO' or obj.estatus_credito=='PAGO TOTAL') :
             estatus='PAGADO'
         elif obj.estatus_cuota=='PAGADO'and obj.estatus_credito=='CREDITO':
             estatus= 'CREDITO'
