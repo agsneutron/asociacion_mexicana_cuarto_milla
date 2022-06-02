@@ -281,10 +281,10 @@ class CuotaEvento(models.Model):
         return dict
 
     def __str__(self):
-        return self.tipoCuota.nombre + ' - $ ' + str(self.monto)
+        return self.tipoCuota.nombre + ' - $ ' + '{:,.2f}'.format(self.monto)
 
     def __unicode__(self):
-        return self.tipoCuota.nombre + ' - $ ' + str(self.monto)
+        return self.tipoCuota.nombre + ' - $ ' + '{:,.2f}'.format(self.monto)
 
 
 #catalogo para tipoFechas
