@@ -218,7 +218,7 @@
 
 
 
-    <table style="width: 100%;" align="center">
+    {% comment %}<table style="width: 100%;" align="center">
         <tbody>
          {% for cuota in evento.cuotas_evento %}
         <tr style="border-top: 1px solid #000; border-right:1px solid #000; border-left: 1px solid #000; border-bottom: 1px solid #000; margin-left: 5px; margin-top: 15px; margin-bottom:5px; padding-top: 12px; padding-bottom: 2px;" valign="middle" >
@@ -250,7 +250,7 @@
 
 
         </tbody>
-    </table>
+    </table>{% endcomment %}
     <br>
     <p style="font-size: 12px; text-align: center; font-weight: bold">
     {% for fecha in evento.fechas_evento %}

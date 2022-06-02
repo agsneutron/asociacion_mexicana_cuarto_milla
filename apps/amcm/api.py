@@ -767,7 +767,10 @@ class getEventoCuotas(ListView):
                 'application/json; charset=utf-8')
 
         dt = datetime.datetime.now()
-        fecha = dt.strftime("%d de %B del %Y")
+        dia = dt.strftime("%d")
+        mes = dt.strftime("%B").capitalize()
+        anio = dt.strftime("%Y")
+        fecha = dia + ' de ' + mes + ' del ' + anio
         params = {
             "reporte_cuotas": reporte,
             'aportacion_fondo': aportacion_fondo,
