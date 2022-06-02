@@ -590,7 +590,7 @@ class getEventoCuotas(ListView):
             fondo_aportacion = all_evento.fondo
             if all_evento.bolsa > 0:
                 response = {
-                    'monto_cuota': all_evento.bolsa,
+                    'monto_cuota': '{:,.2f}'.format(all_evento.bolsa),
                     'total_cuota': all_evento.bolsa,
                     'cuota': 'AMCM APORTARÁ PARA ESTA CARRERA',
                     'cuadra_ejemplar': ''
@@ -600,7 +600,7 @@ class getEventoCuotas(ListView):
 
             if all_evento.fondo > 0:
                 response = {
-                    'monto_cuota': all_evento.fondo,
+                    'monto_cuota': '{:,.2f}'.format(all_evento.fondo),
                     'total_cuota': all_evento.fondo,
                     'cuota': 'FONDO: ' + all_evento.descripcion_fondo,
                     'cuadra_ejemplar': ''
@@ -671,7 +671,7 @@ class getEventoCuotas(ListView):
 
                         if cuadra_ejemplares:
                             response = {
-                                'monto_cuota': reporte_cuota.monto * total_cuota,
+                                'monto_cuota': '{:,.2f}'.format(reporte_cuota.monto * total_cuota),
                                 'total_cuota': total_cuota,
                                 'cuota': reporte_cuota,
                                 'cuadra_ejemplar': cuadra_ejemplares
@@ -682,7 +682,7 @@ class getEventoCuotas(ListView):
                             # aqui meter lo del fondo fondo_aportacion
                     else:
                         response = {
-                            'monto_cuota': 0,
+                            'monto_cuota': '{:,.2f}'.format(0),
                             'total_cuota': 0,
                             'cuota': reporte_cuota,
                             'cuadra_ejemplar': []
@@ -775,7 +775,7 @@ class getEventoCuotas(ListView):
             'cycle': range(0, i),
             "cuotas": cuotas_set,
             'descuento': descuento,
-            "total": total,
+            "total": '{:,.2f}'.format(total),
             'titulo': cuota_obj,
             'fecha':fecha,
             "ejemplares_cuota": cuadra_ejemplares_reporte

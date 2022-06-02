@@ -276,6 +276,7 @@ class CuotaEvento(models.Model):
         dict['id'] = str(self.id)
         dict['fechaVencimiento'] = self.fechaVencimiento
         dict['monto'] = str(self.monto)
+        dict['monto_formato'] = '{:,.2f}'.format(self.monto)
         dict['tipoCuota'] = self.tipoCuota
         return dict
 

@@ -224,7 +224,7 @@
         <tr style="border-top: 1px solid #000; border-right:1px solid #000; border-left: 1px solid #000; border-bottom: 1px solid #000; margin-left: 5px; margin-top: 15px; margin-bottom:5px; padding-top: 12px; padding-bottom: 2px;" valign="middle" >
             <td style="width: 70%;text-align: left;">
 
-                <p style="font-size: 12px; text-align: left;"> {{ cuota.tipoCuota}}
+                <p style="font-size: 12px; text-align: left;"> {{ cuota.tipoCuota.descripcion}}
                     {% if cuota.tipoCuota.id == 2 %}
                         ( ${{ cuota.monto }} ) CON EL {{ evento.descuento }} DE DESCUENTO
                     {% else %}
@@ -237,7 +237,7 @@
                     {% if cuota.tipoCuota.id == 2 %}
                         $ {{ descuento }}
                     {% else %}
-                        $ {{ cuota.monto }} {{ cuota.observacion }}
+                        $ {{ cuota.monto_formato }} {{ cuota.observacion }}
                     {% endif %}
                 </p>
             </td>
@@ -341,7 +341,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 100%; height: 5px" >
+                <td style="width: 100%; height: 3px" >
 
                 </td>
             </tr>
@@ -351,7 +351,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 100%; height: 60px" >
+                <td style="width: 100%; height: 50px" >
 
                 </td>
             </tr>
@@ -366,7 +366,7 @@
                 </td>
             </tr>
             <tr>
-                <td style="width: 100%; height: 20px" >
+                <td style="width: 100%; height: 5px" >
 
                 </td>
             </tr>
