@@ -706,6 +706,9 @@ class getEventoCuotas(ListView):
             if pagos:
                 for ejemplar_obj in pagos:  # ejemplar_pago_set:
                     # ejemplares_pago.append(ejemplar_obj)
+                    negritas = 'N'
+                    if ejemplar_obj.cuota.id == 172: #todas las cuotas
+                        negritas = 'S'
                     ejemplar_pago_set = ejemplar_obj.ejemplar.all()
                     for x in ejemplar_pago_set:
                         i = i + 1
@@ -713,7 +716,8 @@ class getEventoCuotas(ListView):
                             'cuadra': x.cuadra,  # x.pago.cuadra,
                             'contador': i,
                             "ejemplar_lote": x.lote,
-                            "ejemplar_nombre": x.nombre
+                            "ejemplar_nombre": x.nombre,
+                            'negritas': negritas
                         }
                         cuadra_ejemplares_reporte.append(data)
 

@@ -290,7 +290,11 @@
                                             <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_lote }}</p>
                                         </td>{% endcomment %}
                                         <td style="width: 80%">
-                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                            {% if ejemplar.negritas == 'S' %}
+                                                <p style="font-size: 12px;text-align: left"><strong>{{ ejemplar.ejemplar_nombre }}</strong></p>
+                                            {% else %}
+                                                <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -316,7 +320,11 @@
 {#                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_lote }}</p>#}
 {#                                        </td>#}
                                         <td style="width: 80%">
-                                            <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                            {% if ejemplar.negritas == 'S' %}
+                                                <p style="font-size: 12px;text-align: left"><strong>{{ ejemplar.ejemplar_nombre }}</strong></p>
+                                            {% else %}
+                                                <p style="font-size: 12px;text-align: left">{{ ejemplar.ejemplar_nombre }}</p>
+                                            {% endif %}
                                         </td>
                                     </tr>
                                 {% endfor %}
