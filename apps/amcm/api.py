@@ -254,6 +254,24 @@ class GenerarReciboPDF(ListView):
         else:
             font_size_recibido =16
 
+        total_recibido = 0
+        cuotas_pagadas = 0
+        for pago_ref in recibo.pago.referenciaformapago_set.all():
+            ref_anteriores = ReferenciaFormaPago.objects.filter(referencia=pago_ref.referencia, id__lt=pago_ref.id)
+            for ref_ant in ref_anteriores:
+                cuotas_pagadas += ref_ant.importe_pago
+            total_recibido += pago_ref.importe
+        saldo_favor = total_recibido - (recibo.pago.cuotaPagada + cuotas_pagadas)
+
+        if saldo_favor>0:
+            referencia_json = {
+                'nombre': 'Saldo a favor',
+                'importe': '{:,.2f}'.format(saldo_favor),
+                'referencia': '',
+                'fecha': ''
+            }
+            arrReferenciaFormaPago.append(referencia_json)
+
         cantidad_letra = '{:,.2f}'.format(recibo.pago.cuotaPagada) + '(' + Utilities.numero_to_letras(recibo.pago.cuotaPagada) + ' PESOS 00/100 M.N.)'
         len_cantidad_letra = len(cantidad_letra)
         if len(cantidad_letra) <=50:
