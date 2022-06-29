@@ -108,7 +108,6 @@ class PagoForm(forms.ModelForm):
             ejemplares_pago=pago.ejemplar.all()
             if set(list(ejemplares)) == set(list(ejemplares_pago)):
                 total_pago += pago.cuotaPagada
-                print(ejemplar)
 
         if self.instance.paquete:
             monto_cuota = self.instance.paquete.importe
