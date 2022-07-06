@@ -11,6 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.list import ListView
 from requests import RequestException
 from django.views.decorators.cache import never_cache
+from django.db.models.functions import Trim
 
 
 from io import BytesIO
@@ -222,6 +223,8 @@ class GenerarReciboPDF(ListView):
             else:
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
+            if concepto == 'GENERAL':
+                concepto = recibo.pago.conceptoPago
         else:
             ancho_evento=91
             ancho_caballos=25
@@ -257,6 +260,7 @@ class GenerarReciboPDF(ListView):
         total_recibido = 0
         cuotas_pagadas = 0
         for pago_ref in recibo.pago.referenciaformapago_set.all():
+            texto=Trim(pago_ref.referencia)
             ref_anteriores = ReferenciaFormaPago.objects.filter(referencia=pago_ref.referencia, id__lt=pago_ref.id)
             for ref_ant in ref_anteriores:
                 cuotas_pagadas += ref_ant.importe_pago
