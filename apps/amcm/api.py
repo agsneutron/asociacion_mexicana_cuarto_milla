@@ -224,7 +224,7 @@ class GenerarReciboPDF(ListView):
                 saldo = 0.00
             concepto=recibo.pago.evento.nombre
             if concepto == 'GENERAL':
-                concepto = recibo.pago.conceptoPago
+                concepto = recibo.pago.conceptoPago if recibo.pago.conceptoPago else ""
         else:
             ancho_evento=91
             ancho_caballos=25
