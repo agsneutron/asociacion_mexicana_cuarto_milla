@@ -287,7 +287,7 @@ class GenerarReciboPDF(ListView):
                 if len(cantidad_letra) > 58 and len(cantidad_letra) < 67:
                     font_size_letra = 18
                 else:
-                    if len(cantidad_letra) > 66 and len(cantidad_letra) < 80:
+                    if len(cantidad_letra) > 66 and len(cantidad_letra) < 90:
                         font_size_letra = 18
 
 
